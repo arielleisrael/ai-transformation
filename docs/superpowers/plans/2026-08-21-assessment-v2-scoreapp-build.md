@@ -224,14 +224,37 @@ Add a multi-select question to the sandbox with 6 options at 2 points each into 
 - 100% → the denominator is the highest option, not the sum. Q11b's point values must be recalculated; **stop and raise** before Task 5.
 - Anything else → record the exact number and raise.
 
-- [ ] **Step 3: Test D — audience nesting**
+- [x] **Step 3: Test D — audience nesting** — ✅ **RESOLVED 2026-08-21: no bracket control, but none needed**
+
+The audience builder is **OR of AND-groups** (disjunctive normal form): each grey block is a set of conditions joined by AND, blocks are joined by OR via `Add an OR condition`. There is no nesting or bracket control.
+
+That is sufficient. Any boolean expression distributes into this form — `X AND (Y OR Z)` becomes `(X AND Y) OR (X AND Z)`.
+
+**But do not build the positive form.** Distributing the full CTA condition (four simple terms plus a 2-way and a 3-way OR-group) yields **6 blocks × 6 conditions = 36 hand-entered conditions**, where one wrong dropdown silently changes who gets a sales call. Build the inverse instead — see Task 8 Step 3.
+
+Other details confirmed in the builder: condition rows offer `Category Score Actual` (with sibling options for percentage / tier), operators including `Is greater than or equal to`, and lead-answer conditions of the form *question → Answer → Is → value*. The audience header shows a live **"N existing matches"** count, and there is an `UPDATE PREVIOUS RESPONSES` action for retroactive segmentation.
+
+*(Original instructions retained below.)*
+
+- [ ] ~~Step 3 (original)~~
 
 Create an Audience and try to build: `TEST-A score ≥ 10 AND (Sandbox question is not "High" OR Sandbox question is not "Low")`.
 
 - PASS: build HG4 and HG5 as specified in Task 8.
 - FAIL: use the fallback in Task 8 Step 5 — one Audience per gate, combined at the section-visibility layer.
 
-- [ ] **Step 4: Test E — section visibility direction**
+- [x] **Step 4: Test E — section visibility direction** — ✅ **BOTH DIRECTIONS AVAILABLE, 2026-08-21**
+
+Result page → select section → visibility dialog offers three radio options:
+- `Visible` — everyone sees it
+- `Hidden` — nobody sees it
+- `Audience Based` — **show *or hide*** this section to a specific audience, with a toggle for direction and an audience picker
+
+Hide-from-audience is available, which is what the Task 8 Step 3 construction depends on.
+
+*(Original instructions retained below.)*
+
+- [ ] ~~Step 4 (original)~~
 
 On a sandbox result page, add a text section and open its visibility control. Determine whether it offers **show-if-in-audience**, **hide-if-in-audience**, or both.
 
@@ -662,36 +685,45 @@ The invisible half. Two audiences on the hidden `Diagnostic Fit` category, carry
 
 Take the quiz as **P6 Raj**. Diagnostic Fit should read 68. With no gates, that qualifies. Confirm — that is the bug.
 
-- [ ] **Step 3: Create `Diagnostic Qualified`**
+- [ ] **Step 3: Create `Diagnostic Disqualified` — the inverse, not the positive**
 
-```
-Diagnostic Fit percentage  is greater than or equal to  45
-AND  Q13   is not  "Unlikely — mostly curious right now"                     (HG1)
-AND  Q1    is not  "Individual Contributor"                                   (HG2)
-AND  Q11a  is not  "It runs smoothly — I'm mostly here to explore what's possible"  (HG3)
-AND ( Q10  is not  "Less than 5 hours"  OR  Q8  is not  "Just me" )           (HG4)
-AND ( Q3   is not  "A few people are experimenting on their own"
-      OR  Q4  is not  "No formal strategy yet — mostly individual decisions"
-      OR  Q5  is not  "We're not really using it yet" )                       (HG5)
-```
+**Build who is EXCLUDED, not who qualifies.** Verified 2026-08-21: the audience builder is OR-of-AND-groups with no nesting. The positive form distributes to 36 hand-entered conditions; the inverse collapses to **9**, because each hard gate is conjunctive and inverts into a single block.
 
-HG5 is deliberately narrower than archetype gate G3 — it additionally requires Q4. A Spectator who clears HG5 **does** qualify. That is P5 Tom, and it is the point.
+One block per gate — so it is auditable at a glance, and a gate can be changed without touching the others. It also uses only the `Is` operator, so it does not depend on `Is not` existing.
+
+| Block | Conditions (AND within the block) | Gate |
+|---|---|---|
+| 1 | Q13 **is** "Unlikely — mostly curious right now" | HG1 |
+| 2 | Q1 **is** "Individual Contributor" | HG2 |
+| 3 | Q11a **is** "It runs smoothly — I'm mostly here to explore what's possible" | HG3 |
+| 4 | Q10 **is** "Less than 5 hours" **AND** Q8 **is** "Just me" | HG4 |
+| 5 | Q3 **is** "A few people are experimenting on their own" **AND** Q4 **is** "No formal strategy yet — mostly individual decisions" **AND** Q5 **is** "We're not really using it yet" | HG5 |
+| 6 | Diagnostic Fit percentage **is less than or equal to** 44 | below threshold |
+| 7 | ( Q2 **is** "Under 25" **OR** "Over 500" ) **AND** Diagnostic Fit **≤** 59 | out-of-band raised bar — see Step 6 |
+
+Blocks are joined with `Add an OR condition`. Use the **percentage** variant of the category-score condition, not `Category Score Actual`, so the thresholds stay meaningful if any point total is ever retuned.
+
+Note block 7 replaces the separate out-of-band audience: an out-of-band respondent below 60 is disqualified, and one at 60+ falls through to the ACCEPT/HOLD logic in Step 6.
+
+HG5 is deliberately narrower than archetype gate G3 — it additionally requires Q4. A Spectator who clears HG5 is **not** in this audience and therefore **does** see the CTA. That is P5 Tom, and it is the point.
 
 - [ ] **Step 4: Create `Diagnostic Priority`**
 
-Identical, except the first line reads `is greater than or equal to 65`. Drives ranking and the CRM tag.
-
-- [ ] **Step 5: If Task 2 found audience nesting unsupported**
-
-Do not force it. Build five separate single-condition audiences — `DQ-Fail-HG1` through `DQ-Fail-HG5` — each matching respondents who **trip** that gate:
+A positive audience this time, and simple because it has no OR-groups — it only ever *adds* emphasis, never grants a CTA:
 
 ```
-DQ-Fail-HG4:  Q10 is "Less than 5 hours"  AND  Q8 is "Just me"
-DQ-Fail-HG5:  Q3 is "A few people…" AND Q4 is "No formal strategy…" AND Q5 is "We're not really using it yet"
+Diagnostic Fit percentage  is greater than or equal to  65
 ```
-(HG1–HG3 are single conditions and need no OR-group.)
 
-Then `Diagnostic Qualified` becomes just `Diagnostic Fit ≥ 45`, and Task 10 hides the CTA section from anyone in any `DQ-Fail-*` audience. This needs *hide-if-in-audience*, which Task 2 Step 4 determined. Record which construction was used.
+Drives internal ranking and the CRM tag. A respondent in both `Diagnostic Priority` and `Diagnostic Disqualified` is disqualified — the CTA hide rule in Task 10 wins, because hiding is applied at the section level regardless of other audience membership. Verify this precedence during Task 11 with **P6 Raj** (Diagnostic Fit 68, HG2 fired): he must land in `Diagnostic Priority` and still see **no CTA**.
+
+- [ ] **Step 5: Optional — split the gates into separate audiences for internal reporting**
+
+The single `Diagnostic Disqualified` audience is enough to drive the CTA. But the internal brief and the four gate-specific nurture emails (Task 13) need to know *which* gate fired, and a single audience cannot tell you that.
+
+If ScoreApp's Leads view is where you will triage, build five additional single-purpose audiences — `DQ-HG1` through `DQ-HG5` — each containing just that gate's block from Step 3. They cost nothing, they make the Leads list filterable by disqualification reason, and Task 13's nurture routing can key off them directly.
+
+Skip this only if you intend to do that routing in the phase-2 webhook instead.
 
 - [ ] **Step 6: Handle the company-size threshold modifier**
 
@@ -803,9 +835,11 @@ Take the quiz as P2 Marcus. The booking CTA is currently unconditional, so it sh
 
 - [ ] **Step 3: Make the booking CTA conditional**
 
-On **all four** result pages, set the secondary CTA section's visibility to: visible if in `Diagnostic Qualified` **OR** `Diagnostic Qualified — Out of Band`.
+On **all four** result pages, select the booking CTA section and open its visibility dialog. Choose **`Audience Based`**, set the direction toggle to **hide** rather than show, and pick **`Diagnostic Disqualified`**.
 
-If Task 2 found only *hide-if-in-audience*, invert using the `DQ-Fail-*` audiences from Task 8 Step 5.
+Verified 2026-08-21: the dialog offers `Visible` / `Hidden` / `Audience Based — show or hide this section to a specific audience`, with a direction toggle and audience picker.
+
+Hiding from the disqualified audience — rather than showing to a qualified one — is what lets Task 8 use the 9-condition construction instead of the 36-condition one.
 
 - [ ] **Step 4: Apply the two CTA framings**
 
@@ -1069,8 +1103,9 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-21 | 1 — platform go/no-go | ✅ **PASS — GO** | Both behaviors confirmed. Categories live in the left icon rail, creatable before any questions exist. Score logic + Hidden are on the category's **LOGIC** tab. Per-answer scoring is on the question's **ANSWERS** tab, one points field per category. |
 | 2026-08-21 | 2 — item C, multi-select denominator | ✅ **CONFIRMED** | 73% at one tick / 89% at four, both matching prediction exactly. Denominator = Σ(all options), as documented. |
 | 2026-08-21 | 2 — bonus finding | ⚠️ **Plan amended** | A category excluded from the total still **displays** on the results page. `Hidden` toggle is required, not optional. Tasks 3 and 9 updated. |
-| | 2 — item D, audience nesting | ⏳ not yet run | |
-| | 2 — item E, section visibility direction | ⏳ not yet run | |
+| 2026-08-21 | 2 — item D, audience nesting | ✅ **RESOLVED** | No bracket control; builder is OR-of-AND-groups (DNF). Sufficient via distribution, but Task 8 rewritten to build the **inverse** audience — 9 conditions instead of 36. |
+| 2026-08-21 | 2 — item E, section visibility | ✅ **BOTH DIRECTIONS** | `Audience Based` offers show *or* hide, with a direction toggle. Unlocks the Task 8 inverse construction. |
+| 2026-08-21 | — | ✅ **Task 1 & 2 complete** | Sandbox may now be deleted. Ready to begin Task 3. |
 
 ---
 
