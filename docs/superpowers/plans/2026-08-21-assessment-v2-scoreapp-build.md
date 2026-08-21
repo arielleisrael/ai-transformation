@@ -1,0 +1,1059 @@
+# AI Readiness Assessment v2 — ScoreApp Build Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Configure the live ScoreApp assessment so it collects 14 questions, shows respondents an archetype plus two scores, and silently routes the Diagnostic CTA on a hidden qualification score — launch-ready without any external automation.
+
+**Architecture:** Three ScoreApp Categories carry the three scoring layers; only AI Readiness counts toward the total. Four priority-ordered Audiences keyed to the AI Readiness category percentage plus answer-level conditions assign the archetype and route to four result pages. A separate Audience on the hidden Diagnostic Fit category controls whether the booking CTA section is visible. No code is written.
+
+**Tech stack:** ScoreApp (Business plan, $99/mo) · Calendly · the account's email sender. No repository code changes except the landing page.
+
+---
+
+## This Is Not a Software Build — Read This First
+
+There is no codebase, no test runner, and no git repository here. Adapting the usual TDD rhythm honestly:
+
+| Normal | Here |
+|---|---|
+| Write a failing test | State the expected result for a named test persona |
+| Run it, watch it fail | Take that persona through the live quiz, confirm current behavior is wrong or absent |
+| Write the implementation | Configure it in the ScoreApp UI |
+| Run it, watch it pass | Re-take the quiz as that persona, confirm the expected result |
+| Commit | Record the result in the build log (§Build Log) |
+
+**The test personas in §Test Fixtures are the test suite.** They are not illustrative — they have exact answers and exact expected outputs, and every task verifies against specific ones.
+
+**UI paths are from official documentation, not the live account.** Where a path is written as `Build → Questions → Categories`, treat it as a strong hint, not gospel. If the UI differs, find the equivalent and note the real path in the build log.
+
+**Recommended before starting:** run `git init` in this directory. Five content files were substantially rewritten and there is currently no history to recover from.
+
+```bash
+git init && git add -A && git commit -m "chore: baseline before v2 assessment build"
+```
+
+---
+
+## Global Constraints
+
+- **Plan tier:** ScoreApp Business ($99/mo) or higher. Audiences, multiple result pages, and section-level audience visibility all gate here.
+- **Never use `max selections`** on any question. Undocumented denominator behavior would depress every score by a constant and corrupt the tier cutoffs invisibly.
+- **Never put jump logic on a scored question.** Logic-skipping changes total points available, so two respondents get normalized against different denominators. The only permitted jump is Q7 → Q7b, and Q7b is unscored Open Text.
+- **Every scored question is Required.** This sidesteps the undocumented question of whether an optional blank leaves the denominator.
+- **Only one multi-select question exists: Q11b.** Its option values must sum to exactly its budget (10 in Layer B, 5 in Layer C). Per-option severity stays flat; differentiating it silently raises the question's weight.
+- **Layer C must never render.** No result page, PDF, or respondent-facing email may display the Diagnostic Fit category or any value derived from it.
+- **No email sequence may fire without `opt_in = true`.**
+- **Copy is already written.** Question text and answer options come verbatim from `content/quiz-questions.md`; results copy from `content/results-copy.md`; archetype copy from `content/archetypes.md`. Do not rewrite copy while configuring. If copy looks wrong, stop and raise it.
+- **Canonical spec:** `docs/AI-Readiness-Assessment-Master-Reference.md`. If any other document disagrees, that one wins.
+
+---
+
+## Test Fixtures
+
+Eight personas. Each has exact answers to all 14 questions and an exact expected outcome. Every one exercises a distinct behavior — none is redundant, and between them they exercise **all three demotion gates and all the hard gates the quiz can detect**.
+
+**Shared answers unless the persona overrides:** Q7 varies per persona and is unscored; function and consent are set at Q14.
+
+| | **P1 Priya** | **P2 Marcus** | **P3 Dana** | **P4 Ellen** | **P5 Tom** | **P6 Raj** | **P7 Nadia** | **P8 Sofia** |
+|---|---|---|---|---|---|---|---|---|
+| **Q1** Role | VP | C-Suite | Owner/CEO | Director | Owner/CEO | **Individual Contributor** | VP | Director |
+| **Q2** Size | 51–100 | 101–200 | **Under 25** | **Over 500** | 51–100 | 101–200 | 101–200 | 51–100 |
+| **Q3** Breadth | across teams, differently | woven into ops | a few experimenting | across teams, differently | a few experimenting | across teams, differently | woven into ops | woven into ops |
+| **Q4** Leadership | have a plan | top priority | starting to discuss | have a plan | top priority | have a plan | top priority | **no formal strategy** |
+| **Q5** ROI | tools, no impact | measurable results | not really using | productivity gains | not really using | tools, no impact | productivity gains | productivity gains |
+| **Q6** Ownership | part of wider role | dedicated team | no one | part of wider role | dedicated team | informal champions | dedicated team | dedicated team |
+| **Q7** Category | Reporting | Research | Document creation | Approvals | Client comms | Sales ops | Approvals | Sales ops |
+| **Q8** People | 6–15 | 2–5 | 2–5 | 16+ | 6–15 | 6–15 | 6–15 | 6–15 |
+| **Q9** Frequency | Daily | Monthly | Weekly | Multiple daily | Daily | Daily | Weekly | Daily |
+| **Q10** Hours | 21–40 | **Less than 5** | 5–10 | More than 40 | 11–20 | 21–40 | 11–20 | 21–40 |
+| **Q11a** State | partly automated | **runs smoothly** | partly automated | entirely manual | entirely manual | tools don't talk | tools don't talk | entirely manual |
+| **Q11b** Symptoms | 2 selected | **None of these** | 1 selected | 4 selected | 2 selected | 1 selected | 2 selected | 3 selected |
+| **Q12** Cost | Money | Time | Time | Scale | Errors | Money | Scale | Money |
+| **Q13** Act | Likely | Possibly | Possibly | Likely | **Very likely** | Likely | Likely | Likely |
+| **Function** | Operations | Technology | Operations | Operations | Operations | Sales & Marketing | Technology | Operations |
+
+### Expected outcomes
+
+| Persona | Layer A | Archetype | Gate | Layer B | Tier | Layer C | Pillars | Decision | CTA? |
+|---|---|---|---|---|---|---|---|---|---|
+| **P1 Priya** | 54 | Explorer | — | 79 | Significant | 85 | 27/25/20/13 | **ACCEPT** | Yes |
+| **P2 Marcus** | 100 | Architect | — | 26 | Contained | 53 | 8/19/12/14 | **REJECT · HG3** | **No** |
+| **P3 Dana** | 18 | Spectator | G3 | 52 | Meaningful | 46 | 17/10/4/15 | **REJECT · below raised bar** | **No** |
+| **P4 Ellen** | 62 | Builder | — | 98 | Substantial | 81 | 34/25/13/9 | **ACCEPT** | Yes |
+| **P5 Tom** | 55 | **Spectator** | G3 | 75 | Significant | 80 | 25/29/11/15 | **ACCEPT** | **Yes** |
+| **P6 Raj** | 46 | Explorer | — | 79 | Significant | 68 | 26/22/20/0 | **REJECT · HG2** | **No** |
+| **P7 Nadia** | 91 | **Builder** | G1 | 71 | Significant | 77 | 24/25/15/13 | **ACCEPT** | Yes |
+| **P8 Sofia** | 69 | **Explorer** | **G2** | 85 | Substantial | 70 | 29/17/15/9 | **ACCEPT** | Yes |
+
+### What each persona proves
+
+| Persona | Proves |
+|---|---|
+| **P1** | The baseline path works end to end. |
+| **P2** | A perfect 100 AI Readiness Score with no workflow pain gets **no CTA**. v1 flagged this profile as a hot lead. |
+| **P3** | The out-of-band size modifier turns a 46 from HOLD into REJECT. Without it, a sub-25-person company qualifies on the strength of Q1 = Owner alone. |
+| **P4** | The same modifier lets the intentional exception through — 81 against a raised bar of 80. Both directions work. |
+| **P5** | **A Spectator receives the Diagnostic CTA.** The single most important behavioral change in v2. If this persona sees no CTA, the archetype and the qualification are still coupled somewhere. |
+| **P6** | A hard gate beats a strong score: 68 points, still REJECT, because an Individual Contributor cannot move a buying process. |
+| **P7** | G1 demotion — 91 points lands in the Architect band, but no measurable results means the copy would lie, so they become a Builder. |
+| **P8** | **G2 demotion** — 69 lands in the Builder band, but with no leadership strategy the Builder copy's opening line ("Leadership is paying attention") would be false. Also the profile the spec flags as worth watching: it reaches ACCEPT on workflow economics alone, with SF7 as the only warning. |
+
+**Flags expected:** P1 → SF8, SF9 · P2 → SF4, SF5 · P4 → SF1, SF2, SF3, SF9, SF10 · P6 → none (HG2 gates them out before flags matter) · P7 → SF8 · P8 → **SF7**, SF2, SF8
+
+---
+
+## Build Order and Why
+
+```
+Task 1  Verify the two load-bearing platform behaviors   ← GO / NO-GO
+Task 2  Verify multi-select, audience nesting, section hiding
+        │
+Task 3  Create the three Categories
+Task 4  Build Q1–Q6  (Phase 1 + 2)
+Task 5  Build Q7–Q12 (Phase 3, incl. the only multi-select and the only jump)
+Task 6  Build Q13 + the contact form
+        │
+Task 7  Archetype Audiences + End Logic routing
+Task 8  Qualification Audiences
+Task 9  Build the four result pages
+Task 10 Wire conditional CTA visibility
+        │
+Task 11 Run all seven personas end to end        ← acceptance gate
+        │
+Task 12 Internal notification email
+Task 13 Email sequences with consent gating
+Task 14 Landing page, Calendly, launch checks
+```
+
+Task 1 comes first because it can invalidate the whole approach. Do not build questions before it passes.
+
+---
+
+## Task 1: Verify the Two Load-Bearing Platform Behaviors
+
+**This is a GO / NO-GO gate.** Both behaviors are confirmed in ScoreApp's official documentation but neither has been seen in this account. If either fails, the native build is impossible and the project pivots to the webhook plan immediately — before any configuration work is wasted.
+
+**Where:** ScoreApp → a **throwaway scorecard**, not the live one. Name it `ZZ-SANDBOX — delete me`.
+
+**Interfaces:**
+- Produces: a confirmed yes/no on both behaviors, recorded in the build log. Every later task assumes both are YES.
+
+- [ ] **Step 1: State the expected results**
+
+Write these down before touching the UI, so the test cannot be rationalized after the fact:
+
+> **Behavior A —** one answer option can award *different* point values to two different categories. Expected: an option can hold 25 in Category "AI Readiness" and 8 in Category "Diagnostic Fit" simultaneously.
+>
+> **Behavior B —** a category can be excluded from the total score. Expected: a setting exists (documented as `scoring_logic: none`) that keeps a category scoring itself while contributing nothing to the overall percentage.
+
+- [ ] **Step 2: Build the sandbox**
+
+Create scorecard `ZZ-SANDBOX — delete me`. Add two categories: `TEST-A` and `TEST-B`. Add one single-choice question, "Sandbox question", with two options: "High" and "Low".
+
+- [ ] **Step 3: Test Behavior A**
+
+On the option "High", assign **25 points to TEST-A** and **8 points to TEST-B**.
+
+- PASS: the UI accepts both values and they persist after save/reload.
+- FAIL: the option holds only one shared point value across categories.
+
+- [ ] **Step 4: Test Behavior B**
+
+Open TEST-B's category settings and look for a toggle governing whether it contributes to the total score (wording may be "add to total score", "include in overall score", or a scoring-logic dropdown with a "none" option). Set TEST-B to **not** contribute.
+
+Submit the sandbox quiz selecting "High". Read the overall score.
+
+- PASS: overall reflects TEST-A's 25 only; TEST-B still reports its own subscore.
+- FAIL: overall includes TEST-B's 8, or TEST-B stops scoring entirely.
+
+- [ ] **Step 5: Record and decide**
+
+| Result | Action |
+|---|---|
+| Both PASS | **GO.** Record both, delete the sandbox, continue to Task 2. |
+| A fails | **STOP.** Layer C cannot coexist with Layer A natively. Do not proceed — the webhook becomes a launch prerequisite, not a phase 2. |
+| B fails only | **STOP AND RAISE.** Layer B and C would inflate the visible score. A workaround may exist (a second scorecard, or reweighting so contamination is tolerable) but it is a design decision, not an implementation one. |
+
+- [ ] **Step 6: Log the outcome**
+
+Append to §Build Log: date, both results, and the actual UI paths found.
+
+---
+
+## Task 2: Verify Multi-Select, Audience Nesting, and Section Hiding
+
+Three behaviors that shape *how* things get built rather than *whether*. None is a go/no-go, but each has a documented fallback that must be chosen now rather than mid-build.
+
+**Interfaces:**
+- Consumes: sandbox scorecard from Task 1 (recreate if deleted).
+- Produces: a decision on Q11b's scoring, and on how the CTA section gets hidden (Task 10 branches on this).
+
+- [ ] **Step 1: State the expected results**
+
+> **C — multi-select denominator.** A 6-option checkbox at 2 points each has a potential of 12. Ticking one option should score **2/12 ≈ 17%**. This confirms `Σ(selected) ÷ Σ(all options)`.
+>
+> **D — audience nesting.** An Audience should express `X AND (Y OR Z)` — an AND of an OR-group. Hard gates HG4 and HG5 need this.
+>
+> **E — section hiding.** A result-page section should be controllable by audience membership — ideally both "show only to" and "hide from".
+
+- [ ] **Step 2: Test C — the multi-select denominator**
+
+Add a multi-select question to the sandbox with 6 options at 2 points each into TEST-A. Submit, ticking exactly one.
+
+- ~17% → confirmed as documented. **Q11b's design is safe as specified.**
+- 100% → the denominator is the highest option, not the sum. Q11b's point values must be recalculated; **stop and raise** before Task 5.
+- Anything else → record the exact number and raise.
+
+- [ ] **Step 3: Test D — audience nesting**
+
+Create an Audience and try to build: `TEST-A score ≥ 10 AND (Sandbox question is not "High" OR Sandbox question is not "Low")`.
+
+- PASS: build HG4 and HG5 as specified in Task 8.
+- FAIL: use the fallback in Task 8 Step 5 — one Audience per gate, combined at the section-visibility layer.
+
+- [ ] **Step 4: Test E — section visibility direction**
+
+On a sandbox result page, add a text section and open its visibility control. Determine whether it offers **show-if-in-audience**, **hide-if-in-audience**, or both.
+
+Record which. Task 10 needs this: the CTA section is most simply built as *show-if-in* a "Diagnostic Qualified" audience, but if only *hide-if-in* exists, the audiences must be built inverted.
+
+- [ ] **Step 5: Delete the sandbox and log**
+
+Record all three results and the exact UI paths. Delete `ZZ-SANDBOX`.
+
+---
+
+## Task 3: Create the Three Categories
+
+**Interfaces:**
+- Consumes: Task 1's confirmation of Behaviors A and B.
+- Produces: three named categories every subsequent question scores into. **Names must match exactly** — later tasks reference them by name.
+
+- [ ] **Step 1: State the expected result**
+
+> Three categories exist. A test submission returns three independent subscores. The overall score equals the AI Readiness subscore exactly.
+
+- [ ] **Step 2: Create them**
+
+`Build → Questions → Categories`. Create in this order (order matters — ScoreApp breaks ties by list position, and AI Readiness should win any tie):
+
+| # | Name (exact) | Contributes to total? | Visible on results? |
+|---|---|---|---|
+| 1 | `AI Readiness` | **Yes** | Yes |
+| 2 | `Workflow Opportunity` | **No** | Yes |
+| 3 | `Diagnostic Fit` | **No** | **Never** |
+
+- [ ] **Step 3: Set the exclusion toggles**
+
+Set `Workflow Opportunity` and `Diagnostic Fit` to not contribute to the total, using the control found in Task 1 Step 4.
+
+- [ ] **Step 4: Verify**
+
+Setting overall score = AI Readiness is deliberate: any stray ScoreApp UI that displays "your score" then shows the right number.
+
+There are no questions yet, so full verification happens at the end of Task 4. Confirm now only that all three categories exist, are spelled exactly as above, and that two are marked as non-contributing.
+
+- [ ] **Step 5: Log**
+
+Record the three names and their toggle states.
+
+---
+
+## Task 4: Build Questions Q1–Q6
+
+Six single-choice questions. Q1 and Q2 score into `Diagnostic Fit` only. Q3–Q6 score into **both** `AI Readiness` and `Diagnostic Fit`, at different values — this is where Behavior A does its work.
+
+**Files:** source copy is `content/quiz-questions.md` §2–§3.
+
+**Interfaces:**
+- Consumes: the three categories from Task 3.
+- Produces: a complete `AI Readiness` score (0–100) and Pillars 2–4 of `Diagnostic Fit`.
+
+- [ ] **Step 1: State the expected result**
+
+> After this task, submitting **P1 Priya's** Q1–Q6 answers yields `AI Readiness = 54`. Submitting **P2 Marcus's** yields `AI Readiness = 100`.
+
+- [ ] **Step 2: Build Q1 and Q2**
+
+All questions: single choice, **Required**, no jump logic.
+
+**Q1 — "What's your role at your company?"**
+
+| Option | AI Readiness | Diagnostic Fit |
+|---|---|---|
+| Owner / Founder / CEO | 0 | 15 |
+| C-Suite (COO, CTO, CIO, CFO…) | 0 | 14 |
+| VP | 0 | 13 |
+| Director / Head of Department | 0 | 9 |
+| Manager | 0 | 5 |
+| Individual Contributor | 0 | 0 |
+
+**Q2 — "About how many employees does your company have?"**
+
+| Option | AI Readiness | Diagnostic Fit |
+|---|---|---|
+| Under 25 | 0 | 1 |
+| 25–50 | 0 | 4 |
+| 51–100 | 0 | 8 |
+| 101–200 | 0 | 8 |
+| 201–300 | 0 | 5 |
+| 301–500 | 0 | 3 |
+| Over 500 | 0 | 2 |
+
+- [ ] **Step 3: Build Q3–Q6 with dual-category scoring**
+
+**Q3 — "Which best describes AI adoption across your company right now?"**
+
+| Option | AI Readiness | Diagnostic Fit |
+|---|---|---|
+| A few people are experimenting on their own | 4 | 2 |
+| We use AI across teams, but each team does it differently — no shared approach | 11 | **6** |
+| Most of our team uses AI as part of how they work | 18 | 4 |
+| AI is woven into our operations — it's infrastructure, not just a tool | 25 | 2 |
+
+**Q4 — "Where does your leadership stand on AI?"**
+
+| Option | AI Readiness | Diagnostic Fit |
+|---|---|---|
+| No formal strategy yet — mostly individual decisions | 3 | 0 |
+| We're starting to discuss it at a leadership level | 10 | 4 |
+| We have an AI plan and we're actively working on it | 18 | 7 |
+| AI is a top strategic priority with full executive buy-in | 25 | 8 |
+
+**Q5 — "Honestly — is AI actually moving the needle at your company?"**
+
+| Option | AI Readiness | Diagnostic Fit |
+|---|---|---|
+| We're not really using it yet | 1 | 1 |
+| We're using AI tools but haven't seen clear business impact | 8 | **6** |
+| We see productivity gains, but nothing that's changed the company overall | 16 | 5 |
+| Yes — we can point to real, measurable business results | 25 | 2 |
+
+**Q6 — "Who's accountable for AI at your company?"**
+
+| Option | AI Readiness | Diagnostic Fit |
+|---|---|---|
+| No one specifically — it's whoever's interested | 3 | 1 |
+| A few informal champions, but it isn't anyone's actual job | 9 | 4 |
+| Someone owns it as part of a wider role | 17 | **7** |
+| We have a dedicated owner or team accountable for AI outcomes | 25 | 6 |
+
+**The Q3 and Q5 Diagnostic Fit columns are inverted-U on purpose.** The middle answers score highest because fragmented adoption and unproven ROI are the ICP's target state. If a reviewer flags these as errors, point them at the master reference §6.2 — they are the entire reason two scores exist.
+
+- [ ] **Step 4: Verify**
+
+Take the quiz twice, answering only Q1–Q6:
+
+| Answers | Expected AI Readiness | Expected Diagnostic Fit so far |
+|---|---|---|
+| P1 Priya's Q1–Q6 | **54** | 13 + 8 + 6 + 7 + 6 + 7 = **47** |
+| P2 Marcus's Q1–Q6 | **100** | 14 + 8 + 2 + 8 + 2 + 6 = **40** |
+
+If AI Readiness is right but Diagnostic Fit is wrong, a per-category value was entered into the wrong column — recheck each option rather than adjusting totals.
+
+- [ ] **Step 5: Log**
+
+Record both observed scores against expected.
+
+---
+
+## Task 5: Build Questions Q7–Q12
+
+The most intricate task: it contains the only unscored question, the only jump, and the only multi-select.
+
+**Files:** source copy is `content/quiz-questions.md` §4.
+
+**Interfaces:**
+- Consumes: categories from Task 3.
+- Produces: the complete `Workflow Opportunity` score (0–100) and Pillar 1 of `Diagnostic Fit`.
+
+- [ ] **Step 1: State the expected result**
+
+> Submitting **P4 Ellen's** Q7–Q12 answers yields `Workflow Opportunity = 98`. Submitting **P2 Marcus's** yields `26`.
+
+- [ ] **Step 2: Build Q7 — unscored**
+
+**"Think about one workflow that consistently costs more time, effort, or money than it should. Which category fits best?"** — single choice, Required, **zero points in every category**.
+
+Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other — something else
+
+Leave it uncategorised or explicitly set every option to 0 in all three categories. Q7's job is selecting the insight paragraph, not scoring. In v1 it scored 8–10 for named categories and 0 for "Other", so the honest answer silently tanked the respondent's score.
+
+- [ ] **Step 3: Build Q7b — the only jump**
+
+**"In a sentence, what is it?"** — **Open Text**, **Optional**, unscored.
+
+Set jump logic on **Q7** so that selecting "Other — something else" routes to Q7b, and every other option skips it to Q8.
+
+This is the one permitted exception to the no-jump-logic rule, and only because Open Text is never scored — a skipped unscored question cannot change the denominator.
+
+If Task 2 found that ScoreApp offers a native "Other + free text" option on choice questions, use that instead and delete Q7b. Record which route was taken.
+
+- [ ] **Step 4: Build Q8–Q10**
+
+All single choice, Required, no jump logic.
+
+**Q8 — "How many people on your team touch this workflow?"**
+
+| Option | Workflow Opportunity | Diagnostic Fit |
+|---|---|---|
+| Just me | 2 | 1 |
+| 2–5 people | 7 | 2 |
+| 6–15 people | 12 | 4 |
+| 16 or more people | 15 | 5 |
+
+Monotonic on purpose. v1 scored 16+ *below* 6–15; more people on a repetitive workflow means more leverage, and the complexity concern is now flag SF3.
+
+**Q9 — "How often does this workflow run?"**
+
+| Option | Workflow Opportunity | Diagnostic Fit |
+|---|---|---|
+| Multiple times per day | 15 | 5 |
+| Daily | 13 | 4 |
+| Weekly | 10 | 3 |
+| Monthly | 5 | 2 |
+| Quarterly | 1 | 0 |
+
+**Q10 — "How many hours per week does your team collectively spend on this workflow?"**
+
+| Option | Workflow Opportunity | Diagnostic Fit |
+|---|---|---|
+| Less than 5 hours | 4 | 1 |
+| 5–10 hours | 13 | 5 |
+| 11–20 hours | 22 | 8 |
+| 21–40 hours | 29 | 10 |
+| More than 40 hours | 35 | 12 |
+
+- [ ] **Step 5: Build Q11a**
+
+**"Which best describes how this workflow runs today?"** — single choice, Required.
+
+| Option | Workflow Opportunity | Diagnostic Fit |
+|---|---|---|
+| Entirely manual — spreadsheets, email, or paper | 15 | 4 |
+| We have tools for it, but they don't talk to each other | 13 | 3 |
+| Partly automated, but it still takes significant hands-on work | 11 | 3 |
+| It runs smoothly — I'm mostly here to explore what's possible | 1 | 0 |
+
+That last option is hard gate HG3. Its exact wording is referenced by an Audience condition in Task 8 — **do not reword it.**
+
+- [ ] **Step 6: Build Q11b — the only multi-select**
+
+**"Which of these also apply? Select all that apply."** — **multi-select**, Required, **no min/max selections**.
+
+| Option | Workflow Opportunity | Diagnostic Fit |
+|---|---|---|
+| It depends on one or two people — if they're out, it stalls | 2 | 1 |
+| It's complex, with a lot of steps or handoffs | 2 | 1 |
+| Work sits waiting for someone to review or approve it | 2 | 1 |
+| Mistakes slip through and get caught later | 2 | 1 |
+| The same information gets entered or copied more than once | 2 | 1 |
+| None of these | 0 | 0 |
+
+Σ(all options) = 10 in Workflow Opportunity and 5 in Diagnostic Fit — exactly the budgets. This is the only configuration that bounds a multi-select natively.
+
+**Do not vary the per-option values.** Making "depends on one or two people" worth 3 would raise Σ to 11 and silently increase the whole question's weight inside Layer B.
+
+**"None of these" is worth 0**, so a respondent ticking it alongside symptoms cannot move the score — necessary because ScoreApp has no exclusive-option behavior.
+
+- [ ] **Step 7: Build Q12**
+
+**"What does this workflow cost your company most?"** — single choice, Required.
+
+| Option | Workflow Opportunity | Diagnostic Fit |
+|---|---|---|
+| Money — the labor cost is significant | 10 | 4 |
+| Scale — we can't grow without adding headcount | 10 | 4 |
+| Errors — mistakes happen and they're expensive | 9 | 3 |
+| Time — it creates constant bottlenecks | 9 | 3 |
+| Customer experience — slow or inconsistent handling costs us business | 9 | 3 |
+| Team morale — it's tedious and people hate it | 7 | 2 |
+
+- [ ] **Step 8: Verify**
+
+| Answers | Expected Workflow Opportunity |
+|---|---|
+| P4 Ellen's Q7–Q12 (16+, multiple daily, >40hrs, entirely manual, 4 symptoms, Scale) | **98** |
+| P2 Marcus's Q7–Q12 (2–5, monthly, <5hrs, runs smoothly, None of these, Time) | **26** |
+
+Then verify the multi-select specifically: take the quiz twice as P4 but tick **1** symptom, then **4**. Workflow Opportunity should differ by exactly **6** (2 points × 3 extra symptoms). If it differs by more or less, the per-option values are wrong.
+
+Also confirm Q7 = "Other" reveals Q7b, and that any other Q7 answer skips it.
+
+- [ ] **Step 9: Log**
+
+Record both scores, the multi-select delta, and whether the jump fired correctly.
+
+---
+
+## Task 6: Build Q13 and the Contact Form
+
+**Files:** source copy is `content/quiz-questions.md` §5–§6.
+
+**Interfaces:**
+- Consumes: categories from Task 3.
+- Produces: Pillar 2's largest input, plus `function` and `opt_in` — both consumed by Audiences in Task 8 and by every email sequence in Task 13.
+
+- [ ] **Step 1: State the expected result**
+
+> Q13 exists, scores into `Diagnostic Fit` only, and adds nothing to either visible score. The contact form captures function and consent, and consent is optional rather than blocking.
+
+- [ ] **Step 2: Build Q13**
+
+New phase, "Ready to move". Placed **after** the workflow block and **before** contact capture — by then the respondent has articulated concrete pain, so the commitment question reads as a consequence rather than a sales probe.
+
+**"If there were a clear business case for improving this workflow with AI or automation, how likely is your company to act on it in the next 6 months?"** — single choice, Required.
+
+| Option | AI Readiness | Workflow Opportunity | Diagnostic Fit |
+|---|---|---|---|
+| Very likely — this is already a priority | 0 | 0 | 15 |
+| Likely — if the ROI is compelling | 0 | 0 | 11 |
+| Possibly — we're exploring | 0 | 0 | 5 |
+| Unlikely — mostly curious right now | 0 | 0 | 0 |
+
+That last option is hard gate HG1. Its wording is referenced by an Audience in Task 8 — **do not reword it.**
+
+- [ ] **Step 3: Build the contact form**
+
+`Settings → Lead Form`. Heading: **"Almost done. Where should we send your results?"** Subtext: **"We'll send your personalized AI Readiness Brief here — your archetype, your score, and a summary of your biggest opportunity."**
+
+| Field | Type | Required |
+|---|---|---|
+| First name | Text | Yes |
+| Company name | Text | Yes |
+| Email address | Email | Yes |
+| Which area do you lead or work in? | **Dropdown** | Yes |
+
+Dropdown options: Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales & Marketing · HR & People · Customer Service · Other
+
+Lead-form fields cannot be scored. Function drives flag SF8 through an Audience, not through points — this is why Pillar 4 is Q1 alone at 15.
+
+- [ ] **Step 4: Configure consent**
+
+Set consent mode to **Explicit Consent (Optional)** — checkbox shown, submission allowed without ticking.
+
+Optional rather than Required so a missing tick does not cost the lead: the results page delivers instantly on screen regardless. ScoreApp stores a timestamp plus the exact wording and passes `opt_in` on every webhook event.
+
+Add the Privacy Policy URL if the account has one.
+
+- [ ] **Step 5: Verify**
+
+Submit once ticking consent and once not. Both should complete and show results. In `Leads`, confirm the two records differ in opt-in status and that function was captured.
+
+Confirm Q13 moved `Diagnostic Fit` but left `AI Readiness` and `Workflow Opportunity` unchanged.
+
+- [ ] **Step 6: Log**
+
+Record consent mode, and confirm both submissions completed.
+
+---
+
+## Task 7: Build Archetype Audiences and End Logic Routing
+
+Where the three demotion gates get implemented. Priority ordering does the work — ScoreApp evaluates top-down and the first match wins, so each rule only needs to express its own gates.
+
+**Interfaces:**
+- Consumes: `AI Readiness` category percentage; exact answer wording from Q3, Q4, Q5.
+- Produces: exactly one archetype audience per respondent, consumed by End Logic and by Task 9's result pages.
+
+- [ ] **Step 1: State the expected result**
+
+> Each of the eight personas lands in exactly one archetype audience, matching the Expected Outcomes table. Critically: **P7 Nadia scores 91 and must land in Builder, not Architect** (G1); **P8 Sofia scores 69 and must land in Explorer, not Builder** (G2); **P5 Tom scores 55 and must land in Spectator, not Builder** (G3). One persona per gate.
+
+- [ ] **Step 2: Confirm they currently fail**
+
+Before creating any audience, take the quiz as **P7 Nadia**. With no gates in place, 91 falls in the 80–100 band and would be an Architect. Confirm this is the current behavior. That is the bug the gates fix.
+
+- [ ] **Step 3: Create the four audiences in this exact order**
+
+`Audiences → Create`. Order is load-bearing.
+
+**1. `Archetype — Architect`**
+```
+AI Readiness percentage  is greater than or equal to  80
+AND  Q5  is  "Yes — we can point to real, measurable business results"
+```
+The second condition is gate G1.
+
+**2. `Archetype — Builder`**
+```
+AI Readiness percentage  is greater than or equal to  55
+AND  Q4  is not  "No formal strategy yet — mostly individual decisions"
+AND ( Q3  is not  "A few people are experimenting on their own"
+      OR  Q5  is not  "We're not really using it yet" )
+```
+The second condition is G2; the OR-group is G3, expressed as `NOT(A AND B) = (NOT A) OR (NOT B)`.
+
+**3. `Archetype — Explorer`**
+```
+AI Readiness percentage  is greater than or equal to  30
+AND ( Q3  is not  "A few people are experimenting on their own"
+      OR  Q5  is not  "We're not really using it yet" )
+```
+
+**4. `Archetype — Spectator`** — no conditions, or a condition matching everyone. This is the catch-all and **must sit last**.
+
+- [ ] **Step 4: Set End Logic**
+
+`End Logic → Configure Logic → Audience Redirects`. Map each audience to its result page (created in Task 9 — return here if pages must exist first). Confirm the drag-to-order priority matches the order above.
+
+**Do not use "Outcome / Highest Category" routing.** These archetypes are ordinal levels, not parallel personality types; highest-category matching would be conceptually wrong and would inherit ScoreApp's arbitrary tie-breaking.
+
+- [ ] **Step 5: Verify all seven**
+
+| Persona | AI Readiness | Expected audience | Why |
+|---|---|---|---|
+| P1 Priya | 54 | Explorer | band |
+| P2 Marcus | 100 | Architect | band, G1 passes |
+| P3 Dana | 18 | Spectator | band |
+| P4 Ellen | 62 | Builder | band |
+| **P5 Tom** | **55** | **Spectator** | **G3 demotes from Builder** |
+| P6 Raj | 46 | Explorer | band |
+| **P7 Nadia** | **91** | **Builder** | **G1 demotes from Architect** |
+| **P8 Sofia** | **69** | **Explorer** | **G2 demotes from Builder** |
+
+P5, P7 and P8 are the whole point of this task — one per demotion gate. If any lands in its un-demoted band, that gate's condition is wrong.
+
+- [ ] **Step 6: Log**
+
+Record all eight observed audiences against expected.
+
+---
+
+## Task 8: Build Qualification Audiences
+
+The invisible half. Two audiences on the hidden `Diagnostic Fit` category, carrying all five hard gates.
+
+**Interfaces:**
+- Consumes: `Diagnostic Fit` percentage; exact wording from Q1, Q3, Q4, Q5, Q8, Q10, Q11a, Q13.
+- Produces: `Diagnostic Qualified` and `Diagnostic Priority`, consumed by Task 10's section visibility and Task 13's sequences.
+
+- [ ] **Step 1: State the expected result**
+
+> **P1, P4, P5, P7, P8** land in `Diagnostic Qualified`. **P2, P3, P6** do not. P6 is the sharp test: 68 points, comfortably above 45, still excluded because HG2 fires.
+
+- [ ] **Step 2: Confirm it currently fails**
+
+Take the quiz as **P6 Raj**. Diagnostic Fit should read 68. With no gates, that qualifies. Confirm — that is the bug.
+
+- [ ] **Step 3: Create `Diagnostic Qualified`**
+
+```
+Diagnostic Fit percentage  is greater than or equal to  45
+AND  Q13   is not  "Unlikely — mostly curious right now"                     (HG1)
+AND  Q1    is not  "Individual Contributor"                                   (HG2)
+AND  Q11a  is not  "It runs smoothly — I'm mostly here to explore what's possible"  (HG3)
+AND ( Q10  is not  "Less than 5 hours"  OR  Q8  is not  "Just me" )           (HG4)
+AND ( Q3   is not  "A few people are experimenting on their own"
+      OR  Q4  is not  "No formal strategy yet — mostly individual decisions"
+      OR  Q5  is not  "We're not really using it yet" )                       (HG5)
+```
+
+HG5 is deliberately narrower than archetype gate G3 — it additionally requires Q4. A Spectator who clears HG5 **does** qualify. That is P5 Tom, and it is the point.
+
+- [ ] **Step 4: Create `Diagnostic Priority`**
+
+Identical, except the first line reads `is greater than or equal to 65`. Drives ranking and the CRM tag.
+
+- [ ] **Step 5: If Task 2 found audience nesting unsupported**
+
+Do not force it. Build five separate single-condition audiences — `DQ-Fail-HG1` through `DQ-Fail-HG5` — each matching respondents who **trip** that gate:
+
+```
+DQ-Fail-HG4:  Q10 is "Less than 5 hours"  AND  Q8 is "Just me"
+DQ-Fail-HG5:  Q3 is "A few people…" AND Q4 is "No formal strategy…" AND Q5 is "We're not really using it yet"
+```
+(HG1–HG3 are single conditions and need no OR-group.)
+
+Then `Diagnostic Qualified` becomes just `Diagnostic Fit ≥ 45`, and Task 10 hides the CTA section from anyone in any `DQ-Fail-*` audience. This needs *hide-if-in-audience*, which Task 2 Step 4 determined. Record which construction was used.
+
+- [ ] **Step 6: Handle the company-size threshold modifier**
+
+Out-of-band companies face a raised bar: HOLD 60 / ACCEPT 80 instead of 45 / 65.
+
+Add a third audience, `Diagnostic Qualified — Out of Band`:
+```
+( Q2 is "Under 25"  OR  Q2 is "Over 500" )
+AND  Diagnostic Fit percentage  is greater than or equal to  60
+AND  [all five hard-gate conditions, as Step 3]
+```
+
+Then amend `Diagnostic Qualified` (Step 3) to additionally require:
+```
+AND  Q2  is not  "Under 25"
+AND  Q2  is not  "Over 500"
+```
+
+so the two audiences are mutually exclusive and in-band respondents keep the 45 threshold. Task 10 shows the CTA to **either** audience.
+
+This is what makes **P3 Dana** (46, Under 25) fail while **P4 Ellen** (81, Over 500) passes.
+
+- [ ] **Step 7: Verify all seven**
+
+| Persona | Diagnostic Fit | Size band | Qualified? | Reason |
+|---|---|---|---|---|
+| P1 Priya | 85 | in | **Yes** | ≥ 65, priority |
+| P2 Marcus | 53 | in | **No** | HG3 |
+| P3 Dana | 46 | **out** | **No** | 46 < 60 raised bar |
+| P4 Ellen | 81 | **out** | **Yes** | 81 ≥ 80 |
+| P5 Tom | 80 | in | **Yes** | clears HG5 despite Spectator |
+| P6 Raj | 68 | in | **No** | HG2 beats the score |
+| P7 Nadia | 77 | in | **Yes** | ≥ 65, priority |
+| P8 Sofia | 70 | in | **Yes** | ≥ 65 despite zero leadership — SF7 flags it |
+
+- [ ] **Step 8: Log**
+
+Record all eight, plus which audience construction was used.
+
+---
+
+## Task 9: Build the Four Result Pages
+
+**Files:** copy comes from `content/archetypes.md` (hero) and `content/results-copy.md` (everything else).
+
+**Interfaces:**
+- Consumes: the four archetype audiences from Task 7.
+- Produces: four result pages, each with a CTA section that Task 10 makes conditional.
+
+- [ ] **Step 1: State the expected result**
+
+> Four pages exist, each showing the correct archetype hero, both scores, the positioning statement, benchmark, insight paragraph, and both CTAs. **No page displays anything from `Diagnostic Fit`.**
+
+- [ ] **Step 2: Build the shared structure**
+
+Each page, top to bottom:
+
+1. **Archetype hero** — name, tagline, full description, "Your next move". Verbatim from `content/archetypes.md`.
+2. **AI Readiness Score** + the archetype sub-headline from `results-copy.md` §Score Display.
+3. **Workflow Opportunity Score** + tier label + tier sub-headline.
+4. **Positioning statement** — the 2×2 cell matching this archetype's readiness half. Architect and Builder pages use the "Readiness high" row; Explorer and Spectator use "Readiness low".
+5. **Benchmark** — static McKinsey stat + the dynamic Q10 annual-hours and cost line.
+6. **Insight paragraph** — conditional on Q7 + Q12, 48 variants.
+7. **Primary CTA** — "Get your AI Readiness Brief".
+8. **Secondary CTA** — booking. Made conditional in Task 10.
+9. **Not-qualified note.** Made conditional in Task 10.
+
+- [ ] **Step 3: Suppress the default headline**
+
+Remove or blank the default "Thank you for taking the AI Readiness Assessment" heading. The archetype reveal is the hero; reintroducing the quiz name above it reads as a reset. Move the email delivery notice **below** the score card.
+
+- [ ] **Step 4: Configure the insight paragraph**
+
+48 variants: 8 workflow categories × 6 pain types, triggered by Q7 + Q12.
+
+If ScoreApp supports only single-question conditional copy, use **Q7** as the trigger and each category's **"Time (bottlenecks)"** variant as the default — it is the most broadly applicable. Record which route was taken; falling back costs real personalization and is worth revisiting in phase 2.
+
+- [ ] **Step 5: Verify**
+
+Take the quiz as each of P1, P2, P4, P5. Confirm the correct archetype hero, that both scores display and match the expected table, and that the insight paragraph matches that persona's Q7 + Q12.
+
+Then the critical negative check: **search each page for any Diagnostic Fit value.** If a category chart renders all categories by default, remove `Diagnostic Fit` from it. A respondent seeing their qualification score is the worst failure this build can produce.
+
+- [ ] **Step 6: Log**
+
+Record all four pages built, and explicitly confirm Diagnostic Fit is invisible on every one.
+
+---
+
+## Task 10: Wire Conditional CTA Visibility
+
+The step that decouples qualification from archetype.
+
+**Interfaces:**
+- Consumes: `Diagnostic Qualified` and `Diagnostic Qualified — Out of Band` from Task 8; the four result pages from Task 9.
+- Produces: launch-ready results pages.
+
+- [ ] **Step 1: State the expected result**
+
+> **P5 Tom sees the booking CTA on the Spectator page.** **P2 Marcus does not see it on the Architect page.** Under v1 both were exactly backwards.
+
+- [ ] **Step 2: Confirm it currently fails**
+
+Take the quiz as P2 Marcus. The booking CTA is currently unconditional, so it shows. Confirm — that is the bug.
+
+- [ ] **Step 3: Make the booking CTA conditional**
+
+On **all four** result pages, set the secondary CTA section's visibility to: visible if in `Diagnostic Qualified` **OR** `Diagnostic Qualified — Out of Band`.
+
+If Task 2 found only *hide-if-in-audience*, invert using the `DQ-Fail-*` audiences from Task 8 Step 5.
+
+- [ ] **Step 4: Apply the two CTA framings**
+
+Same Calendly link, different body copy — from `results-copy.md` §CTA:
+
+| Pages | Body copy |
+|---|---|
+| Builder, Architect | "Talk through your results with our team. We'll examine the workflow you identified from both the business and technical sides and determine whether there's a practical opportunity worth pursuing — and roughly what it's worth." |
+| Spectator, Explorer | "You don't need an AI strategy to have this conversation — you need one workflow worth examining, and you've just described one. We'll look at it from both the business and technical sides and tell you honestly whether it's the right place to start." |
+
+A qualifying Spectator is not a lesser lead. Framing the Diagnostic as prerequisite-free is what makes it reachable for them.
+
+- [ ] **Step 5: Add the not-qualified note**
+
+Inverse visibility of the booking CTA — shown only to respondents in neither qualified audience.
+
+Four variants keyed to which gate fired, from `results-copy.md`. If per-gate conditional visibility is too fiddly for launch, use the **HG5 / early-stage** variant as a single default — it is the least presumptuous — and record the simplification.
+
+Never imply the respondent failed. Every variant gives them something to do and a reason to keep the page.
+
+- [ ] **Step 6: Verify the full 2×2**
+
+| Persona | Page | CTA? | This proves |
+|---|---|---|---|
+| **P5 Tom** | Spectator | **Yes** | low archetype **can** qualify |
+| **P2 Marcus** | Architect | **No** | high archetype **can** fail |
+| P1 Priya | Explorer | Yes | mid/mid baseline |
+| P3 Dana | Spectator | No | Spectator without pain still excluded |
+
+The first two rows are the entire behavioral change in v2. If either is wrong, qualification and archetype are still coupled somewhere.
+
+- [ ] **Step 7: Log**
+
+Record the 2×2 results.
+
+---
+
+## Task 11: Full Persona Regression
+
+Acceptance gate. Everything built so far, verified end to end in one pass.
+
+**Interfaces:**
+- Consumes: all previous tasks.
+- Produces: a signed-off results table. Do not proceed to launch tasks until every row passes.
+
+- [ ] **Step 1: Run all eight personas end to end**
+
+Complete the live quiz as each persona, answering all 14 questions exactly as specified in §Test Fixtures. Record every observed value.
+
+Eight runs, roughly 45 minutes. Do not sample — each persona exercises a behavior no other one does.
+
+- [ ] **Step 2: Compare against expected**
+
+| Persona | Layer A | Archetype | Layer B | Layer C | Decision | CTA |
+|---|---|---|---|---|---|---|
+| P1 Priya | 54 | Explorer | 79 | 85 | ACCEPT | Yes |
+| P2 Marcus | 100 | Architect | 26 | 53 | REJECT · HG3 | No |
+| P3 Dana | 18 | Spectator | 52 | 46 | REJECT · raised bar | No |
+| P4 Ellen | 62 | Builder | 98 | 81 | ACCEPT | Yes |
+| P5 Tom | 55 | Spectator | 75 | 80 | ACCEPT | Yes |
+| P6 Raj | 46 | Explorer | 79 | 68 | REJECT · HG2 | No |
+| P7 Nadia | 91 | Builder | 71 | 77 | ACCEPT | Yes |
+| P8 Sofia | 69 | Explorer | 85 | 70 | ACCEPT | Yes |
+
+**Any mismatch stops the build.** Diagnose before continuing:
+
+| Symptom | Likely cause |
+|---|---|
+| Layer A wrong | A Q3–Q6 point value in the wrong category column (Task 4) |
+| Layer B wrong by a multiple of 2 | Q11b per-option values (Task 5 Step 6) |
+| Layer C wrong, A and B correct | A Diagnostic Fit value mistyped (Tasks 4–6) |
+| Archetype wrong, Layer A correct | Audience ordering or a gate condition (Task 7) |
+| CTA wrong, Layer C correct | Section visibility or a hard-gate condition (Tasks 8, 10) |
+
+- [ ] **Step 3: Expand to fifteen profiles**
+
+The question review recommends 10–15 before launch. Add seven more of your own invention, answering as a real company would, then ask of each: **does the archetype feel obviously correct to a human reading these answers?**
+
+If not, move the bands — do not adjust individual point values to force one profile. Bands are the tuning dial; point values encode meaning.
+
+- [ ] **Step 4: Delete every test lead**
+
+`Leads → filter to test submissions → delete`. Test data will otherwise corrupt the first real calibration read at ~50 submissions.
+
+- [ ] **Step 5: Log**
+
+Record the full eight-row results table and the seven added profiles.
+
+---
+
+## Task 12: Internal Notification Email
+
+**Files:** source is `content/internal-brief-template.md`.
+
+**Interfaces:**
+- Consumes: all three category scores; the audiences from Tasks 7–8.
+- Produces: a founder-facing notification. **Phase 1 delivers a flat version** — the full conditional brief needs the webhook.
+
+- [ ] **Step 1: State the expected result**
+
+> Submitting the quiz sends Uzziah and Arielle an email within 30 minutes containing every answer, all three scores, and the archetype.
+
+- [ ] **Step 2: Set the expectation honestly**
+
+ScoreApp documents Dynamic Content for result pages and PDFs but **never for emails**. The `{IF …}` blocks in the template will not render natively. Phase 1 gets a flat brief; the conditional talking points, pillar breakdown, and FAEO pre-fill arrive with the webhook.
+
+Do not spend hours fighting the email editor to approximate conditionals. Build the flat version, note the gap, move on.
+
+- [ ] **Step 3: Configure**
+
+`Integrate → Notification Settings`. Add both founders' addresses. Set the delay to 30 minutes if supported; if not, accept immediate and note it.
+
+- [ ] **Step 4: Build the flat body**
+
+Using whatever merge tags the editor exposes — the full inventory is undocumented, so open the merge-tag picker and see what is actually available:
+
+```
+DECISION: {IF audience merge tag available: Qualified / Not qualified}
+Archetype: {archetype or highest category}
+AI Readiness: {AI Readiness score}
+Workflow Opportunity: {Workflow Opportunity score}
+Diagnostic Fit: {Diagnostic Fit score}
+
+{first_name} {last_name} · {company} · {email}
+Role: {Q1} · Function: {function} · Size: {Q2}
+Consent: {opt_in}
+
+AI STORY
+Breadth: {Q3} | Leadership: {Q4} | ROI: {Q5} | Ownership: {Q6}
+Willingness to act: {Q13}
+
+WORKFLOW
+{Q7}{Q7b} · {Q8} · {Q9} · {Q10}
+Runs as: {Q11a}
+Also true: {Q11b}
+Costs most: {Q12}
+```
+
+Subject line: `[{Diagnostic Fit score} · {archetype}] {first_name} at {company}`
+
+The Diagnostic score leads, not the respondent-facing one. High readiness plus REJECT is now common, and the subject line must make that unmissable.
+
+- [ ] **Step 5: Record which merge tags exist**
+
+Write the actual available list into the build log. Phase 2 planning depends on knowing exactly what phase 1 could not express.
+
+- [ ] **Step 6: Verify**
+
+Submit as P2 Marcus. Confirm the email arrives at both addresses, that all three scores are present and correct, and that the subject line makes a 100-readiness REJECT legible at a glance.
+
+- [ ] **Step 7: Log**
+
+Record delivery, delay achieved, and the merge-tag inventory.
+
+---
+
+## Task 13: Email Sequences with Consent Gating
+
+**Files:** source is `content/follow-up-sequences.md`.
+
+**Interfaces:**
+- Consumes: `opt_in`; the qualified audiences from Task 8.
+- Produces: three respondent-facing sequences.
+
+- [ ] **Step 1: State the expected result**
+
+> A respondent who did not tick consent receives **no** email. A REJECT respondent receives the brief without a booking link, and never receives the non-booker follow-up.
+
+- [ ] **Step 2: Build Sequence 1 — the Brief**
+
+Immediate on results-page email submission. Body from `follow-up-sequences.md` §Sequence 1: archetype, both scores, positioning statement, what they identified, the insight paragraph, and the cost estimate.
+
+Make the booking block conditional on the qualified audiences. If email conditionals are unsupported, build **two versions** of Sequence 1 — with and without the booking block — triggered by audience membership.
+
+Sending a booking link to someone the results page deliberately withheld it from would undo the entire qualification logic.
+
+- [ ] **Step 3: Gate everything on consent**
+
+Every sequence: `opt_in = true`. If ScoreApp cannot condition on opt-in natively, **do not send automated email at all** — export and send manually to opted-in leads only. This is a compliance requirement, not a preference.
+
+- [ ] **Step 4: Build Sequence 2 — Non-booker**
+
+Day 5, only to qualified respondents with no booking. Never to a REJECT: they were not offered a booking, so following up as though they were reads as a bot.
+
+- [ ] **Step 5: Build Sequence 3 — Nurture**
+
+Day 14, to non-qualified respondents. Four gate-specific variants (3a workflow is fine · 3b not ready · 3c early stage · 3d access).
+
+If four audience-triggered emails are impractical for launch, ship **3c** as the single default and note the simplification. But do not merge the four into one generic message: "your workflow is fine", "you're not ready", and "you can't reach the buyer" are three different conversations and a generic one gets all three wrong.
+
+- [ ] **Step 6: Verify**
+
+Submit four times with real addresses you control:
+
+| Submission | Expected |
+|---|---|
+| P1 Priya, consent ticked | Brief **with** booking link |
+| P1 Priya, consent **not** ticked | **No email at all** |
+| P2 Marcus, consent ticked | Brief **without** booking link |
+| P2 Marcus, wait 14 days or trigger manually | Nurture variant |
+
+The second row is the compliance test. If an email arrives, stop and fix before launch.
+
+- [ ] **Step 7: Log**
+
+Record all four results and any simplifications taken.
+
+---
+
+## Task 14: Landing Page, Calendly, and Launch Checks
+
+**Files:** Modify `index.html` (already updated for v2 copy — verify only).
+
+**Interfaces:**
+- Consumes: the live quiz URL; the Calendly link.
+- Produces: a launchable funnel.
+
+- [ ] **Step 1: State the expected result**
+
+> A visitor reaches the landing page, takes the assessment, receives their result, and — if qualified — books a call that notifies both founders.
+
+- [ ] **Step 2: Verify landing page copy**
+
+`index.html` was updated for v2. Confirm on the live page:
+- The three "What you'll find out" cards read Archetype / Two Scores Not One / Biggest Workflow Gap.
+- No text claims the score is "calibrated to your company size" — company size no longer touches any visible score.
+- The audience list does not say "Anyone shaping how their company works". Individual Contributors hit HG2 and get no CTA; recruiting people the quiz will reject is a bad experience and wasted traffic.
+
+- [ ] **Step 3: Confirm the quiz URL**
+
+Three CTAs in `index.html` point at `https://arielle-86mp1dws.scoreapp.com/questions`. Confirm this is still the live scorecard; update all three if it changed.
+
+- [ ] **Step 4: Configure Calendly**
+
+Confirm: 30-minute Diagnostic; both founders on every invite; availability excludes Saturdays, holy days, and blocked commitments; confirmation and reminders active. Paste the link into the secondary CTA on all four result pages.
+
+- [ ] **Step 5: Verify the McKinsey statistic**
+
+`results-copy.md` cites "23% of the workweek on automatable tasks" (McKinsey Global Institute, 2021) with a standing note to verify before launch. Confirm it at mckinsey.com or replace it with a current sourced figure. **Do not launch with an unverified statistic** on a page whose whole purpose is credibility.
+
+- [ ] **Step 6: Full funnel dry run**
+
+Landing page → quiz → results → book → confirm. Do it once as **P4 Ellen** (qualified, should book cleanly) and once as **P3 Dana** (not qualified, should reach no booking path anywhere — results page, brief email, or follow-up).
+
+- [ ] **Step 7: Mobile check**
+
+Complete the quiz on a phone. 14 questions is longer than v1's 12; confirm the multi-select Q11b is comfortably tappable and that the progress indicator does not read as discouraging.
+
+- [ ] **Step 8: Delete remaining test leads and log**
+
+Final sweep of test data. Record the dry-run results and launch date.
+
+---
+
+## Build Log
+
+Append one row per completed task. This replaces commit history.
+
+| Date | Task | Result | Deviations from plan / actual UI paths |
+|---|---|---|---|
+| | | | |
+
+---
+
+## Explicitly Out of Scope — Separate Plan
+
+**Phase 2: the webhook automation.** Different tooling (Make or Zapier), different failure modes, and phase 1 is fully launchable without it. It should be planned separately once phase 1 is live and producing real submissions to test against.
+
+It delivers four things phase 1 cannot:
+
+1. **The full conditional internal brief** — pillar breakdown, demotion-gate explanations, all ten soft flags, per-symptom talking points.
+2. **Exact Layer C recomputation**, including any hard gate that audience nesting could not express.
+3. **FAEO pre-population** — five of nine criteria arriving pre-filled.
+4. **CRM write-through** to the Revenue Pipeline.
+
+Two payload facts already established for that plan: the `QUIZ_FINISHED` webhook carries **no per-question scores**, so Layer C must be re-derived from answer text (which is preferable — it makes the automation the single source of truth for gate logic); and multi-select answers arrive as an **array of objects**, `[{"answer": "..."}]`, not bare strings.
+
+**Also deferred — post-launch, not implementation:**
+
+- **Calibration at ~50 real submissions.** Every threshold in this build is a tuning dial, not a finding. Per the master reference §12: if more than ~60% qualify, the ACCEPT threshold is too low; if archetype distribution skews hard to one level, move the Layer A bands; if Diagnostic calls keep surfacing a disqualifier the quiz missed, that needs a new question or gate. Watch **P8 Sofia's profile** specifically — it reaches ACCEPT on workflow economics with zero leadership sponsorship, and if those calls stall on the missing sponsor, raising Q4's Pillar 2 weight is the first dial to turn.
+- **The archetypes reference artifact** linked in project memory still shows the v1 names and needs regenerating.

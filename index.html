@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Readiness Assessment</title>
+  <meta name="description" content="Discover where your company stands on the AI journey. Find your AI Readiness Archetype, your readiness score, and your biggest workflow opportunity in under 5 minutes.">
+
+  <!-- Social sharing -->
+  <meta property="og:title" content="AI Readiness Assessment">
+  <meta property="og:description" content="Discover your company's AI identity in 4 minutes. Find out where you stand — and what's possible from here.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+  /* === DESIGN TOKENS === */
+  :root {
+    --bg:          #F5F4FF;
+    --bg-surface:  #FFFFFF;
+    --bg-raised:   #ECEEFF;
+    --text-primary:   #0B0E2C;
+    --text-secondary: #44477A;
+    --text-muted:     #9094C4;
+    --accent:         #5341F2;
+    --accent-light:   #7C6CF8;
+    --accent-glow:    rgba(83, 65, 242, 0.13);
+    --cta:            #F59E0B;
+    --cta-hover:      #FBBF24;
+    --cta-text:       #0B0E2C;
+    --cta-shadow:     rgba(245, 158, 11, 0.36);
+    --border:         rgba(83, 65, 242, 0.10);
+    --orb-opacity:    0.07;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:          #080C22;
+      --bg-surface:  #0D1340;
+      --bg-raised:   #141B52;
+      --text-primary:   #EDEEFF;
+      --text-secondary: #9EA3CC;
+      --text-muted:     #575E90;
+      --accent:         #6B59F5;
+      --accent-light:   #9B8FFB;
+      --accent-glow:    rgba(107, 89, 245, 0.22);
+      --cta:            #FBBF24;
+      --cta-hover:      #FCD34D;
+      --cta-text:       #0B0E2C;
+      --cta-shadow:     rgba(251, 191, 36, 0.28);
+      --border:         rgba(107, 89, 245, 0.14);
+      --orb-opacity:    0.18;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg:          #080C22;
+    --bg-surface:  #0D1340;
+    --bg-raised:   #141B52;
+    --text-primary:   #EDEEFF;
+    --text-secondary: #9EA3CC;
+    --text-muted:     #575E90;
+    --accent:         #6B59F5;
+    --accent-light:   #9B8FFB;
+    --accent-glow:    rgba(107, 89, 245, 0.22);
+    --cta:            #FBBF24;
+    --cta-hover:      #FCD34D;
+    --cta-text:       #0B0E2C;
+    --cta-shadow:     rgba(251, 191, 36, 0.28);
+    --border:         rgba(107, 89, 245, 0.14);
+    --orb-opacity:    0.18;
+  }
+
+  /* === RESET & BASE === */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* === NAV === */
+  nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2.5rem;
+  }
+  .nav-brand {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    text-decoration: none;
+  }
+  .nav-link {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--text-primary); }
+
+  /* === SHARED TYPOGRAPHY === */
+  .eyebrow {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+  }
+
+  /* === HERO === */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 9rem 2rem 5rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(80px);
+    opacity: var(--orb-opacity);
+  }
+  .orb-1 {
+    width: 580px; height: 580px;
+    background: radial-gradient(circle at center, #5341F2 0%, transparent 70%);
+    top: -15%; left: -10%;
+    animation: orbDrift1 20s ease-in-out infinite;
+  }
+  .orb-2 {
+    width: 460px; height: 460px;
+    background: radial-gradient(circle at center, #9333EA 0%, transparent 70%);
+    top: 5%; right: -8%;
+    animation: orbDrift2 26s ease-in-out infinite;
+  }
+  .orb-3 {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle at center, #10B981 0%, transparent 70%);
+    bottom: -5%; left: 30%;
+    animation: orbDrift3 32s ease-in-out infinite;
+  }
+
+  .hero .eyebrow {
+    margin-bottom: 1.75rem;
+    position: relative;
+    opacity: 0;
+    animation: riseIn 0.55s ease forwards 0.1s;
+  }
+  .hero-h1 {
+    font-size: clamp(2.5rem, 6vw, 4.4rem);
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+    color: var(--text-primary);
+    max-width: 15ch;
+    margin: 0 auto 1.5rem;
+    text-wrap: balance;
+    position: relative;
+    opacity: 0;
+    animation: riseIn 0.55s ease forwards 0.25s;
+  }
+  .gradient-word {
+    background: linear-gradient(90deg,
+      #2563EB 0%,
+      #9333EA 25%,
+      #EA580C 50%,
+      #10B981 75%,
+      #2563EB 100%
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: spectrumShift 9s ease-in-out infinite;
+  }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 50ch;
+    margin: 0 auto 2.75rem;
+    line-height: 1.78;
+    position: relative;
+    opacity: 0;
+    animation: riseIn 0.55s ease forwards 0.4s;
+  }
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    position: relative;
+    opacity: 0;
+    animation: riseIn 0.55s ease forwards 0.55s;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--cta);
+    color: var(--cta-text);
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: 0.875rem 2.25rem;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 22px var(--cta-shadow);
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover {
+    background: var(--cta-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px var(--cta-shadow);
+  }
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--cta);
+    outline-offset: 3px;
+  }
+  .btn-arrow { transition: transform 0.2s; display: inline-block; }
+  .btn-primary:hover .btn-arrow { transform: translateX(3px); }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .meta-item {
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+  }
+  .meta-sep {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  /* === MYSTERY CARDS === */
+  .mystery {
+    padding: 0 2rem 7rem;
+    text-align: center;
+    background: var(--bg);
+  }
+  .mystery .eyebrow {
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+  }
+  .archetype-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    max-width: 660px;
+    margin: 0 auto 1.75rem;
+  }
+  .archetype-card {
+    aspect-ratio: 2 / 3;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: transform 0.3s ease;
+  }
+  .archetype-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    animation-play-state: paused;
+  }
+  .card-shine {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(155deg, rgba(255,255,255,0.16) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .ac-1 {
+    background: linear-gradient(155deg, #1A3460 0%, #2563EB 100%);
+    box-shadow: 0 8px 36px rgba(37, 99, 235, 0.28);
+    animation: cardFloat 7s ease-in-out infinite 0s;
+  }
+  .ac-2 {
+    background: linear-gradient(155deg, #4A1A82 0%, #9333EA 100%);
+    box-shadow: 0 8px 36px rgba(147, 51, 234, 0.28);
+    animation: cardFloat 7s ease-in-out infinite 1.4s;
+  }
+  .ac-3 {
+    background: linear-gradient(155deg, #7B2B0E 0%, #EA580C 100%);
+    box-shadow: 0 8px 36px rgba(234, 88, 12, 0.28);
+    animation: cardFloat 7s ease-in-out infinite 2.8s;
+  }
+  .ac-4 {
+    background: linear-gradient(155deg, #064C3A 0%, #10B981 100%);
+    box-shadow: 0 8px 36px rgba(16, 185, 129, 0.28);
+    animation: cardFloat 7s ease-in-out infinite 4.2s;
+  }
+  .mystery-caption {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    max-width: 38ch;
+    margin: 0 auto;
+    line-height: 1.68;
+  }
+  .mystery-caption strong {
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+
+  /* === DISCOVER === */
+  .discover {
+    background: var(--bg);
+    padding: 5rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .discover-inner { max-width: 960px; margin: 0 auto; }
+  .discover-header { text-align: center; margin-bottom: 3.5rem; }
+  .discover-header .eyebrow { margin-bottom: 0.75rem; }
+  .section-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+    color: var(--text-primary);
+    text-wrap: balance;
+  }
+  .discover-header .section-title { max-width: 26ch; margin: 0 auto; }
+  .find-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .find-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+    border-radius: 0 0 8px 8px;
+    padding: 2rem 1.75rem;
+  }
+  .find-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.65rem;
+    line-height: 1.3;
+  }
+  .find-body {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  /* === FOR + SHARE === */
+  .for-section {
+    padding: 6rem 2rem;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+  }
+  .for-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+  .for-left .eyebrow { margin-bottom: 0.75rem; }
+  .for-left .section-title { margin-bottom: 1.25rem; }
+  .for-left p {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.82;
+    margin-bottom: 1.75rem;
+  }
+  .audience-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .audience-list li {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .audience-list li::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .share-panel {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.25rem 2rem;
+  }
+  .share-panel-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 0.85rem;
+    line-height: 1.25;
+  }
+  .share-panel p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+  .share-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .share-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--accent-light);
+    background: var(--accent-glow);
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+  }
+
+  /* === FINAL CTA === */
+  .final-cta {
+    padding: 8rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+  .final-glow {
+    position: absolute;
+    bottom: -25%; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 500px;
+    background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 68%);
+    pointer-events: none;
+  }
+  .cta-h2 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    letter-spacing: -0.033em;
+    line-height: 1.06;
+    color: var(--text-primary);
+    max-width: 18ch;
+    margin: 0 auto 1.25rem;
+    text-wrap: balance;
+  }
+  .final-cta > p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 44ch;
+    margin: 0 auto 2.75rem;
+    line-height: 1.78;
+  }
+
+  /* === FOOTER === */
+  footer {
+    padding: 1.75rem 2rem;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    text-align: center;
+  }
+  footer p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* === SCROLL REVEAL === */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  /* === ANIMATIONS === */
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes cardFloat {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-9px); }
+  }
+  @keyframes spectrumShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  @keyframes orbDrift1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33%       { transform: translate(55px, 35px) scale(1.07); }
+    66%       { transform: translate(-30px, 55px) scale(0.94); }
+  }
+  @keyframes orbDrift2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    40%       { transform: translate(-65px, 25px) scale(1.09); }
+    80%       { transform: translate(30px, -40px) scale(0.96); }
+  }
+  @keyframes orbDrift3 {
+    0%, 100% { transform: translate(0, 0); }
+    30%       { transform: translate(45px, -55px); }
+    65%       { transform: translate(-35px, 25px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    .hero .eyebrow, .hero-h1, .hero-sub, .hero-actions { opacity: 1; }
+    .reveal { opacity: 1; transform: none; }
+    .gradient-word {
+      background: none;
+      -webkit-text-fill-color: var(--accent-light);
+      color: var(--accent-light);
+    }
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 700px) {
+    nav { padding: 1rem 1.5rem; }
+    .hero { padding: 8rem 1.5rem 5rem; }
+    .mystery { padding-bottom: 5rem; }
+    .archetype-grid { grid-template-columns: repeat(2, 1fr); max-width: 320px; }
+    .find-grid { grid-template-columns: 1fr; }
+    .for-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .meta-row { gap: 0.9rem; }
+    .orb-1 { width: 340px; height: 340px; }
+    .orb-2 { width: 280px; height: 280px; }
+    .orb-3 { width: 240px; height: 240px; }
+  }
+  @media (max-width: 440px) {
+    .hero-h1 { letter-spacing: -0.025em; }
+    .section-title { font-size: 1.75rem; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">AI Readiness Assessment</a>
+  <a href="https://arielle-86mp1dws.scoreapp.com/questions" class="nav-link">Take the Assessment →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb orb-1" aria-hidden="true"></div>
+  <div class="hero-orb orb-2" aria-hidden="true"></div>
+  <div class="hero-orb orb-3" aria-hidden="true"></div>
+
+  <p class="eyebrow">Free Assessment</p>
+  <h1 class="hero-h1">Your company has an <span class="gradient-word">AI identity</span>. Find out what it is.</h1>
+  <p class="hero-sub">
+    Discover where your company truly stands on the AI journey — and get a clear, honest picture of your biggest transformation opportunity.
+  </p>
+  <div class="hero-actions">
+    <a href="https://arielle-86mp1dws.scoreapp.com/questions" class="btn-primary" id="hero-cta">
+      Discover My AI Identity <span class="btn-arrow">→</span>
+    </a>
+    <div class="meta-row">
+      <span class="meta-item">4 minutes</span>
+      <span class="meta-sep" aria-hidden="true"></span>
+      <span class="meta-item">Instant results</span>
+      <span class="meta-sep" aria-hidden="true"></span>
+      <span class="meta-item">Free</span>
+    </div>
+  </div>
+</section>
+
+<!-- MYSTERY ARCHETYPE CARDS -->
+<section class="mystery">
+  <p class="eyebrow reveal">4 AI readiness identities</p>
+  <div class="archetype-grid reveal" style="transition-delay:0.1s" aria-hidden="true">
+    <div class="archetype-card ac-1"><div class="card-shine"></div></div>
+    <div class="archetype-card ac-2"><div class="card-shine"></div></div>
+    <div class="archetype-card ac-3"><div class="card-shine"></div></div>
+    <div class="archetype-card ac-4"><div class="card-shine"></div></div>
+  </div>
+  <p class="mystery-caption reveal" style="transition-delay:0.2s">
+    <strong>One of these is yours.</strong><br>
+    The assessment reveals which — and what it means for your company's AI journey.
+  </p>
+</section>
+
+<!-- WHAT YOU'LL DISCOVER -->
+<section class="discover">
+  <div class="discover-inner">
+    <div class="discover-header reveal">
+      <p class="eyebrow">What you'll find out</p>
+      <h2 class="section-title" style="margin-top:0.75rem">Real answers, not a generic report.</h2>
+    </div>
+    <div class="find-grid">
+      <div class="find-card reveal" style="transition-delay:0.05s">
+        <h3 class="find-title">Your AI Readiness Archetype</h3>
+        <p class="find-body">Spectator, Explorer, Builder, or Architect — a clear identity that maps exactly where your company sits on the AI journey, and one that resonates when you share it with your team or leadership.</p>
+      </div>
+      <div class="find-card reveal" style="transition-delay:0.15s">
+        <h3 class="find-title">Two Scores, Not One</h3>
+        <p class="find-body">An AI Readiness Score for how far your company has actually come — and a separate Workflow Opportunity Score for how much value is sitting in the process you name. Where you are, and what's waiting for you.</p>
+      </div>
+      <div class="find-card reveal" style="transition-delay:0.25s">
+        <h3 class="find-title">Your Biggest Workflow Gap</h3>
+        <p class="find-body">The workflow costing your company the most in time, money, or growth — what it plausibly costs you a year, and where AI can realistically move the needle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHOM + SHAREABILITY -->
+<section class="for-section">
+  <div class="for-inner">
+    <div class="for-left reveal">
+      <p class="eyebrow">Who it's for</p>
+      <h2 class="section-title">Built for the people who make the decisions.</h2>
+      <p>If you lead a team, run a company, or have a say in how your organization works — this is for you. The assessment is calibrated for knowledge-worker businesses navigating real questions about AI adoption.</p>
+      <ul class="audience-list">
+        <li>Founders and CEOs</li>
+        <li>C-Suite and VP-level leaders</li>
+        <li>Department and team leads</li>
+        <li>Operations, technology, and transformation leaders</li>
+      </ul>
+    </div>
+    <div class="share-panel reveal" style="transition-delay:0.15s">
+      <h3 class="share-panel-title">Results built to travel.</h3>
+      <p>Your AI readiness identity is designed to share — with your leadership team, your direct reports, or anyone else who should see where your company stands. Drop it in Slack. Bring it to your next all-hands. Send it to a peer and compare.</p>
+      <div class="share-tags">
+        <span class="share-tag">Share with your team</span>
+        <span class="share-tag">Forward to leadership</span>
+        <span class="share-tag">Compare with peers</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="quiz">
+  <div class="final-glow" aria-hidden="true"></div>
+  <h2 class="cta-h2 reveal">Ready to find out where you stand?</h2>
+  <p class="reveal" style="transition-delay:0.1s">
+    Four minutes. Instant results. A clear picture of your company's AI identity — and what's waiting on the other side.
+  </p>
+  <div class="hero-actions reveal" style="transition-delay:0.2s; opacity:1; animation:none;">
+    <a href="https://arielle-86mp1dws.scoreapp.com/questions" class="btn-primary" id="bottom-cta">
+      Take the Assessment <span class="btn-arrow">→</span>
+    </a>
+    <div class="meta-row">
+      <span class="meta-item">4 minutes</span>
+      <span class="meta-sep" aria-hidden="true"></span>
+      <span class="meta-item">Free</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>AI Readiness Assessment &nbsp;·&nbsp; Results delivered instantly</p>
+</footer>
+
+<script>
+  // Scroll-reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.18 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Nav background on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY > 60;
+    nav.style.backdropFilter = scrolled ? 'blur(14px)' : 'none';
+    nav.style.webkitBackdropFilter = scrolled ? 'blur(14px)' : 'none';
+    nav.style.background = scrolled
+      ? 'color-mix(in srgb, var(--bg) 85%, transparent)'
+      : 'transparent';
+  }, { passive: true });
+
+  // TODO: Replace the href="#" on #hero-cta and #bottom-cta with your ScoreApp quiz URL
+  // Example: document.getElementById('hero-cta').href = 'https://your-scoreapp-url.scoreapp.com';
+</script>
+
+</body>
+</html>

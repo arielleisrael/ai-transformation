@@ -1,0 +1,489 @@
+<title>AI Readiness Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+:root{
+  --ground:#F5F4FF; --surface:#FFFFFF; --raised:#ECEEFF; --sunken:#E4E6FB;
+  --ink:#0B0E2C; --ink-2:#44477A; --ink-3:#7B7FB5;
+  --rule:rgba(83,65,242,.14); --rule-soft:rgba(83,65,242,.07);
+  --accent:#5341F2; --accent-2:#7C6CF8; --accent-wash:rgba(83,65,242,.07);
+  --layerA:#5341F2; --layerB:#0D7C86; --layerC:#5B6180;
+  --accept:#0F766E; --hold:#B45309; --reject:#A31137;
+  --accept-w:rgba(15,118,110,.10); --hold-w:rgba(180,83,9,.10); --reject-w:rgba(163,17,55,.09);
+  --shadow:0 1px 2px rgba(11,14,44,.05),0 8px 24px -12px rgba(11,14,44,.14);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#080C22; --surface:#0D1340; --raised:#141B52; --sunken:#0A1036;
+    --ink:#EDEEFF; --ink-2:#9EA3CC; --ink-3:#6A70A0;
+    --rule:rgba(139,128,255,.20); --rule-soft:rgba(139,128,255,.10);
+    --accent:#8B80FF; --accent-2:#A99EFF; --accent-wash:rgba(139,128,255,.10);
+    --layerA:#8B80FF; --layerB:#3FC7D4; --layerC:#9AA0C4;
+    --accept:#3BD4B4; --hold:#FBBF24; --reject:#FB7185;
+    --accept-w:rgba(59,212,180,.12); --hold-w:rgba(251,191,36,.12); --reject-w:rgba(251,113,133,.12);
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#080C22; --surface:#0D1340; --raised:#141B52; --sunken:#0A1036;
+  --ink:#EDEEFF; --ink-2:#9EA3CC; --ink-3:#6A70A0;
+  --rule:rgba(139,128,255,.20); --rule-soft:rgba(139,128,255,.10);
+  --accent:#8B80FF; --accent-2:#A99EFF; --accent-wash:rgba(139,128,255,.10);
+  --layerA:#8B80FF; --layerB:#3FC7D4; --layerC:#9AA0C4;
+  --accept:#3BD4B4; --hold:#FBBF24; --reject:#FB7185;
+  --accept-w:rgba(59,212,180,.12); --hold-w:rgba(251,191,36,.12); --reject-w:rgba(251,113,133,.12);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Source Serif 4",Georgia,serif; font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{display:grid; grid-template-columns:250px minmax(0,1fr); gap:0; max-width:1240px; margin:0 auto}
+
+/* ---- rail ---- */
+.rail{
+  position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+  padding:2.6rem 1.4rem 3rem 1.6rem; border-right:1px solid var(--rule-soft);
+  font-family:Archivo,system-ui,sans-serif;
+}
+.rail .brand{font-size:.66rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:.15rem}
+.rail .ver{font-family:"IBM Plex Mono",monospace; font-size:.66rem; color:var(--ink-3); margin-bottom:1.8rem}
+.rail a{display:block; text-decoration:none; color:var(--ink-2); border-left:2px solid transparent;
+  transition:color .15s,border-color .15s}
+.rail a:hover{color:var(--accent); border-left-color:var(--accent)}
+.rail a.n2{font-size:.79rem; font-weight:600; color:var(--ink); padding:.42rem 0 .42rem .7rem; margin-top:.35rem}
+.rail a.n3{font-size:.74rem; padding:.2rem 0 .2rem .7rem}
+.rail a:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
+
+/* ---- content ---- */
+main{padding:3.2rem 3rem 7rem; min-width:0}
+main>*{max-width:68ch}
+main>.tw,main>pre{max-width:100%}
+
+h1{font-family:Archivo,system-ui,sans-serif; font-size:clamp(2rem,4.4vw,2.9rem); font-weight:700;
+  letter-spacing:-.028em; line-height:1.08; text-wrap:balance; margin:0 0 .5rem; max-width:20ch}
+h2{font-family:Archivo,system-ui,sans-serif; font-size:1.45rem; font-weight:700; letter-spacing:-.018em;
+  line-height:1.2; text-wrap:balance; margin:4rem 0 1.1rem; padding-top:1.6rem;
+  border-top:1px solid var(--rule); display:flex; gap:.85rem; align-items:baseline; scroll-margin-top:1.5rem}
+h2 .secnum{font-family:"IBM Plex Mono",monospace; font-size:.82rem; font-weight:500; color:var(--accent);
+  background:var(--accent-wash); padding:.18rem .48rem; border-radius:3px; flex:none}
+h3{font-family:Archivo,system-ui,sans-serif; font-size:1.06rem; font-weight:650; letter-spacing:-.008em;
+  margin:2.4rem 0 .7rem; text-wrap:balance; scroll-margin-top:1.5rem}
+h4{font-family:Archivo,system-ui,sans-serif; font-size:.95rem; font-weight:650; margin:2rem 0 .55rem;
+  scroll-margin-top:1.5rem}
+h4.q{padding-left:.8rem; border-left:3px solid var(--accent)}
+h4.lv4{border-left-color:var(--layerA)} h4.lv3{border-left-color:var(--layerB)}
+h4.lv2{border-left-color:var(--hold)}   h4.lv1{border-left-color:var(--ink-3)}
+
+p{margin:0 0 1.05rem}
+strong{font-weight:650; color:var(--ink)}
+em{font-style:italic}
+a{color:var(--accent); text-underline-offset:2px}
+hr{border:0; height:1px; background:var(--rule-soft); margin:2.6rem 0; max-width:100%}
+ul,ol{margin:0 0 1.15rem; padding-left:1.3rem}
+li{margin:.32rem 0}
+code{font-family:"IBM Plex Mono",monospace; font-size:.85em; background:var(--raised);
+  padding:.1em .36em; border-radius:3px; color:var(--ink)}
+
+/* ---- lede ---- */
+.lede{font-size:1.12rem; line-height:1.6; color:var(--ink-2); max-width:60ch; margin-bottom:2rem}
+.meta{display:flex; flex-wrap:wrap; gap:.5rem; margin:0 0 2.6rem; font-family:"IBM Plex Mono",monospace}
+.chip{font-size:.68rem; letter-spacing:.04em; padding:.28rem .6rem; border-radius:3px;
+  border:1px solid var(--rule); color:var(--ink-2); background:var(--surface)}
+.chip.on{border-color:var(--accent); color:var(--accent); background:var(--accent-wash)}
+
+/* ---- tables ---- */
+.tw{overflow-x:auto; margin:0 0 1.6rem; border:1px solid var(--rule); border-radius:6px;
+  background:var(--surface); box-shadow:var(--shadow)}
+table{border-collapse:collapse; width:100%; font-family:Archivo,system-ui,sans-serif; font-size:.83rem;
+  line-height:1.45}
+th{text-align:left; font-weight:650; font-size:.68rem; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-2); background:var(--sunken); padding:.62rem .85rem; border-bottom:1px solid var(--rule);
+  white-space:nowrap}
+td{padding:.6rem .85rem; border-bottom:1px solid var(--rule-soft); vertical-align:top; color:var(--ink-2)}
+td:first-child{color:var(--ink)}
+tbody tr:last-child td{border-bottom:0}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; text-align:right;
+  white-space:nowrap; color:var(--ink); font-weight:500}
+td.nil{color:var(--ink-3); text-align:right; font-family:"IBM Plex Mono",monospace}
+td.gate{color:var(--reject); font-weight:600}
+table.points td.num{width:1%}
+table.points th:nth-child(-n+4):not(:first-child){text-align:right}
+
+/* dual-score table: the document's thesis */
+table.dual th:nth-child(2){color:var(--layerA)} table.dual th:nth-child(3){color:var(--layerC)}
+table.dual th:nth-child(n+2){text-align:right}
+table.dual td:nth-child(n+2){text-align:right; font-family:"IBM Plex Mono",monospace;
+  font-variant-numeric:tabular-nums; white-space:nowrap}
+table.dual td:nth-child(2){color:var(--layerA); font-weight:600}
+table.dual td:nth-child(3){color:var(--layerC); font-weight:600}
+table.dual tr:has(strong) td{background:var(--accent-wash)}
+
+/* ---- notes ---- */
+blockquote.note{margin:0 0 1.5rem; padding:.95rem 1.15rem; background:var(--surface);
+  border:1px solid var(--rule); border-left:3px solid var(--accent-2); border-radius:0 5px 5px 0;
+  font-size:.93rem; color:var(--ink-2)}
+blockquote.note p{margin:0 0 .6rem} blockquote.note p:last-child{margin:0}
+blockquote.note.warn{border-left-color:var(--hold); background:var(--hold-w); border-color:transparent}
+blockquote.note.warn::before{content:"Important"; display:block; font-family:Archivo,sans-serif;
+  font-size:.63rem; font-weight:700; letter-spacing:.11em; text-transform:uppercase; color:var(--hold);
+  margin-bottom:.35rem}
+
+/* ---- code & diagram ---- */
+pre{overflow-x:auto; background:var(--surface); border:1px solid var(--rule); border-radius:6px;
+  padding:1.05rem 1.2rem; margin:0 0 1.6rem; font-family:"IBM Plex Mono",monospace;
+  font-size:.76rem; line-height:1.6; color:var(--ink-2)}
+pre code{background:none; padding:0; font-size:inherit}
+pre.diagram{background:var(--sunken); border-style:dashed; color:var(--ink-2); font-size:.72rem}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  .rail{position:static; height:auto; border-right:0; border-bottom:1px solid var(--rule);
+    padding:1.6rem 1.4rem; max-height:none}
+  .rail nav{columns:2; column-gap:1.2rem}
+  .rail a.n3{display:none}
+  main{padding:2rem 1.3rem 4rem}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+<div class="wrap">
+<aside class="rail">
+  <div class="brand">Master Reference</div>
+  <div class="ver">v2.0 · 2026-08-21</div>
+  <nav><a class="n2" href="#s1">How to Use This Document</a><a class="n2" href="#s2">What This Is</a><a class="n2" href="#s3">The Scoring Architecture</a><a class="n3" href="#s4">2.1 Three layers</a><a class="n3" href="#s5">2.2 Why three, and not one</a><a class="n3" href="#s6">2.3 Design principles</a><a class="n3" href="#s7">2.4 Input-type rules</a><a class="n2" href="#s8">The Question Set</a><a class="n3" href="#s9">Phase 1 — About You</a><a class="n3" href="#s12">Phase 2 — Your AI Story</a><a class="n3" href="#s17">Phase 3 — Your Biggest Opportunity</a><a class="n3" href="#s26">Phase 4 — Ready to Move</a><a class="n3" href="#s28">Phase 5 — Your Results</a><a class="n2" href="#s30">Layer A — AI Readiness Score → Archetype</a><a class="n3" href="#s31">4.1 Structure</a><a class="n3" href="#s32">4.2 Bands</a><a class="n3" href="#s33">4.3 Demotion gates</a><a class="n3" href="#s34">4.4 Archetype copy</a><a class="n2" href="#s39">Layer B — Workflow Opportunity Score</a><a class="n3" href="#s40">5.1 Weights</a><a class="n3" href="#s41">5.2 Tiers</a><a class="n2" href="#s42">Layer C — Diagnostic Fit Score</a><a class="n3" href="#s43">6.1 Pillars</a><a class="n3" href="#s44">6.2 The inverted-U, side by side</a><a class="n3" href="#s45">6.3 Hard gates</a><a class="n3" href="#s46">6.4 Soft flags</a><a class="n3" href="#s47">6.5 Decision tiers</a><a class="n3" href="#s48">6.6 Company-size threshold modifier</a><a class="n3" href="#s49">6.7 FAEO pre-population</a><a class="n2" href="#s50">The Results Page</a><a class="n3" href="#s51">7.1 Routing</a><a class="n3" href="#s52">7.2 Score display</a><a class="n3" href="#s53">7.3 The Positioning Statement</a><a class="n3" href="#s54">7.4 Personalized insight paragraphs</a><a class="n3" href="#s55">7.5 Benchmarks</a><a class="n3" href="#s56">7.6 CTA copy</a><a class="n2" href="#s57">The Internal Brief</a><a class="n2" href="#s58">Email Sequences</a><a class="n2" href="#s59">ScoreApp Build</a><a class="n3" href="#s60">10.1 Categories</a><a class="n3" href="#s61">10.2 Archetype audiences — priority-ordered, first match wins</a><a class="n3" href="#s62">10.3 CTA audience</a><a class="n3" href="#s63">10.4 Phasing</a><a class="n3" href="#s64">10.5 Verified platform facts</a><a class="n3" href="#s65">10.6 Still to verify in the account UI</a><a class="n2" href="#s66">Validation</a><a class="n2" href="#s67">Calibration</a><a class="n3" href="#s68">Deliberately out of scope</a><a class="n2" href="#s69">Change Log</a><a class="n3" href="#s70">v2.0 — 2026-08-21</a></nav>
+</aside>
+<main><h1>AI Readiness Assessment</h1>
+<div class="meta"><span class="chip on">Version 2.0</span><span class="chip">2026-08-21</span><span class="chip">Canonical</span><span class="chip">14 questions</span><span class="chip">3 scoring layers</span></div>
+<p class="lede">The complete specification for the AI Readiness Assessment: what it is, every question, all three scoring layers, archetype assignment, qualification logic, results copy, internal process, and the ScoreApp build.</p>
+<hr>
+<h2 id="s1"><span class="secnum">0</span>How to Use This Document</h2>
+<p>This is the <strong>canonical reference</strong>. If any other file disagrees with it, this document wins and the other file should be corrected.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>File</th><th>Role</th></tr></thead><tbody><tr><td><strong>This document</strong></td><td>Complete specification. Read this to understand or hand off the whole system.</td></tr><tr><td><code>content/quiz-questions.md</code></td><td>Question build sheet — same content as §3–§6 here, sliced for ScoreApp configuration work.</td></tr><tr><td><code>content/archetypes.md</code></td><td>Archetype hero copy — reproduced in full in §4.4.</td></tr><tr><td><code>content/results-copy.md</code></td><td>Results page copy, <strong>including the 48-variant insight matrix not reproduced here</strong> (see §7.4).</td></tr><tr><td><code>content/internal-brief-template.md</code></td><td>Internal brief template — summarized in §8.</td></tr><tr><td><code>content/follow-up-sequences.md</code></td><td>Email copy — summarized in §9.</td></tr><tr><td><code>docs/superpowers/specs/2026-08-21-quiz-scoring-architecture-design.md</code></td><td>Design rationale: why each number is what it is, alternatives considered, worked examples.</td></tr></tbody></table></div>
+<p><strong>One thing is deliberately not here:</strong> the 48 personalized insight paragraphs (8 workflow categories × 6 pain types). They are ~5,000 words of near-parallel copy that would dominate this document without making the logic clearer. They live in <code>content/results-copy.md</code> §Layer 3. Everything else is here in full.</p>
+<p><strong>Maintenance rule:</strong> change this document first, then propagate. Two places holding the same fact will drift; the only defence is a clear order of precedence.</p>
+<hr>
+<h2 id="s2"><span class="secnum">1</span>What This Is</h2>
+<p>A 14-question assessment that a business leader completes in 4–5 minutes and receives an immediate, personalized result. It sits at the top of the funnel for the <strong>AI Workflow ROI Diagnostic</strong>.</p>
+<p><strong>Position in the funnel:</strong></p>
+<pre class="diagram"><code>CTA / LinkedIn / Referral
+        ↓
+   AI Readiness Assessment
+        ↓
+Archetype + two scores, instantly
+        ↓
+   Layer C qualification (invisible)
+        ↓
+Qualified → Calendly booking     Not qualified → nurture
+        ↓
+Internal brief to Uzziah + Arielle (30 min delay)
+        ↓
+   30-minute Diagnostic</code></pre>
+<p><strong>The two jobs it does at once:</strong></p>
+<div class="tw"><table class="tbl"><thead><tr><th>To the respondent</th><th>To us</th></tr></thead><tbody><tr><td>A useful AI-readiness assessment with a result worth discussing internally</td><td>Qualification data: company fit, authority, AI maturity, workflow economics, willingness to act</td></tr></tbody></table></div>
+<p><strong>Design promise:</strong> the result should be specific enough that the respondent wants to show someone. The target reaction is <em>&quot;This describes us. We should talk about this.&quot;</em> Not <em>&quot;I&#x27;ve been sold to.&quot;</em></p>
+<p><strong>Who it&#x27;s for</strong> (from <code>Initial_Ideal_Customer_Profile_ICP.md</code>): 50–250 employee knowledge-work-heavy companies whose leaders already believe AI matters and whose teams are using it, but who have not translated adoption into coordinated workflows and measurable impact. The <strong>&quot;messy middle&quot; — not AI-resistant, not AI-optimized.</strong></p>
+<hr>
+<h2 id="s3"><span class="secnum">2</span>The Scoring Architecture</h2>
+<h3 id="s4">2.1 Three layers</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>Layer</th><th>Name</th><th>Range</th><th>Visible</th><th>Inputs</th><th>Drives</th></tr></thead><tbody><tr><td><strong>A</strong></td><td>AI Readiness Score</td><td>0–100</td><td>Yes — hero</td><td>Q3, Q4, Q5, Q6</td><td>The archetype</td></tr><tr><td><strong>B</strong></td><td>Workflow Opportunity Score</td><td>0–100</td><td>Yes — secondary</td><td>Q8–Q12</td><td>Opportunity tier + cost estimate</td></tr><tr><td><strong>C</strong></td><td>Diagnostic Fit Score</td><td>0–100</td><td><strong>Never</strong></td><td>Q1–Q6, Q8–Q13 + function</td><td>Diagnostic CTA + internal brief</td></tr></tbody></table></div>
+<p>All three read the same answers with different weightings. None is derived from another.</p>
+<h3 id="s5">2.2 Why three, and not one</h3>
+<p>The v1 assessment computed a single 0–100 number blending company fit (~21%), AI maturity (~31%), and workflow economics (~49%). That number drove the score, the archetype, and the CTA simultaneously.</p>
+<p>The root problem is sharper than &quot;it mixes concepts&quot;:</p>
+<blockquote class="note"><p><strong>AI maturity relates to prospect value monotonically, but to internal opportunity as an inverted U.</strong></p></blockquote>
+<p>The ICP defines the target as the messy middle and lists &quot;already highly AI-optimized with a mature internal transformation team&quot; as a disqualifier. A monotonic score cannot express a non-monotonic preference. The two audiences rank the same answers in a different order:</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Q5 — &quot;Is AI actually moving the needle?&quot;</th><th>To the respondent</th><th>To us</th></tr></thead><tbody><tr><td>We&#x27;re not really using it yet</td><td>Lowest</td><td><strong>Low</strong> — we&#x27;d have to sell the category first</td></tr><tr><td>Using AI tools but no clear business impact</td><td>Low</td><td><strong>Highest</strong> — the exact ICP pain state</td></tr><tr><td>Productivity gains, nothing company-wide</td><td>Mid</td><td><strong>High</strong> — the messy middle</td></tr><tr><td>Real, measurable business results</td><td>Highest</td><td><strong>Moderate</strong> — may already have internal capability</td></tr></tbody></table></div>
+<p>Q3 behaves identically. &quot;We use AI across teams, but each team does it differently&quot; reads as mid-maturity to the respondent and is the <strong>single highest-value answer in the quiz</strong> for us, because fragmentation is what the offer sells against.</p>
+<p>One score cannot carry both shapes.</p>
+<h3 id="s6">2.3 Design principles</h3>
+<ol><li><strong>Nothing about company size or job title touches a visible score.</strong> Marking a 400-person company down on a score claiming to measure <em>their AI readiness</em> is indefensible to them. Q1 and Q2 are Layer C only.</li><li><strong>The archetype never overclaims.</strong> Gates demote, never promote (§4.3).</li><li><strong>The CTA is decoupled from the archetype.</strong> Qualification runs entirely on Layer C. An Architect with no pain gets no CTA; a Spectator who clears every gate does.</li><li><strong>Layer C reuses existing decision vocabulary.</strong> ACCEPT / HOLD / REJECT, already defined in <code>AI Workflow ROI Diagnostic Qualification Criteria.md</code>.</li></ol>
+<h3 id="s7">2.4 Input-type rules</h3>
+<ol><li><strong>Every question a gate references must be single-select.</strong> Gates test for <em>specific answers</em>; multi-select makes &quot;is Q5 the top answer?&quot; unanswerable. Gate-referenced: <strong>Q1, Q3, Q4, Q5, Q8, Q10, Q11a, Q13.</strong></li><li><strong>Multi-select scoring is <code>Σ(selected) ÷ Σ(all options)</code>.</strong> A checkbox question&#x27;s weight equals the sum of all its options, so option values must sum to exactly the intended budget, and per-option severity must stay flat.</li><li><strong>Never use <code>max selections</code></strong> — undocumented denominator behaviour would depress every score by a constant.</li><li><strong>Never put jump logic on a scored question</strong> — skipping changes total points available. The one jump (Q7 → Q7b) targets an unscored Open Text question.</li></ol>
+<hr>
+<h2 id="s8"><span class="secnum">3</span>The Question Set</h2>
+<p><strong>14 scored questions + 1 conditional unscored question + contact form.</strong></p>
+<p>Point columns: <strong>A</strong> = AI Readiness, <strong>B</strong> = Workflow Opportunity, <strong>C</strong> = Diagnostic Fit. A dash means the question does not feed that layer.</p>
+<h3 id="s9">Phase 1 — About You</h3>
+<h4 class="q" id="s10">Q1 · Role</h4>
+<p><em>&quot;What&#x27;s your role at your company?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>Owner / Founder / CEO</td><td class="nil">—</td><td class="nil">—</td><td class="num">15</td></tr><tr><td>C-Suite (COO, CTO, CIO, CFO…)</td><td class="nil">—</td><td class="nil">—</td><td class="num">14</td></tr><tr><td>VP</td><td class="nil">—</td><td class="nil">—</td><td class="num">13</td></tr><tr><td>Director / Head of Department</td><td class="nil">—</td><td class="nil">—</td><td class="num">9</td></tr><tr><td>Manager</td><td class="nil">—</td><td class="nil">—</td><td class="num">5</td></tr><tr><td>Individual Contributor</td><td class="nil">—</td><td class="nil">—</td><td class="num gate"><strong>0 · HG2</strong></td></tr></tbody></table></div>
+<blockquote class="note"><p>Function (&quot;Operations / Technology / Transformation leader&quot;) was removed from this list in v2. It is a <em>function</em>, not a seniority level, so the list was not a partition — &quot;VP of Operations&quot; matched two rows and scored differently depending on which the respondent picked, feeding noise straight into qualification. Function is now captured on the contact form.</p></blockquote>
+<h4 class="q" id="s11">Q2 · Company Size</h4>
+<p><em>&quot;About how many employees does your company have?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>Under 25</td><td class="nil">—</td><td class="nil">—</td><td class="num">1</td></tr><tr><td>25–50</td><td class="nil">—</td><td class="nil">—</td><td class="num">4</td></tr><tr><td>51–100</td><td class="nil">—</td><td class="nil">—</td><td class="num">8</td></tr><tr><td>101–200</td><td class="nil">—</td><td class="nil">—</td><td class="num">8</td></tr><tr><td>201–300</td><td class="nil">—</td><td class="nil">—</td><td class="num">5</td></tr><tr><td>301–500</td><td class="nil">—</td><td class="nil">—</td><td class="num">3</td></tr><tr><td>Over 500</td><td class="nil">—</td><td class="nil">—</td><td class="num">2</td></tr></tbody></table></div>
+<p>Also triggers the company-size threshold modifier (§6.6) and flag SF1 when Under 25 or Over 500.</p>
+<h3 id="s12">Phase 2 — Your AI Story</h3>
+<p><em>These four questions are Layer A in full.</em></p>
+<h4 class="q" id="s13">Q3 · AI Adoption Breadth</h4>
+<p><em>&quot;Which best describes AI adoption across your company right now?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>A few people are experimenting on their own</td><td class="num">4</td><td class="nil">—</td><td class="num">2</td></tr><tr><td>We use AI across teams, but each team does it differently — no shared approach</td><td class="num">11</td><td class="nil">—</td><td class="num"><strong>6</strong></td></tr><tr><td>Most of our team uses AI as part of how they work</td><td class="num">18</td><td class="nil">—</td><td class="num">4</td></tr><tr><td>AI is woven into our operations — it&#x27;s infrastructure, not just a tool</td><td class="num">25</td><td class="nil">—</td><td class="num">2</td></tr></tbody></table></div>
+<h4 class="q" id="s14">Q4 · Leadership AI Strategy</h4>
+<p><em>&quot;Where does your leadership stand on AI?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>No formal strategy yet — mostly individual decisions</td><td class="num">3</td><td class="nil">—</td><td class="num">0</td></tr><tr><td>We&#x27;re starting to discuss it at a leadership level</td><td class="num">10</td><td class="nil">—</td><td class="num">4</td></tr><tr><td>We have an AI plan and we&#x27;re actively working on it</td><td class="num">18</td><td class="nil">—</td><td class="num">7</td></tr><tr><td>AI is a top strategic priority with full executive buy-in</td><td class="num">25</td><td class="nil">—</td><td class="num">8</td></tr></tbody></table></div>
+<h4 class="q" id="s15">Q5 · Current AI ROI</h4>
+<p><em>&quot;Honestly — is AI actually moving the needle at your company?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>We&#x27;re not really using it yet</td><td class="num">1</td><td class="nil">—</td><td class="num">1</td></tr><tr><td>We&#x27;re using AI tools but haven&#x27;t seen clear business impact</td><td class="num">8</td><td class="nil">—</td><td class="num"><strong>6</strong></td></tr><tr><td>We see productivity gains, but nothing that&#x27;s changed the company overall</td><td class="num">16</td><td class="nil">—</td><td class="num">5</td></tr><tr><td>Yes — we can point to real, measurable business results</td><td class="num">25</td><td class="nil">—</td><td class="num">2</td></tr></tbody></table></div>
+<blockquote class="note"><p>Top answer scores <strong>25 to the respondent and 2 to us</strong>. This single row is the clearest justification for the whole architecture.</p></blockquote>
+<h4 class="q" id="s16">Q6 · AI Ownership · new in v2</h4>
+<p><em>&quot;Who&#x27;s accountable for AI at your company?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>No one specifically — it&#x27;s whoever&#x27;s interested</td><td class="num">3</td><td class="nil">—</td><td class="num">1</td></tr><tr><td>A few informal champions, but it isn&#x27;t anyone&#x27;s actual job</td><td class="num">9</td><td class="nil">—</td><td class="num">4</td></tr><tr><td>Someone owns it as part of a wider role</td><td class="num">17</td><td class="nil">—</td><td class="num"><strong>7</strong></td></tr><tr><td>We have a dedicated owner or team accountable for AI outcomes</td><td class="num">25</td><td class="nil">—</td><td class="num">6</td></tr></tbody></table></div>
+<blockquote class="note"><p>Added because the ICP names &quot;no clear owner accountable for converting AI experimentation into measurable workflow ROI&quot; as <em>the</em> defining symptom of the immaturity we target, and nothing in v1 detected it. Note the inversion at the top of column C: a part-time owner is a champion who needs help; a dedicated AI team may be the capability that removes the need for us.</p></blockquote>
+<h3 id="s17">Phase 3 — Your Biggest Opportunity</h3>
+<p><em>Every question in this phase describes <strong>one</strong> workflow — the one named in Q7.</em></p>
+<h4 class="q" id="s18">Q7 · Workflow Category</h4>
+<p><em>&quot;Think about one workflow that consistently costs more time, effort, or money than it should. Which category fits best?&quot;</em> — Single choice, required — <strong>UNSCORED</strong></p>
+<p>Reporting &amp; data aggregation · Document creation &amp; review · Client or customer communications · Research &amp; analysis · Approval &amp; review processes · Employee or client onboarding · Sales operations &amp; CRM · Other — something else</p>
+<p><strong>Job:</strong> selects the insight paragraph (§7.4) and sets the FAEO Repeatability signal. In v1 this scored 8–10 for named categories and <strong>0</strong> for &quot;Other,&quot; so choosing the honest answer silently tanked the score. Now unscored.</p>
+<h4 class="q" id="s19">Q7b · Workflow Description</h4>
+<p><em>&quot;In a sentence, what is it?&quot;</em> — Open Text, <strong>optional</strong>, shown by jump logic <strong>only when Q7 = Other</strong> — unscored</p>
+<p>Safe to attach jump logic here precisely because it is unscored.</p>
+<h4 class="q" id="s20">Q8 · People Involved</h4>
+<p><em>&quot;How many people on your team touch this workflow?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>Just me</td><td class="nil">—</td><td class="num">2</td><td class="num">1</td></tr><tr><td>2–5 people</td><td class="nil">—</td><td class="num">7</td><td class="num">2</td></tr><tr><td>6–15 people</td><td class="nil">—</td><td class="num">12</td><td class="num">4</td></tr><tr><td>16 or more people</td><td class="nil">—</td><td class="num">15</td><td class="num">5</td></tr></tbody></table></div>
+<blockquote class="note"><p><strong>Now monotonic.</strong> v1 scored 16+ <em>below</em> 6–15. More people on a repetitive workflow means more economic leverage; the implementation complexity that motivated the original penalty is now flag SF3.</p></blockquote>
+<h4 class="q" id="s21">Q9 · Frequency</h4>
+<p><em>&quot;How often does this workflow run?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>Multiple times per day</td><td class="nil">—</td><td class="num">15</td><td class="num">5</td></tr><tr><td>Daily</td><td class="nil">—</td><td class="num">13</td><td class="num">4</td></tr><tr><td>Weekly</td><td class="nil">—</td><td class="num">10</td><td class="num">3</td></tr><tr><td>Monthly</td><td class="nil">—</td><td class="num">5</td><td class="num">2</td></tr><tr><td>Quarterly</td><td class="nil">—</td><td class="num">1</td><td class="num">0</td></tr></tbody></table></div>
+<h4 class="q" id="s22">Q10 · Hours Per Week</h4>
+<p><em>&quot;How many hours per week does your team collectively spend on this workflow?&quot;</em> — Single choice, required — <strong>heaviest question in the quiz</strong></p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th><th>Annual hrs</th><th>Cost range</th></tr></thead><tbody><tr><td>Less than 5 hours</td><td class="nil">—</td><td class="num">4</td><td class="num">1</td><td>150+</td><td>$7,500–$11,000</td></tr><tr><td>5–10 hours</td><td class="nil">—</td><td class="num">13</td><td class="num">5</td><td>375+</td><td>$19,000–$28,000</td></tr><tr><td>11–20 hours</td><td class="nil">—</td><td class="num">22</td><td class="num">8</td><td>750+</td><td>$38,000–$56,000</td></tr><tr><td>21–40 hours</td><td class="nil">—</td><td class="num">29</td><td class="num">10</td><td>1,500+</td><td>$75,000–$113,000</td></tr><tr><td>More than 40 hours</td><td class="nil">—</td><td class="num">35</td><td class="num">12</td><td>2,250+</td><td>$113,000–$169,000</td></tr></tbody></table></div>
+<p>Cost = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker rate.</p>
+<blockquote class="note warn"><p> <strong>Screening estimates of labor cost — never present as recoverable savings.</strong> The Diagnostic converts this into a defensible model: annual hours × loaded rate × automatable percentage + error/rework cost + capacity value − implementation and operating cost.</p></blockquote>
+<h4 class="q" id="s23">Q11a · Automation Level</h4>
+<p><em>&quot;Which best describes how this workflow runs today?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>Entirely manual — spreadsheets, email, or paper</td><td class="nil">—</td><td class="num">15</td><td class="num">4</td></tr><tr><td>We have tools for it, but they don&#x27;t talk to each other</td><td class="nil">—</td><td class="num">13</td><td class="num">3</td></tr><tr><td>Partly automated, but it still takes significant hands-on work</td><td class="nil">—</td><td class="num">11</td><td class="num">3</td></tr><tr><td>It runs smoothly — I&#x27;m mostly here to explore what&#x27;s possible</td><td class="nil">—</td><td class="num">1</td><td class="num gate"><strong>0 · HG3</strong></td></tr></tbody></table></div>
+<h4 class="q" id="s24">Q11b · Symptoms · MULTI-SELECT</h4>
+<p><em>&quot;Which of these also apply? Select all that apply.&quot;</em> — Multi-select, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th><th>Flag</th></tr></thead><tbody><tr><td>It depends on one or two people — if they&#x27;re out, it stalls</td><td class="nil">—</td><td class="num">2</td><td class="num">1</td><td class="nil"></td></tr><tr><td>It&#x27;s complex, with a lot of steps or handoffs</td><td class="nil">—</td><td class="num">2</td><td class="num">1</td><td class="nil"></td></tr><tr><td>Work sits waiting for someone to review or approve it</td><td class="nil">—</td><td class="num">2</td><td class="num">1</td><td>SF10</td></tr><tr><td>Mistakes slip through and get caught later</td><td class="nil">—</td><td class="num">2</td><td class="num">1</td><td class="nil"></td></tr><tr><td>The same information gets entered or copied more than once</td><td class="nil">—</td><td class="num">2</td><td class="num">1</td><td>SF9</td></tr><tr><td>None of these</td><td class="nil">—</td><td class="num">0</td><td class="num">0</td><td class="nil"></td></tr></tbody></table></div>
+<p><strong>Bounding proof:</strong> Σ(all options) = 5 × 2 = 10 = the Layer B budget, so the question is exactly bounded and its weight inside Layer B is exactly 10. Scores 0 / 2 / 4 / 6 / 8 / 10 by symptom count.</p>
+<blockquote class="note"><p><strong>Why Q11 splits.</strong> v1&#x27;s single list mixed mutually-exclusive automation states with co-occurring failure modes — &quot;entirely manual&quot; and &quot;partly automated&quot; cannot both be true, yet &quot;depends on one person&quot; and &quot;complex&quot; routinely are. Splitting by dimension fixes the contradiction and unlocks the symptom detail: each symptom names a <em>different</em> automation lever, so the founders enter the call with a mechanism hypothesis rather than a category. <strong>Combined budget is 25 — identical to v1. The split is weight-neutral.</strong></p><p>Per-option severity is deliberately flat. Differentiating it would raise Σ and silently increase the question&#x27;s weight. <strong>&quot;None of these&quot; is worth 0</strong>, so a stray selection alongside symptoms cannot move the score — which matters because ScoreApp has no exclusive-option behaviour.</p></blockquote>
+<h4 class="q" id="s25">Q12 · Primary Cost</h4>
+<p><em>&quot;What does this workflow cost your company most?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>Money — the labor cost is significant</td><td class="nil">—</td><td class="num">10</td><td class="num">4</td></tr><tr><td>Scale — we can&#x27;t grow without adding headcount</td><td class="nil">—</td><td class="num">10</td><td class="num">4</td></tr><tr><td>Errors — mistakes happen and they&#x27;re expensive</td><td class="nil">—</td><td class="num">9</td><td class="num">3</td></tr><tr><td>Time — it creates constant bottlenecks</td><td class="nil">—</td><td class="num">9</td><td class="num">3</td></tr><tr><td>Customer experience — slow or inconsistent handling costs us business</td><td class="nil">—</td><td class="num">9</td><td class="num">3</td></tr><tr><td>Team morale — it&#x27;s tedious and people hate it</td><td class="nil">—</td><td class="num">7</td><td class="num">2</td></tr></tbody></table></div>
+<p>Stays single-select: &quot;costs you <em>most</em>&quot; is a ranking question whose forced prioritization is itself signal, and it selects which of the 48 insight paragraphs renders.</p>
+<h3 id="s26">Phase 4 — Ready to Move</h3>
+<h4 class="q" id="s27">Q13 · Willingness to Act · new in v2</h4>
+<p><em>&quot;If there were a clear business case for improving this workflow with AI or automation, how likely is your company to act on it in the next 6 months?&quot;</em> — Single choice, required</p>
+<div class="tw"><table class="tbl points"><thead><tr><th>Answer</th><th>A</th><th>B</th><th>C</th></tr></thead><tbody><tr><td>Very likely — this is already a priority</td><td class="nil">—</td><td class="nil">—</td><td class="num">15</td></tr><tr><td>Likely — if the ROI is compelling</td><td class="nil">—</td><td class="nil">—</td><td class="num">11</td></tr><tr><td>Possibly — we&#x27;re exploring</td><td class="nil">—</td><td class="nil">—</td><td class="num">5</td></tr><tr><td>Unlikely — mostly curious right now</td><td class="nil">—</td><td class="nil">—</td><td class="num gate"><strong>0 · HG1</strong></td></tr></tbody></table></div>
+<blockquote class="note"><p>Placed after the respondent has articulated concrete pain, so the commitment question reads as a natural consequence rather than a sales probe. It is the only clean detector for the criteria doc&#x27;s first automatic-reject condition. <strong>Contributes nothing to either visible score.</strong></p></blockquote>
+<h3 id="s28">Phase 5 — Your Results</h3>
+<h4 class="q" id="s29">Q14 · Contact Capture</h4>
+<p><em>&quot;Almost done. Where should we send your results?&quot;</em> Subtext: <em>&quot;We&#x27;ll send your personalized AI Readiness Brief here — your archetype, your score, and a summary of your biggest opportunity.&quot;</em></p>
+<p><strong>All fields unscored</strong> — ScoreApp lead-form fields cannot carry points.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Purpose</th></tr></thead><tbody><tr><td>First name</td><td>Text</td><td>Yes</td><td class="nil"></td></tr><tr><td>Company name</td><td>Text</td><td>Yes</td><td class="nil"></td></tr><tr><td>Email address</td><td>Email</td><td>Yes</td><td class="nil"></td></tr><tr><td>Function — <em>&quot;Which area do you lead or work in?&quot;</em></td><td>Dropdown</td><td>Yes</td><td>Drives SF8 via an Audience on Lead Form Answers</td></tr><tr><td>Marketing consent</td><td>Explicit Consent (Optional)</td><td>No</td><td>Gates all email sequences</td></tr></tbody></table></div>
+<p><strong>Function options:</strong> Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales &amp; Marketing · HR &amp; People · Customer Service · Other</p>
+<p>Consent is <strong>Optional, not Required</strong>, so a missing tick doesn&#x27;t cost the lead — results deliver instantly on screen regardless. ScoreApp stores a timestamp plus the exact opt-in wording and passes <code>opt_in</code> on every webhook event.</p>
+<blockquote class="note warn"><p> <strong>No email sequence may fire without <code>opt_in = true</code>.</strong></p></blockquote>
+<hr>
+<h2 id="s30"><span class="secnum">4</span>Layer A — AI Readiness Score → Archetype</h2>
+<h3 id="s31">4.1 Structure</h3>
+<p>Four maturity axes at 25 points each; the raw total <strong>is</strong> the 0–100 score.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Axis</th><th>Question</th></tr></thead><tbody><tr><td>Breadth — how far usage has spread</td><td>Q3</td></tr><tr><td>Commitment — whether it can be sponsored</td><td>Q4</td></tr><tr><td>Proof — whether it has produced anything</td><td>Q5</td></tr><tr><td>Ownership — whether anyone is accountable</td><td>Q6</td></tr></tbody></table></div>
+<h3 id="s32">4.2 Bands</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>Score</th><th>Level</th><th>Archetype</th></tr></thead><tbody><tr><td>80–100</td><td class="num">4</td><td>The Architect</td></tr><tr><td>55–79</td><td class="num">3</td><td>The Builder</td></tr><tr><td>30–54</td><td class="num">2</td><td>The Explorer</td></tr><tr><td>0–29</td><td class="num">1</td><td>The Spectator</td></tr></tbody></table></div>
+<h3 id="s33">4.3 Demotion gates</h3>
+<p>Applied after banding. <strong>Demotion only — never promotion.</strong> Evaluated in order; G3 overrides everything.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Gate</th><th>Condition</th><th>Result</th><th>Why</th></tr></thead><tbody><tr><td><strong>G1</strong></td><td>Architect band AND Q5 ≠ &quot;real, measurable business results&quot;</td><td>Cap at Builder</td><td>The Architect copy&#x27;s central claim is &quot;your company can point to real results.&quot; Without it the copy is false.</td></tr><tr><td><strong>G2</strong></td><td>Builder band or above AND Q4 = &quot;No formal strategy yet&quot;</td><td>Cap at Explorer</td><td>The Builder copy opens &quot;Leadership is paying attention.&quot;</td></tr><tr><td><strong>G3</strong></td><td>Q3 = &quot;a few people experimenting&quot; AND Q5 = &quot;not really using it yet&quot;</td><td>Force Spectator</td><td>That answer pair is the literal Spectator definition.</td></tr></tbody></table></div>
+<p><strong>Why demotion-only.</strong> Overclaiming is the worse failure. Telling a company they&#x27;re an Architect when they can&#x27;t point to results discredits the entire assessment the moment they discuss it internally — which is the explicit design goal of the results page. Under-claiming leaves the copy accurate.</p>
+<p><strong>Worked example.</strong> Leadership says AI is a top strategic priority (25), there&#x27;s a dedicated owner (25), but Q3 = &quot;a few people experimenting&quot; (4) and Q5 = &quot;not really using it yet&quot; (1). Raw score 55 → provisional <strong>Builder</strong>. G3 fires → <strong>Spectator</strong>, and the copy fits precisely: <em>&quot;You see what&#x27;s happening. You just haven&#x27;t stepped onto the field yet.&quot;</em></p>
+<p>That same company scores strongly on Layer C — high intent, real ownership, zero execution. <strong>Low archetype, strong lead.</strong> v1 could not express that combination at all.</p>
+<h3 id="s34">4.4 Archetype copy</h3>
+<p>Respondents see only their own. Full versions also in <code>content/archetypes.md</code>.</p>
+<hr>
+<h4 class="q lv4" id="s35">Level 4 — The Architect</h4>
+<p><strong><em>&quot;AI isn&#x27;t something your company uses anymore. It&#x27;s becoming part of how your company is designed.&quot;</em></strong></p>
+<p>You&#x27;ve crossed an important threshold.</p>
+<p>AI is not living in a few isolated tools or individual habits. Leadership understands its strategic importance. Adoption is broad. Your company can point to real results, and AI is increasingly embedded into workflows, decisions, and operating processes.</p>
+<p>You are not simply adopting technology. You are shaping an organization around new capabilities. That is what makes you an Architect.</p>
+<p>Architects think differently from everyone else. They don&#x27;t ask, <em>&quot;Where can we add AI?&quot;</em> They ask, <em>&quot;If we were designing this workflow today, knowing what AI can do, would we build it this way at all?&quot;</em> That question changes everything.</p>
+<p>At this level the opportunity is no longer finding basic use cases. It is creating systems that compound: workflows that get faster, operating models that become more scalable, people who spend more time on judgment and less on mechanical work, and capabilities that become increasingly difficult for competitors to imitate.</p>
+<p>But Architects face their own risk. Success can create complacency. The companies that lead this transition will not be the ones that simply accumulate AI projects — they will be the ones that continually redesign the business around what becomes newly possible. The question isn&#x27;t whether you&#x27;re ahead. It&#x27;s whether you&#x27;re moving fast enough to stay there.</p>
+<p><strong>Your next move:</strong> Look beyond individual AI wins and ask, <em>&quot;Where could we redesign an entire end-to-end workflow so dramatically that the old way of working would no longer make sense?&quot;</em></p>
+<hr>
+<h4 class="q lv3" id="s36">Level 3 — The Builder</h4>
+<p><strong><em>&quot;You&#x27;re no longer experimenting with AI. You&#x27;re starting to build the company around it.&quot;</em></strong></p>
+<p>Something important has changed.</p>
+<p>Leadership is paying attention. AI is showing up across multiple teams. People are seeing legitimate productivity gains, and the conversation has moved beyond novelty.</p>
+<p>The question is no longer <em>&quot;Can AI help us?&quot;</em> It&#x27;s becoming <em>&quot;How do we turn these wins into something bigger?&quot;</em> That is Builder territory.</p>
+<p>You have raw materials: executive interest, employee adoption, useful experiments, and early evidence that AI can improve how the company operates. Now the hard part begins.</p>
+<p>Builders have to connect the pieces. That means deciding which workflows deserve investment, creating consistency where there is fragmentation, redesigning processes instead of layering AI on top of broken ones, and turning scattered productivity gains into measurable company-level results.</p>
+<p>This is where many organizations stall, because the excitement of experimentation gives way to the harder work of transformation. It&#x27;s also the most dangerous place to be comfortable — close enough to transformation that it can feel like you&#x27;re already there, far enough that you&#x27;re not yet capturing the compounding returns.</p>
+<p>But if you get this stage right, the payoff changes dramatically. You stop collecting AI wins and start building an AI-enabled operating model.</p>
+<p><strong>Your next move:</strong> Find the workflows where AI is already showing promise and ask, <em>&quot;What would we have to redesign for this to become a repeatable business advantage instead of an isolated success?&quot;</em></p>
+<hr>
+<h4 class="q lv2" id="s37">Level 2 — The Explorer</h4>
+<p><strong><em>&quot;You&#x27;ve left the sidelines. Now you&#x27;re finding out what&#x27;s actually possible.&quot;</em></strong></p>
+<p>AI is already showing up inside your company.</p>
+<p>A few people have found tools they love. Someone has built a clever workflow. One team may be saving hours every week while another is barely touching AI at all. There are experiments, wins, frustrations, and probably a growing list of ideas.</p>
+<p>That&#x27;s exactly what exploration looks like. You are learning through action instead of theory, which puts you ahead of companies still only talking about AI.</p>
+<p>But exploration has a trap. It can feel like progress even when the company itself hasn&#x27;t changed.</p>
+<p>If every useful AI workflow lives inside one employee&#x27;s personal process, every team chooses its own tools, and nobody is connecting the wins to a larger strategy, you can end up with a company full of interesting experiments and very little transformation.</p>
+<p>The AI landscape is moving at a pace unlike anything before it, and the window to move from isolated experiments to coordinated advantage is narrower than most leaders realize. Explorers eventually have to decide which discoveries are worth turning into roads.</p>
+<p>That&#x27;s the shift in front of you now.</p>
+<p><strong>Your next move:</strong> Identify the experiments that are producing real value, then ask, <em>&quot;What would happen if this stopped being one person&#x27;s clever trick and became the way this workflow worked across the business?&quot;</em></p>
+<hr>
+<h4 class="q lv1" id="s38">Level 1 — The Spectator</h4>
+<p><strong><em>&quot;You see what&#x27;s happening. You just haven&#x27;t stepped onto the field yet.&quot;</em></strong></p>
+<p>AI is on your radar. People around your company are talking about it, experimenting with it, and probably sending each other examples of what it can do. You may even have a few employees using AI regularly.</p>
+<p>But as an organization, you&#x27;re still mostly watching.</p>
+<p>AI hasn&#x27;t meaningfully changed how work gets done. It hasn&#x27;t become part of your operating rhythm. There may be curiosity, but not yet a coordinated move. That&#x27;s what makes this stage deceptively comfortable.</p>
+<p>Spectators often know enough to recognize that something important is happening, but not enough has changed internally to create urgency. The danger is assuming that watching closely is the same thing as preparing.</p>
+<p>It isn&#x27;t.</p>
+<p>The good news is that you are not late simply because you are early in your journey. You still have the opportunity to move deliberately instead of reactively. The companies that make the smartest moves from here won&#x27;t be the ones that chase every new AI tool. They&#x27;ll be the ones that choose the right business problems, experiment with purpose, and start building evidence about where AI actually creates value.</p>
+<p><strong>Your next move:</strong> Stop asking, <em>&quot;Should we be doing more with AI?&quot;</em> Start asking, <em>&quot;Where could AI change the economics of how we work?&quot;</em></p>
+<hr>
+<h2 id="s39"><span class="secnum">5</span>Layer B — Workflow Opportunity Score</h2>
+<h3 id="s40">5.1 Weights</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>Question</th><th>Max</th><th>Rationale</th></tr></thead><tbody><tr><td>Q10 hours/week</td><td class="num">35</td><td>The economic core. Already aggregates people × frequency (&quot;collectively spend&quot;).</td></tr><tr><td>Q11a automation level</td><td class="num">15</td><td>Automation headroom — the multiplier on everything else.</td></tr><tr><td>Q11b symptoms</td><td class="num">10</td><td>Bounded additive; each symptom is a separate lever.</td></tr><tr><td>Q8 people involved</td><td class="num">15</td><td>Coordination leverage beyond raw hours.</td></tr><tr><td>Q9 frequency</td><td class="num">15</td><td>Cadence — determines return on a build.</td></tr><tr><td>Q12 primary cost</td><td class="num">10</td><td>Value <em>type</em>, not amount. Compressed to avoid false precision.</td></tr><tr><td>Q7 workflow category</td><td class="num"><strong>0</strong></td><td>Unscored.</td></tr><tr><td><strong>Total</strong></td><td class="num"><strong>100</strong></td><td class="nil"></td></tr></tbody></table></div>
+<h3 id="s41">5.2 Tiers</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>Score</th><th>Tier</th></tr></thead><tbody><tr><td>80–100</td><td>Substantial</td></tr><tr><td>60–79</td><td>Significant</td></tr><tr><td>35–59</td><td>Meaningful</td></tr><tr><td>0–34</td><td>Contained</td></tr></tbody></table></div>
+<hr>
+<h2 id="s42"><span class="secnum">6</span>Layer C — Diagnostic Fit Score</h2>
+<p>Never rendered on any result page, never sent to the respondent.</p>
+<h3 id="s43">6.1 Pillars</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>Pillar</th><th>Max</th><th>Criteria-doc requirement</th></tr></thead><tbody><tr><td>1 — Economic Pain</td><td class="num">35</td><td>&quot;Meaningful workflow&quot; + &quot;Potential economic value&quot;</td></tr><tr><td>2 — Readiness to Act</td><td class="num">30</td><td>&quot;AI interest/readiness&quot; + actionability</td></tr><tr><td>3 — Company &amp; Maturity Fit</td><td class="num">20</td><td>&quot;Company fit&quot;</td></tr><tr><td>4 — Access &amp; Authority</td><td class="num">15</td><td>&quot;Decision access&quot;</td></tr></tbody></table></div>
+<p><strong>Pillar 1 (35):</strong> Q10 (12) · Q11a (4) · Q11b (5, one per symptom) · Q8 (5) · Q9 (5) · Q12 (4) <strong>Pillar 2 (30):</strong> Q13 (15) · Q4 (8) · Q6 (7) <strong>Pillar 3 (20):</strong> Q2 (8) · Q3 (6, inverted-U) · Q5 (6, inverted-U) <strong>Pillar 4 (15):</strong> Q1 (15)</p>
+<p>Per-answer values are in §3.</p>
+<h3 id="s44">6.2 The inverted-U, side by side</h3>
+<p>This is where Layer C stops being a re-weighting of Layer A and becomes a different instrument:</p>
+<div class="tw"><table class="tbl dual"><thead><tr><th>Q3 answer</th><th>Layer A</th><th>Layer C</th></tr></thead><tbody><tr><td>A few people experimenting on their own</td><td class="num">4</td><td class="num">2</td></tr><tr><td><strong>Across teams, each differently — no shared approach</strong></td><td class="num">11</td><td><strong>6 ← max</strong></td></tr><tr><td>Most of our team uses AI</td><td class="num">18</td><td class="num">4</td></tr><tr><td>Woven into operations — infrastructure</td><td class="num">25</td><td class="num">2</td></tr></tbody></table></div>
+<div class="tw"><table class="tbl dual"><thead><tr><th>Q5 answer</th><th>Layer A</th><th>Layer C</th></tr></thead><tbody><tr><td>Not really using it yet</td><td class="num">1</td><td class="num">1</td></tr><tr><td><strong>Using AI tools but no clear business impact</strong></td><td class="num">8</td><td><strong>6 ← max</strong></td></tr><tr><td>Productivity gains, nothing company-wide</td><td class="num">16</td><td class="num">5</td></tr><tr><td>Real, measurable business results</td><td class="num">25</td><td class="num">2</td></tr></tbody></table></div>
+<h3 id="s45">6.3 Hard gates</h3>
+<p>Any one firing forces REJECT and suppresses the CTA regardless of score. Each traces to a line in <code>AI Workflow ROI Diagnostic Qualification Criteria.md</code>.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>ID</th><th>Condition</th><th>Criteria-doc line</th></tr></thead><tbody><tr><td><strong>HG1</strong></td><td>Q13 = &quot;Unlikely — mostly curious right now&quot;</td><td>&quot;Primarily wants general AI education, brainstorming, or free consulting without a specific workflow problem&quot;</td></tr><tr><td><strong>HG2</strong></td><td>Q1 = &quot;Individual Contributor&quot;</td><td>&quot;No meaningful access to the workflow owner or buying process and cannot make an introduction&quot;</td></tr><tr><td><strong>HG3</strong></td><td>Q11a = &quot;It runs smoothly — I&#x27;m mostly here to explore&quot;</td><td>&quot;No identifiable operational pain or meaningful cost&quot;</td></tr><tr><td><strong>HG4</strong></td><td>Q10 = &quot;Less than 5 hours&quot; <strong>AND</strong> Q8 = &quot;Just me&quot;</td><td>&quot;Too trivial to support an economically rational engagement&quot;</td></tr><tr><td><strong>HG5</strong></td><td>Q3 = &quot;a few experimenting&quot; <strong>AND</strong> Q4 = &quot;No formal strategy&quot; <strong>AND</strong> Q5 = &quot;not really using it yet&quot;</td><td>&quot;Fundamentally resistant to AI… would first require us to sell the category itself&quot;</td></tr></tbody></table></div>
+<p>HG5 is deliberately narrower than Layer A&#x27;s G3. <strong>A Spectator who clears HG5 — leadership engaged, real pain, willing to act — does receive the CTA.</strong></p>
+<h3 id="s46">6.4 Soft flags</h3>
+<p>CTA still shows; the internal brief carries the note.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>ID</th><th>Condition</th><th>Note</th></tr></thead><tbody><tr><td>SF1</td><td>Q2 ∈ {Under 25, 301–500, Over 500}</td><td>Outside ICP size band — confirm the economics justify an exception</td></tr><tr><td>SF2</td><td>Q1 ∈ {Manager, Director}</td><td>Map the buying committee early</td></tr><tr><td>SF3</td><td>Q8 = &quot;16 or more people&quot;</td><td>Delivery complexity — probe scope containment</td></tr><tr><td>SF4</td><td>Architect AND Q5 = &quot;measurable results&quot;</td><td>May already have internal capability — probe what&#x27;s actually missing</td></tr><tr><td>SF5</td><td>Q13 = &quot;Possibly — we&#x27;re exploring&quot;</td><td>Timing unconfirmed — establish the trigger event</td></tr><tr><td>SF6</td><td>Q7 = &quot;Other&quot;</td><td>Outside known taxonomy — see Q7b</td></tr><tr><td>SF7</td><td>Q4 = &quot;No formal strategy yet&quot;</td><td>No executive sponsor identified</td></tr><tr><td>SF8</td><td>Function ∈ {Ops, Tech, Transformation} AND Q1 ≥ Director</td><td><strong>★ Priority signal, not a caveat</strong> — ideal champion per ICP §6</td></tr><tr><td>SF9</td><td>Q11b includes &quot;same information entered or copied more than once&quot;</td><td>Direct integration opportunity</td></tr><tr><td>SF10</td><td>Q11b includes &quot;work sits waiting for review or approval&quot;</td><td>Routing / approval-flow opportunity</td></tr></tbody></table></div>
+<h3 id="s47">6.5 Decision tiers</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>Condition</th><th>Decision</th><th>CTA</th><th>Action</th></tr></thead><tbody><tr><td>Any hard gate fires</td><td><strong>REJECT / NOT NOW</strong></td><td>No</td><td>Nurture sequence</td></tr><tr><td>Score ≥ 65, no gates</td><td><strong>ACCEPT</strong></td><td>Yes</td><td>Priority outreach; rank by score</td></tr><tr><td>Score 45–64, no gates</td><td><strong>HOLD / QUALIFY ON CALL</strong></td><td>Yes</td><td>Brief names the weak pillar</td></tr><tr><td>Score &lt; 45, no gates</td><td><strong>REJECT / NOT NOW</strong></td><td>No</td><td>Nurture sequence</td></tr></tbody></table></div>
+<p>Calibrated for balanced strictness at 7+ calls/week capacity, where volume rather than capacity is the binding constraint.</p>
+<h3 id="s48">6.6 Company-size threshold modifier</h3>
+<p>The ICP states that companies outside 50–250 employees &quot;are exceptions, not the default. Consider them only when the workflow economics, buyer access, urgency, and delivery fit are unusually strong.&quot;</p>
+<p><strong>If Q2 ∈ {Under 25, Over 500}, both thresholds rise by 15: HOLD becomes 60, ACCEPT becomes 80.</strong></p>
+<p>A stricter bar rather than a hard gate — which is exactly what &quot;exception, not default&quot; means. It works in both directions:</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Profile</th><th>Layer C</th><th>Standard bar</th><th>Raised bar</th><th>Outcome</th></tr></thead><tbody><tr><td>AI-curious sub-25 company, owner-CEO, modest workflow</td><td class="num">49</td><td>HOLD → CTA</td><td>below 60</td><td><strong>REJECT</strong> ✓</td></tr><tr><td>Dept head in 500+ enterprise, severe pain</td><td class="num">81</td><td>ACCEPT</td><td>clears 80</td><td><strong>ACCEPT</strong> ✓</td></tr></tbody></table></div>
+<p>The small-company case is instructive: 15 of its 49 points come from Q1 = Owner/CEO. Perfect decision access over a workflow too small to matter is not a qualified opportunity.</p>
+<h3 id="s49">6.7 FAEO pre-population</h3>
+<p>Layer C pre-fills 5 of the 9 criteria in the FAEO Scorecard on its 1–5 scale, so the internal brief arrives as a partial scorecard.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Criterion</th><th>From</th><th>Mapping</th></tr></thead><tbody><tr><td>Pain</td><td>Layer B</td><td>0–19→1, 20–39→2, 40–59→3, 60–79→4, 80–100→5</td></tr><tr><td>Urgency</td><td>Q13</td><td>Unlikely→1, Possibly→2, Likely→4, Very likely→5</td></tr><tr><td>Access</td><td>Q1</td><td>IC→1, Manager→2, Director→3, C-Suite/VP→4, Owner→5</td></tr><tr><td>AI Readiness</td><td>Layer A</td><td class="num gate">HG5→1, Spectator→2, Explorer→3, Builder→4, Architect→5</td></tr><tr><td>Repeatability</td><td>Q7</td><td>Named category→4, Other→2</td></tr></tbody></table></div>
+<p><strong>Not derivable — leave blank:</strong> Budget, Uzziah + Arielle Fit, Delivery Simplicity, Proof Speed. Per the FAEO doc, <strong>blanks are not 5s.</strong></p>
+<hr>
+<h2 id="s50"><span class="secnum">7</span>The Results Page</h2>
+<h3 id="s51">7.1 Routing</h3>
+<pre class="diagram"><code>14 answers
+    │
+    ├─► Layer A ──► band ──► gates G1-G3 ──► ARCHETYPE ──► result page (1 of 4)
+    │
+    ├─► Layer B ─────────────────────────► OPPORTUNITY SCORE + tier + $ estimate
+    │
+    └─► Layer C ──► hard gates HG1-HG5
+                          │
+                ┌─────────┴─────────┐
+             fires              none fire
+                │                   │
+             REJECT            score band
+                │              ┌────┴────┐
+          no CTA shown      ≥45        &lt;45
+          nurture email       │           │
+                        CTA shown     no CTA
+                              │       nurture
+                      ACCEPT ≥65 → priority
+                      HOLD 45-64 → flagged</code></pre>
+<p><strong>Two independent axes.</strong> Which page you land on is Layer A. Whether the CTA is visible on it is Layer C. All sixteen combinations are reachable.</p>
+<h3 id="s52">7.2 Score display</h3>
+<p>Archetype and AI Readiness Score are the hero. Opportunity Score is secondary, paired with the dollar estimate. This preserves identity-discovery framing rather than making the page a two-number dashboard.</p>
+<p><strong>Suppress</strong> the default &quot;Thank you for taking the AI Readiness Assessment&quot; headline — the archetype reveal makes reintroducing the quiz name feel like a reset. Move the email delivery notice <em>below</em> the score card.</p>
+<h3 id="s53">7.3 The Positioning Statement</h3>
+<p>Shown beneath both scores. The line designed to travel — what they screenshot and send to leadership.</p>
+<div class="tw"><table class="tbl"><thead><tr><th></th><th>Opportunity low (0–59)</th><th>Opportunity high (60–100)</th></tr></thead><tbody><tr><td><strong>Readiness high (55–100)</strong></td><td>&quot;You&#x27;re in good shape. This particular workflow isn&#x27;t your biggest lever — the next question worth asking is where your real constraint actually sits.&quot;</td><td>&quot;You&#x27;re positioned to move on this now. You have the organizational readiness <em>and</em> a workflow worth the effort. That combination is rarer than it sounds.&quot;</td></tr><tr><td><strong>Readiness low (0–54)</strong></td><td>&quot;Start small. Neither your AI foundation nor this particular workflow is the urgent thing — which means you get to choose your first move deliberately rather than reactively.&quot;</td><td>&quot;There&#x27;s a real prize here — and a foundation to build first. Companies in this position often get the most value from fixing one workflow well and letting that become the proof that funds everything after it.&quot;</td></tr></tbody></table></div>
+<p>The bottom-right cell matters most: a large opportunity in a company not yet organized to capture it. Say so honestly rather than implying readiness they don&#x27;t have.</p>
+<h3 id="s54">7.4 Personalized insight paragraphs</h3>
+<p><strong>8 workflow categories × 6 pain types = 48 variants.</strong> Triggered by Q7 + Q12. Full copy in <code>content/results-copy.md</code> §Layer 3 — the only content not reproduced in this document.</p>
+<p>If ScoreApp supports only single-question conditional copy, use Q7 as the trigger and the &quot;Time (bottlenecks)&quot; variant as each category&#x27;s default.</p>
+<h3 id="s55">7.5 Benchmarks</h3>
+<ul><li><strong>Static, all respondents:</strong> knowledge workers spend ~23% of the workweek on partially or fully automatable tasks (McKinsey Global Institute, 2021). <strong>Verify before launch</strong> and update the citation if a newer figure exists.</li><li><strong>Dynamic, by Q10:</strong> annual hours and cost range from the table in §3.</li></ul>
+<h3 id="s56">7.6 CTA copy</h3>
+<p><strong>Primary — all respondents.</strong> &quot;Get your AI Readiness Brief&quot; → &quot;Send my Brief&quot;</p>
+<p><strong>Secondary — Layer C = ACCEPT or HOLD only.</strong> Same Calendly link, two framings:</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Archetype</th><th>Body</th></tr></thead><tbody><tr><td>Builder, Architect</td><td>&quot;Talk through your results with our team. We&#x27;ll examine the workflow you identified from both the business and technical sides and determine whether there&#x27;s a practical opportunity worth pursuing — and roughly what it&#x27;s worth.&quot;</td></tr><tr><td>Spectator, Explorer</td><td>&quot;You don&#x27;t need an AI strategy to have this conversation — you need one workflow worth examining, and you&#x27;ve just described one. We&#x27;ll look at it from both the business and technical sides and tell you honestly whether it&#x27;s the right place to start.&quot;</td></tr></tbody></table></div>
+<p><strong>Not-qualified note — Layer C = REJECT.</strong> Four variants keyed to which gate fired (HG3/HG4 workflow is fine · HG1 not ready · HG5 early stage · HG2 access). Full copy in <code>content/results-copy.md</code>.</p>
+<blockquote class="note"><p><strong>Principle across all four:</strong> never imply the respondent failed. They completed an honest assessment and got an honest answer. Every variant gives them something to do and a reason to keep the page.</p></blockquote>
+<hr>
+<h2 id="s57"><span class="secnum">8</span>The Internal Brief</h2>
+<p>Sent to Uzziah + Arielle <strong>30 minutes after submission</strong>. Full template in <code>content/internal-brief-template.md</code>.</p>
+<p><strong>Subject line leads with the Layer C decision, not the respondent-facing score:</strong></p>
+<pre class="code"><code>[ACCEPT 89 · Builder] Sarah M. at Clearwater Consulting
+[HOLD 52 · Explorer] Dana R. at Apex Group
+[REJECT — HG3 · Architect] Marcus L. at Vantage Systems</code></pre>
+<p>High readiness plus REJECT is now a common combination, so the subject line has to make it unmissable. v1&#x27;s <code>score &gt;= 76 → 🔥 HOT LEAD</code> rule fired on the blended score and would have flagged mature companies with no workflow pain as hot leads.</p>
+<p><strong>Contents:</strong> decision block · respondent + consent status · all three scores · Layer C pillar breakdown · demotion-gate explanations · all fired flags · AI readiness signals (with the inverted-U reading note) · workflow detail including Q11b symptoms · cost estimate · conditional talking points · FAEO pre-fill · calendar and consent status.</p>
+<blockquote class="note warn"><ul><li><strong>Phase 1 (native):</strong> flat notification with all answers, all three scores, the Layer C tier. Talking points read from a static reference.</li><li><strong>Phase 2 (webhook):</strong> full conditional rendering. <strong>This is what makes the internal side genuinely useful.</strong></li></ul><p> <strong>Rendering dependency.</strong> The template is built on conditional blocks, and ScoreApp documents Dynamic Content for result pages and PDFs but <strong>never for emails</strong>.</p></blockquote>
+<hr>
+<h2 id="s58"><span class="secnum">9</span>Email Sequences</h2>
+<p>Full copy in <code>content/follow-up-sequences.md</code>.</p>
+<blockquote class="note warn"><p> <strong>No sequence fires without <code>opt_in = true</code>.</strong> Respondents who don&#x27;t opt in get their on-screen results and nothing else; any outreach must be individual and manual.</p></blockquote>
+<div class="tw"><table class="tbl"><thead><tr><th>Layer C</th><th>Seq 1 Brief</th><th>Seq 1 booking block</th><th>Seq 2 Non-booker (day 5)</th><th>Seq 3 Nurture (day 14)</th></tr></thead><tbody><tr><td>ACCEPT</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr><tr><td>HOLD</td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td></tr><tr><td>REJECT</td><td>Yes</td><td><strong>No</strong></td><td><strong>No</strong></td><td>Yes — variant by gate</td></tr><tr><td><code>opt_in = false</code></td><td><strong>No</strong></td><td class="nil">—</td><td><strong>No</strong></td><td><strong>No</strong></td></tr></tbody></table></div>
+<p><strong>Sequence 3 has four gate-specific variants</strong> (3a workflow is fine · 3b not ready · 3c early stage · 3d access). They must not collapse into one generic email — &quot;your workflow is fine,&quot; &quot;you&#x27;re not ready,&quot; and &quot;you can&#x27;t reach the buyer&quot; are three different conversations, and a generic message gets all three wrong.</p>
+<hr>
+<h2 id="s59"><span class="secnum">10</span>ScoreApp Build</h2>
+<p><strong>Plan: Business ($99/mo)</strong> — Audiences, multiple result pages, section-level conditional visibility, integration tags, and external redirects all require this tier.</p>
+<h3 id="s60">10.1 Categories</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>Category</th><th>Contents</th><th>Counts toward total?</th></tr></thead><tbody><tr><td>AI Readiness</td><td>Layer A values</td><td><strong>Yes</strong> — total score = Layer A</td></tr><tr><td>Workflow Opportunity</td><td>Layer B values</td><td>No (<code>scoring_logic: none</code>)</td></tr><tr><td>Diagnostic Fit</td><td>Layer C values</td><td>No (<code>scoring_logic: none</code>, <code>type: hidden</code>)</td></tr></tbody></table></div>
+<p>One answer awards <strong>different point values to different categories</strong> — confirmed supported. Q4 carries 25 in AI Readiness and 8 in Diagnostic Fit on the same option.</p>
+<h3 id="s61">10.2 Archetype audiences — priority-ordered, first match wins</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Audience</th><th>Conditions</th></tr></thead><tbody><tr><td>1</td><td>Architect</td><td>AI Readiness % ≥ 80 AND Q5 is &quot;real, measurable business results&quot;</td></tr><tr><td>2</td><td>Builder</td><td>AI Readiness % ≥ 55 AND Q4 is not &quot;No formal strategy yet&quot; AND (Q3 is not &quot;a few experimenting&quot; OR Q5 is not &quot;not really using it yet&quot;)</td></tr><tr><td>3</td><td>Explorer</td><td>AI Readiness % ≥ 30 AND (Q3 is not &quot;a few experimenting&quot; OR Q5 is not &quot;not really using it yet&quot;)</td></tr><tr><td>4</td><td>Spectator</td><td><em>(default — all remaining)</em></td></tr></tbody></table></div>
+<p>G1 is the Architect rule&#x27;s second condition; G2 the Builder rule&#x27;s second; G3 the De Morgan expansion in rules 2 and 3.</p>
+<p><strong>Not using &quot;Outcome / highest category&quot; routing.</strong> These archetypes are ordinal <em>levels</em>, not parallel personality types. Highest-category matching would be conceptually wrong and would inherit ScoreApp&#x27;s arbitrary tie-breaking (ties resolve to whichever category sits higher in the list).</p>
+<h3 id="s62">10.3 CTA audience</h3>
+<pre class="code"><code>Diagnostic Fit % ≥ 45
+  AND Q13  is not &quot;Unlikely — mostly curious right now&quot;           (HG1)
+  AND Q1   is not &quot;Individual Contributor&quot;                         (HG2)
+  AND Q11a is not &quot;It runs smoothly — I&#x27;m mostly here to explore&quot;  (HG3)
+  AND (Q10 is not &quot;Less than 5 hours&quot; OR Q8 is not &quot;Just me&quot;)      (HG4)
+  AND (Q3 is not &quot;a few experimenting&quot;
+       OR Q4 is not &quot;No formal strategy yet&quot;
+       OR Q5 is not &quot;not really using it yet&quot;)                     (HG5)</code></pre>
+<p>Second audience <strong>Diagnostic Priority</strong> (<code>≥ 65</code> + same gates) drives ranking and the CRM tag.</p>
+<h3 id="s63">10.4 Phasing</h3>
+<p><strong>Phase 1 — native.</strong> Layers A and B in full. Archetype routing with all three gates. Layer C as a hidden additive category with as many hard gates as Audience logic supports. Flat internal notification.</p>
+<p><strong>Phase 2 — webhook.</strong> <code>QUIZ_FINISHED</code> → Make/Zapier. Layer C recomputed with exact logic; rich internal brief rendered; FAEO pre-fill; CRM write.</p>
+<p>Two payload facts shape phase 2:</p>
+<ul><li><strong>No per-question scores</strong> — only <code>total_score</code> and <code>category_scores</code> aggregates. Layer C is re-derived from answer <em>text</em>, which makes the automation the single source of truth for gate logic.</li><li><strong>Multi-select arrives as an array of objects</strong>, not bare strings: <code>&quot;answers&quot;: [{&quot;answer&quot;: &quot;...&quot;}, {&quot;answer&quot;: &quot;...&quot;}]</code>.</li></ul>
+<h3 id="s64">10.5 Verified platform facts</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>Fact</th><th>Status</th></tr></thead><tbody><tr><td>One answer can award different points to different categories</td><td><strong>Confirmed</strong></td></tr><tr><td>A category can be excluded from the total score</td><td><strong>Confirmed</strong> (<code>scoring_logic: none</code>, <code>type: hidden</code>)</td></tr><tr><td>Audiences support AND/OR across answers, category subscores, and total</td><td><strong>Confirmed</strong></td></tr><tr><td>Multi-select scores <code>Σ(selected) ÷ Σ(all options)</code>; no cap setting</td><td><strong>Confirmed</strong></td></tr><tr><td>Native GDPR consent with timestamp + wording, passed as <code>opt_in</code></td><td><strong>Confirmed</strong></td></tr><tr><td>Jump logic cannot branch per-answer on a multi-select</td><td><strong>Confirmed</strong></td></tr><tr><td>A public Open API exists (the only place <code>score_potential</code> is exposed)</td><td><strong>Confirmed</strong></td></tr></tbody></table></div>
+<blockquote class="note"><p>A note dated 2026-08-19 concluded ScoreApp could only branch result pages on the overall score, and the live build was collapsed to a single dimension as a result. <strong>That was wrong</strong> — &quot;Outcome&quot; means highest-scoring <em>category</em>, and Audiences do far more. The correction is what makes this architecture possible.</p></blockquote>
+<h3 id="s65">10.6 Still to verify in the account UI</h3>
+<div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Question</th><th>Priority</th></tr></thead><tbody><tr><td>1</td><td>Confirm the multi-select denominator empirically — 6-option checkbox at 2 pts, tick one, expect 20%</td><td><strong>First</strong></td></tr><tr><td>2</td><td>Does an &quot;Other&quot; option with free text exist? (Q7b is the fallback and works regardless)</td><td>High</td></tr><tr><td>3</td><td class="num gate">Audience condition nesting — is an AND of OR-groups expressible? Blocks HG4/HG5</td><td>High</td></tr><tr><td>4</td><td>Can a result-page section be <em>hidden by</em> audience, or only <em>shown to</em> it?</td><td>Medium</td></tr><tr><td>5</td><td>Does an optional scored question left blank leave the denominator? (Mitigated: all scored questions required)</td><td>Medium</td></tr><tr><td>6</td><td>Merge-tag inventory in notification emails</td><td>Medium</td></tr><tr><td>7</td><td>Which plan tier enables webhooks</td><td>Low</td></tr></tbody></table></div>
+<hr>
+<h2 id="s66"><span class="secnum">11</span>Validation</h2>
+<p>Five profiles from the question review, re-derived against this model.</p>
+<div class="tw"><table class="tbl"><thead><tr><th>Mock company</th><th>Expected</th><th>This model</th><th>Correct in v1?</th></tr></thead><tbody><tr><td>AI-curious sub-25 company, modest workflow, owner-CEO</td><td>Spectator, no Diagnostic</td><td>Spectator. Layer C <strong>49</strong>; size modifier raises bar to 60 → <strong>REJECT</strong></td><td>✓</td></tr><tr><td>100-person, fragmented adoption, $100K/yr burden, Ops leader</td><td>Prime candidate</td><td>Explorer/Builder. Layer B 83, Layer C <strong>89</strong> → <strong>ACCEPT</strong>, top of ranking</td><td>✗ under-ranked</td></tr><tr><td>AI-mature, measurable ROI, no workflow pain</td><td>Not a hot lead</td><td class="num gate">Architect. Layer B 27, Layer C 59 — <strong>HG3 fires</strong> → <strong>REJECT</strong>. SF4 would flag regardless</td><td>✗ flagged &quot;🔥 HOT LEAD&quot;</td></tr><tr><td>Dept head in 500+ enterprise, severe pain</td><td>Intentional exception</td><td>Layer C <strong>81</strong>, clears raised 80 bar → <strong>ACCEPT</strong>. SF1 + SF2 + SF3</td><td>✗ unhandled</td></tr><tr><td>Strong economics, no leadership support, Director</td><td>Acknowledge opportunity, soft CTA</td><td>Explorer (G2). Layer B high, Layer C <strong>75</strong> → <strong>ACCEPT</strong> with SF7 + SF2</td><td>✗</td></tr></tbody></table></div>
+<p><strong>Three of five were mis-routed by v1.</strong></p>
+<p><strong>One row deserves scrutiny.</strong> The last reaches ACCEPT at 75 rather than HOLD, because strong workflow economics (31/35) and maturity fit (20/20) outweigh a zero on leadership. The review asked for a softer CTA here. Two defences: the criteria doc&#x27;s minimum bar is &quot;already using, piloting, budgeting for, or actively exploring&quot; — no formal strategy is not the same as resistant — and SF7 puts the missing sponsor in front of the founders before the call. <strong>If founder time gets scarcer, raising Q4&#x27;s Pillar 2 weight is the first dial to turn.</strong></p>
+<p><strong>Before launch:</strong> expand to 15 profiles per the question review&#x27;s recommendation, and answer the quiz as each company would. If an archetype doesn&#x27;t feel obviously correct to a human reading the answers, move the bands.</p>
+<hr>
+<h2 id="s67"><span class="secnum">12</span>Calibration</h2>
+<p>Every threshold in §4.2, §5.2, §6.5 and §6.6 is a <strong>tuning dial, not a finding</strong>. Pre-launch they are set by judgement against §11. Recalibrate after the first ~50 submissions:</p>
+<ul><li>More than ~60% qualifying → the ACCEPT threshold is too low.</li><li>Archetype distribution heavily skewed to one level → move the Layer A bands.</li><li>Diagnostic calls repeatedly surfacing a disqualifier the quiz missed → that disqualifier needs a question or a gate.</li><li><strong>Watch the no-executive-sponsor profile specifically.</strong> It reaches ACCEPT on workflow economics alone. If those calls consistently stall on the absence of a sponsor, increase Q4&#x27;s weight in Pillar 2 or require Q4 ≠ &quot;No formal strategy yet&quot; for ACCEPT.</li></ul>
+<h3 id="s68">Deliberately out of scope</h3>
+<ul><li><strong>Technical feasibility signals</strong> (data access, systems, security). Valuable, but a business leader can&#x27;t answer them reliably in a quiz, and they&#x27;re core Diagnostic material.</li><li><strong>Budget signal.</strong> Asking about money inside a free assessment damages the identity-discovery framing. Stays a call question and a blank in the FAEO pre-fill.</li><li><strong>Multi-select on Q12.</strong> Richer data, materially more complex weighting, and it would break the 48-variant copy matrix.</li></ul>
+<hr>
+<h2 id="s69"><span class="secnum">13</span>Change Log</h2>
+<h3 id="s70">v2.0 — 2026-08-21</h3>
+<p><strong>Architecture</strong></p>
+<ul><li>Split one blended score into three layers. v1 mixed company fit, AI maturity, and workflow economics in a single number driving the score, the archetype, <em>and</em> the CTA.</li><li>Archetype now driven by Layer A with demotion gates, not by the blended score.</li><li>CTA now driven entirely by Layer C, decoupled from archetype.</li><li>Q1 and Q2 removed from all visible scoring.</li></ul>
+<p><strong>Questions</strong> — 11 scored → 14 scored</p>
+<ul><li>Added Q6 (AI ownership) and Q13 (willingness to act).</li><li>Split v1&#x27;s Q10 into Q11a (single-select automation level) + Q11b (multi-select symptoms). Weight-neutral.</li><li>Q1 function option moved to the contact form; consent checkbox added.</li><li>Q7 made unscored; Q8 made monotonic; Q12 gained &quot;Customer experience&quot; and had its spread compressed.</li></ul>
+<p><strong>Copy</strong></p>
+<ul><li>Archetypes renamed Observer / Tinkerer / Catalyst / Architect → <strong>Spectator / Explorer / Builder / Architect</strong>.</li><li>Stage labels retired — the archetype plus two tier labels already do that work.</li><li>40 → 48 insight variants.</li><li>Added the Positioning Statement 2×2.</li><li>Four gate-specific not-qualified variants replace the single &quot;AI Observer Note.&quot;</li><li>Four gate-specific nurture emails replace one generic nurture email.</li></ul>
+<p><strong>Corrected from v1</strong></p>
+<ul><li>The 2026-08-19 platform finding was wrong (§10.5).</li><li>Q7 &quot;Other&quot; scored 0 while named categories scored 8–10 — choosing the honest answer tanked the score.</li><li>Q8 scored 16+ people below 6–15.</li><li><code>score &gt;= 76 → 🔥 HOT LEAD</code> fired on the blended score and would flag mature, pain-free companies as hot leads.</li></ul></main>
+</div>
