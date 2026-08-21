@@ -707,11 +707,13 @@ Full copy in `content/follow-up-sequences.md`.
 
 ### 10.1 Categories
 
-| Category | Contents | Counts toward total? |
-|---|---|---|
-| AI Readiness | Layer A values | **Yes** — total score = Layer A |
-| Workflow Opportunity | Layer B values | No (`scoring_logic: none`) |
-| Diagnostic Fit | Layer C values | No (`scoring_logic: none`, `type: hidden`) |
+| Category | Contents | Score logic | Hidden |
+|---|---|---|---|
+| AI Readiness | Layer A values | `Add category score to total score` | Off |
+| Workflow Opportunity | Layer B values | `Do not affect total score` | Off |
+| Diagnostic Fit | Layer C values | `Do not affect total score` | **ON — required** |
+
+> ⚠️ **Two independent settings, and Diagnostic Fit needs both.** Verified in the account on 2026-08-21: a category excluded from the total score still *displays* on the results page — in the donut legend and as its own score card. Only the `Hidden` toggle suppresses it. Without it every prospect sees their own qualification score, and the configuration screens give no hint anything is wrong.
 
 One answer awards **different point values to different categories** — confirmed supported. Q4 carries 25 in AI Readiness and 8 in Diagnostic Fit on the same option.
 
@@ -755,12 +757,14 @@ Two payload facts shape phase 2:
 
 ### 10.5 Verified platform facts
 
+*Rows marked **account** were confirmed hands-on in the live ScoreApp account on 2026-08-21; the rest are from official documentation.*
+
 | Fact | Status |
 |---|---|
-| One answer can award different points to different categories | **Confirmed** |
-| A category can be excluded from the total score | **Confirmed** (`scoring_logic: none`, `type: hidden`) |
+| One answer can award different points to different categories | **Confirmed — account** |
+| A category can be excluded from the total score | **Confirmed — account.** Separate `Hidden` toggle controls display |
 | Audiences support AND/OR across answers, category subscores, and total | **Confirmed** |
-| Multi-select scores `Σ(selected) ÷ Σ(all options)`; no cap setting | **Confirmed** |
+| Multi-select scores `Σ(selected) ÷ Σ(all options)`; no cap setting | **Confirmed — account** |
 | Native GDPR consent with timestamp + wording, passed as `opt_in` | **Confirmed** |
 | Jump logic cannot branch per-answer on a multi-select | **Confirmed** |
 | A public Open API exists (the only place `score_potential` is exposed) | **Confirmed** |
@@ -771,7 +775,7 @@ Two payload facts shape phase 2:
 
 | # | Question | Priority |
 |---|---|---|
-| 1 | Confirm the multi-select denominator empirically — 6-option checkbox at 2 pts, tick one, expect 20% | **First** |
+| ~~1~~ | ~~Confirm the multi-select denominator empirically~~ — ✅ **CONFIRMED 2026-08-21.** Sandbox read 73% at one tick and 89% at four, both matching prediction exactly. `Σ(selected) ÷ Σ(all options)` holds, so Q11b's point values are safe as specified. | done |
 | 2 | Does an "Other" option with free text exist? (Q7b is the fallback and works regardless) | High |
 | 3 | Audience condition nesting — is an AND of OR-groups expressible? Blocks HG4/HG5 | High |
 | 4 | Can a result-page section be *hidden by* audience, or only *shown to* it? | Medium |
