@@ -174,9 +174,14 @@ Submit the sandbox quiz selecting "High". Read the overall score.
 | A fails | **STOP.** Layer C cannot coexist with Layer A natively. Do not proceed — the webhook becomes a launch prerequisite, not a phase 2. |
 | B fails only | **STOP AND RAISE.** Layer B and C would inflate the visible score. A workaround may exist (a second scorecard, or reweighting so contamination is tolerable) but it is a design decision, not an implementation one. |
 
-- [ ] **Step 6: Log the outcome**
+- [x] **Step 6: Log the outcome** — ✅ **COMPLETE 2026-08-21. Both behaviors PASS. GO.**
 
-Append to §Build Log: date, both results, and the actual UI paths found.
+Real UI paths, confirmed in the account:
+- Categories: left icon rail → **Categories** (creatable with no questions present)
+- Per-category score logic: select category → **LOGIC** tab → `Score logic` dropdown + `Hidden` toggle
+- Per-answer scoring: left icon rail → **Questions** → select question → **ANSWERS** tab → per-answer `Scores` block listing each category with its own points field, plus `+ Add scoring` to attach more categories
+
+Behavior A evidence: a single `Yes` answer held `TEST-A +25` and `TEST-B +8` simultaneously, in separate fields.
 
 ---
 
@@ -196,7 +201,22 @@ Three behaviors that shape *how* things get built rather than *whether*. None is
 >
 > **E — section hiding.** A result-page section should be controllable by audience membership — ideally both "show only to" and "hide from".
 
-- [ ] **Step 2: Test C — the multi-select denominator**
+- [x] **Step 2: Test C — the multi-select denominator** — ✅ **CONFIRMED as documented, 2026-08-21**
+
+Sandbox: `Yes` = 25 into TEST-A, plus a 6-option checkbox at 2 points each.
+
+| Run | Ticked | Expected | Observed |
+|---|---|---|---|
+| 1 | 1 box | `(25+2)/(25+12)` = 73% | **73%** ✓ |
+| 2 | 4 boxes | `(25+8)/(25+12)` = 89% | **89%** ✓ |
+
+Had the denominator been the highest single option rather than the sum, run 1 would have read 100%. It read 73%. **`Σ(selected) ÷ Σ(all options)` confirmed — Q11b's design is safe exactly as specified in Task 5 Step 6, no recalculation needed.**
+
+Run 1 also proved the total-score exclusion works in practice: TEST-B read 100% while the Overall Score read 73%, identical to TEST-A alone. Had TEST-B counted, the overall would have been 78%.
+
+*(Original instructions retained below for reference.)*
+
+- [ ] ~~Step 2 (original)~~
 
 Add a multi-select question to the sandbox with 6 options at 2 points each into TEST-A. Submit, ticking exactly one.
 
@@ -239,9 +259,15 @@ Record all three results and the exact UI paths. Delete `ZZ-SANDBOX`.
 
 | # | Name (exact) | Contributes to total? | Visible on results? |
 |---|---|---|---|
-| 1 | `AI Readiness` | **Yes** | Yes |
-| 2 | `Workflow Opportunity` | **No** | Yes |
-| 3 | `Diagnostic Fit` | **No** | **Never** |
+| 1 | `AI Readiness` | **Yes** (`Add category score to total score`) | Yes |
+| 2 | `Workflow Opportunity` | **No** (`Do not affect total score`) | Yes |
+| 3 | `Diagnostic Fit` | **No** (`Do not affect total score`) | **Never — set `Hidden` = ON** |
+
+> **Verified 2026-08-21 in the account.** Both controls live on the category's **LOGIC** tab: a `Score logic` dropdown (`Add category score to total score` / `Do not affect total score`) and a separate `Hidden` toggle.
+>
+> **These are two independent settings and `Diagnostic Fit` needs both.** Excluding a category from the total does **not** hide it from the respondent — this was proven empirically in the sandbox: TEST-B was set to "do not affect total score" and still rendered on the results page, in the donut legend and as its own score card. Setting `Hidden` = ON removed it completely.
+>
+> Without the Hidden toggle, every prospect would see their own qualification score. The configuration looks correct while this is wrong; it is only visible by taking the quiz and scrolling.
 
 - [ ] **Step 3: Set the exclusion toggles**
 
@@ -747,7 +773,11 @@ If ScoreApp supports only single-question conditional copy, use **Q7** as the tr
 
 Take the quiz as each of P1, P2, P4, P5. Confirm the correct archetype hero, that both scores display and match the expected table, and that the insight paragraph matches that persona's Q7 + Q12.
 
-Then the critical negative check: **search each page for any Diagnostic Fit value.** If a category chart renders all categories by default, remove `Diagnostic Fit` from it. A respondent seeing their qualification score is the worst failure this build can produce.
+Then the critical negative check: **scroll each page to the bottom looking for any Diagnostic Fit value.**
+
+This is not hypothetical. In the Task 1 sandbox, a category excluded from the total score still rendered in the results donut legend *and* as a standalone score card further down the page. The `Hidden` toggle set in Task 3 is what prevents it — this step confirms that toggle actually took effect.
+
+A respondent seeing their own qualification score is the worst failure this build can produce, and it is invisible from the configuration screens.
 
 - [ ] **Step 6: Log**
 
@@ -1036,7 +1066,11 @@ Append one row per completed task. This replaces commit history.
 
 | Date | Task | Result | Deviations from plan / actual UI paths |
 |---|---|---|---|
-| | | | |
+| 2026-08-21 | 1 — platform go/no-go | ✅ **PASS — GO** | Both behaviors confirmed. Categories live in the left icon rail, creatable before any questions exist. Score logic + Hidden are on the category's **LOGIC** tab. Per-answer scoring is on the question's **ANSWERS** tab, one points field per category. |
+| 2026-08-21 | 2 — item C, multi-select denominator | ✅ **CONFIRMED** | 73% at one tick / 89% at four, both matching prediction exactly. Denominator = Σ(all options), as documented. |
+| 2026-08-21 | 2 — bonus finding | ⚠️ **Plan amended** | A category excluded from the total still **displays** on the results page. `Hidden` toggle is required, not optional. Tasks 3 and 9 updated. |
+| | 2 — item D, audience nesting | ⏳ not yet run | |
+| | 2 — item E, section visibility direction | ⏳ not yet run | |
 
 ---
 

@@ -405,11 +405,15 @@ Rationale: the archetype copy must be literally true of the answers given. Overc
 
 ### Categories
 
-| Category | Contents | Counts toward total? |
-|---|---|---|
-| AI Readiness | Layer A values | **Yes** — total score = Layer A |
-| Workflow Opportunity | Layer B values | No (`scoring_logic: none`) |
-| Diagnostic Fit | Layer C values | No (`scoring_logic: none`, `type: hidden`) |
+| Category | Contents | Score logic (LOGIC tab) | Hidden toggle |
+|---|---|---|---|
+| AI Readiness | Layer A values | `Add category score to total score` | Off |
+| Workflow Opportunity | Layer B values | `Do not affect total score` | Off |
+| Diagnostic Fit | Layer C values | `Do not affect total score` | **ON — required** |
+
+> ⚠️ **These are two independent settings.** Verified 2026-08-21: excluding a category from the total does **not** hide it from the respondent. A category set to "do not affect total score" still rendered on the results page — in the donut legend and as its own score card. Only the `Hidden` toggle removes it.
+>
+> Without it, every prospect sees their own Diagnostic Fit score. The configuration screens look correct while this is wrong.
 
 One answer awards **different point values to different categories** — confirmed supported. Q4 carries 25 in AI Readiness and 8 in Diagnostic Fit on the same option.
 
