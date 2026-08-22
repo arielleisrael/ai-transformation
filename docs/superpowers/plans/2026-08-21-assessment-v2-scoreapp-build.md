@@ -47,6 +47,8 @@ git init && git add -A && git commit -m "chore: baseline before v2 assessment bu
 - **Changes are NOT auto-saved.** The builder requires an explicit **Save** (top right). Leaving the page raises an "Unsaved Changes" dialog; clicking "Leave Page" discards everything. Save after every question.
 - **Save is blocked by any validation error anywhere in the scorecard.** A single question with no text produces "You have 1 question error" and blocks saving *all* pending work, including unrelated category settings. Never leave a half-built question when moving on.
 - **Admin URL is `manage.scoreapp.com`** (not `app.` — that redirects to the marketing site). Audiences and most builder screens are scoped to a selected scorecard and cannot be reached by direct URL.
+- **Two different Save controls.** The *builder* (questions, categories, result pages) saves from a button top-right. *Settings* pages have their own **Save** at the bottom of the page, after scrolling. They are not the same control and one does not save the other.
+- **Scorecard rename lives at `Settings → General → NAME`**, not in the card's `…` menu (which only offers Go to / Move / Clone / Delete).
 - **Canonical spec:** `docs/AI-Readiness-Assessment-Master-Reference.md`. If any other document disagrees, that one wins.
 
 ---
@@ -1099,6 +1101,28 @@ Final sweep of test data. Record the dry-run results and launch date.
 
 ---
 
+## Live Account Map — confirmed 2026-08-21
+
+Working scorecard: **`The AI Readiness Assessment`** at `arielle-69xcouvy.scoreapp.com` (draft).
+Archived v1: **`AI Readiness Assessment — v1 (archive)`** at `arielle-86mp1dws.scoreapp.com` — do not edit.
+
+| Need | Where |
+|---|---|
+| Categories, score logic, Hidden | Builder → **Categories** (icon rail) → select category → **LOGIC** tab |
+| Per-answer scoring | Builder → **Questions** → select question → **ANSWERS** tab → per-answer `Scores` block |
+| Question type, Required, Jump to | Builder → **Questions** → **QUESTION** tab |
+| Audiences (Tasks 7, 8) | Left nav → **Audiences** (scorecard-scoped) |
+| Result pages, section visibility (Tasks 9, 10) | Left nav → **Result Pages** → select section → visibility dialog |
+| Lead form + consent (Task 6) | **Settings → Lead Form** |
+| Internal notification (Task 12) | **Settings → Notifications** |
+| Score tier bands | **Settings → Score Tiers** |
+| Respondent result email (Task 13) | **Settings → Result Email** |
+| Rename, URL, draft mode | **Settings → General** |
+
+**Draft mode** is on by default, and Settings → General holds a generated password that grants a visitor access to the draft scorecard — useful for Task 11 testing without publishing.
+
+---
+
 ## Build Log
 
 Append one row per completed task. This replaces commit history.
@@ -1114,7 +1138,7 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-21 | 3 — categories | ✅ **COMPLETE & SAVED** | New scorecard `The AI Readiness Assessment` created from scratch at **arielle-69xcouvy.scoreapp.com** (draft). All three categories created and configured: AI Readiness = *Add category score to total score* / Hidden off; Workflow Opportunity = *Do not affect total score* / Hidden off; Diagnostic Fit = *Do not affect total score* / **Hidden ON**. Verified each individually after saving. |
 | 2026-08-21 | 3 — UI notes | ℹ️ | Categories are creatable before any question exists. Create dialog is name-only with a *More Settings* link; score logic and Hidden live on the category's **LOGIC** tab after creation. The dropdown needs the option click confirmed — one selection silently failed and had to be redone. |
 | 2026-08-21 | 3 — ⚠️ open risk | ⏳ **NEEDS VERIFICATION** | Toggling Hidden raises a warning: *"Merge tags, sections, **audiences**, and CRM integration fields that use the **highest/lowest category** will no longer include this category."* Scoped to highest/lowest conditions, so **Diagnostic Fit score-threshold conditions should still work** — but this is unverified and Task 8 depends entirely on it. **Verify before building Task 8:** open Audiences on this scorecard, start a condition, and confirm `Diagnostic Fit` still appears as a selectable category score. |
-| 2026-08-21 | housekeeping | ⏳ | Two scorecards now share the name `The AI Readiness Assessment` (v1 from 2 hours ago, v2 new). Rename the v1 one to avoid editing the wrong scorecard. |
+| 2026-08-21 | housekeeping | ✅ **DONE** | v1 renamed to `AI Readiness Assessment — v1 (archive)` (still at arielle-86mp1dws, draft, 50% built — preserved, not deleted). No more name collision. Sandbox `ZZ-SANDBOX` can be deleted at will. |
 
 ---
 
