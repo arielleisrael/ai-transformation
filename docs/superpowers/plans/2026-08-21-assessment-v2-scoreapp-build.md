@@ -44,6 +44,9 @@ git init && git add -A && git commit -m "chore: baseline before v2 assessment bu
 - **Layer C must never render.** No result page, PDF, or respondent-facing email may display the Diagnostic Fit category or any value derived from it.
 - **No email sequence may fire without `opt_in = true`.**
 - **Copy is already written.** Question text and answer options come verbatim from `content/quiz-questions.md`; results copy from `content/results-copy.md`; archetype copy from `content/archetypes.md`. Do not rewrite copy while configuring. If copy looks wrong, stop and raise it.
+- **Changes are NOT auto-saved.** The builder requires an explicit **Save** (top right). Leaving the page raises an "Unsaved Changes" dialog; clicking "Leave Page" discards everything. Save after every question.
+- **Save is blocked by any validation error anywhere in the scorecard.** A single question with no text produces "You have 1 question error" and blocks saving *all* pending work, including unrelated category settings. Never leave a half-built question when moving on.
+- **Admin URL is `manage.scoreapp.com`** (not `app.` — that redirects to the marketing site). Audiences and most builder screens are scoped to a selected scorecard and cannot be reached by direct URL.
 - **Canonical spec:** `docs/AI-Readiness-Assessment-Master-Reference.md`. If any other document disagrees, that one wins.
 
 ---
@@ -321,6 +324,8 @@ Six single-choice questions. Q1 and Q2 score into `Diagnostic Fit` only. Q3–Q6
 - [ ] **Step 1: State the expected result**
 
 > After this task, submitting **P1 Priya's** Q1–Q6 answers yields `AI Readiness = 54`. Submitting **P2 Marcus's** yields `AI Readiness = 100`.
+
+> **Head start from Task 3:** the scorecard's default placeholder question has already been given Q1's text — *"What's your role at your company?"* — because a question with no text blocked saving the category settings. **Its type is still `Yes/No/Maybe` and it has no answer options or scoring.** Change the type to multiple choice and build it out as below.
 
 - [ ] **Step 2: Build Q1 and Q2**
 
@@ -1106,6 +1111,10 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-21 | 2 — item D, audience nesting | ✅ **RESOLVED** | No bracket control; builder is OR-of-AND-groups (DNF). Sufficient via distribution, but Task 8 rewritten to build the **inverse** audience — 9 conditions instead of 36. |
 | 2026-08-21 | 2 — item E, section visibility | ✅ **BOTH DIRECTIONS** | `Audience Based` offers show *or* hide, with a direction toggle. Unlocks the Task 8 inverse construction. |
 | 2026-08-21 | — | ✅ **Task 1 & 2 complete** | Sandbox may now be deleted. Ready to begin Task 3. |
+| 2026-08-21 | 3 — categories | ✅ **COMPLETE & SAVED** | New scorecard `The AI Readiness Assessment` created from scratch at **arielle-69xcouvy.scoreapp.com** (draft). All three categories created and configured: AI Readiness = *Add category score to total score* / Hidden off; Workflow Opportunity = *Do not affect total score* / Hidden off; Diagnostic Fit = *Do not affect total score* / **Hidden ON**. Verified each individually after saving. |
+| 2026-08-21 | 3 — UI notes | ℹ️ | Categories are creatable before any question exists. Create dialog is name-only with a *More Settings* link; score logic and Hidden live on the category's **LOGIC** tab after creation. The dropdown needs the option click confirmed — one selection silently failed and had to be redone. |
+| 2026-08-21 | 3 — ⚠️ open risk | ⏳ **NEEDS VERIFICATION** | Toggling Hidden raises a warning: *"Merge tags, sections, **audiences**, and CRM integration fields that use the **highest/lowest category** will no longer include this category."* Scoped to highest/lowest conditions, so **Diagnostic Fit score-threshold conditions should still work** — but this is unverified and Task 8 depends entirely on it. **Verify before building Task 8:** open Audiences on this scorecard, start a condition, and confirm `Diagnostic Fit` still appears as a selectable category score. |
+| 2026-08-21 | housekeeping | ⏳ | Two scorecards now share the name `The AI Readiness Assessment` (v1 from 2 hours ago, v2 new). Rename the v1 one to avoid editing the wrong scorecard. |
 
 ---
 
