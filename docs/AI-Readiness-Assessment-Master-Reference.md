@@ -201,7 +201,7 @@ Also triggers the company-size threshold modifier (§6.6) and flag SF1 when Unde
 #### Q7 · Workflow Category
 *"Think about one workflow that consistently costs more time, effort, or money than it should. Which category fits best?"* — Single choice, required — **UNSCORED**
 
-Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other — something else
+Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other
 
 **Job:** selects the insight paragraph (§7.4) and sets the FAEO Repeatability signal. In v1 this scored 8–10 for named categories and **0** for "Other," so choosing the honest answer silently tanked the score. Now unscored.
 

@@ -148,7 +148,7 @@ Also triggers the **company-size threshold modifier** (§7.4) and soft flag SF1 
 | Approval & review processes | — | — | — |
 | Employee or client onboarding | — | — | — |
 | Sales operations & CRM | — | — | — |
-| Other — something else | — | — | — |
+| Other | — | — | — |
 
 **Job:** selects the insight paragraph on the results page (8 categories × 6 pain types = 48 variants in `results-copy.md`) and sets the FAEO Repeatability signal (named category → 4, Other → 2).
 
@@ -156,7 +156,7 @@ Also triggers the **company-size threshold modifier** (§7.4) and soft flag SF1 
 
 ### Q7b — Workflow Description
 **Text:** "In a sentence, what is it?"
-**Type:** Open Text · **Optional** · Shown by jump logic **only when Q7 = "Other — something else"**
+**Type:** Open Text · **Optional** · Shown by jump logic **only when Q7 = "Other"**
 **Scores:** Unscored (ScoreApp never scores Open Text)
 
 Captures workflows the taxonomy is missing. Safe to attach jump logic here precisely because it is unscored — a skipped scored question would change the denominator.
@@ -373,7 +373,7 @@ Rationale: the archetype copy must be literally true of the answers given. Overc
 | SF3 | Q8 = "16 or more people" | Delivery complexity — probe scope containment |
 | SF4 | Archetype = Architect AND Q5 = "measurable results" | May already have internal capability — probe what is actually missing |
 | SF5 | Q13 = "Possibly — we're exploring" | Timing unconfirmed — establish the trigger event on the call |
-| SF6 | Q7 = "Other — something else" | Outside known taxonomy — see Q7b, confirm scope early |
+| SF6 | Q7 = "Other" | Outside known taxonomy — see Q7b, confirm scope early |
 | SF7 | Q4 = "No formal strategy yet" | No executive sponsor identified — ask who would have to sponsor this |
 | SF8 | Function ∈ {Operations, Technology, Transformation} AND Q1 ≥ Director | **Priority signal, not a caveat** — ideal champion profile per ICP §6 |
 | SF9 | Q11b includes "same information entered or copied more than once" | Direct integration opportunity — name the systems on the call |
