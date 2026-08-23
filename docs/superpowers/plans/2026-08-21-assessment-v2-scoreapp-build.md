@@ -795,11 +795,11 @@ Record all eight, plus which audience construction was used.
 - Consumes: the four archetype audiences from Task 7.
 - Produces: four result pages, each with a CTA section that Task 10 makes conditional.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > Four pages exist, each showing the correct archetype hero, both scores, the positioning statement, benchmark, insight paragraph, and both CTAs. **No page displays anything from `Diagnostic Fit`.**
 
-- [ ] **Step 2: Build the shared structure**
+- [ ] **Step 2: Build the shared structure** — 🚧 **IN PROGRESS.** Architect page has items 1–5 (hero, both scores, positioning, benchmark). Items 6–9 (insight, CTAs, not-qualified note) outstanding; Builder / Explorer / Spectator pages not started.
 
 Each page, top to bottom:
 
@@ -813,11 +813,11 @@ Each page, top to bottom:
 8. **Secondary CTA** — booking. Made conditional in Task 10.
 9. **Not-qualified note.** Made conditional in Task 10.
 
-- [ ] **Step 3: Suppress the default headline**
+- [x] **Step 3: Suppress the default headline** — ✅ **SATISFIED BY CONSTRUCTION.** "Start without a template" yields a blank page with no default headline. Avoid the pre-built section templates, which inject "Thank you for taking the {scorecard name}".
 
 Remove or blank the default "Thank you for taking the AI Readiness Assessment" heading. The archetype reveal is the hero; reintroducing the quiz name above it reads as a reset. Move the email delivery notice **below** the score card.
 
-- [ ] **Step 4: Configure the insight paragraph**
+- [ ] **Step 4: Configure the insight paragraph** — ⚠️ **NOT BUILDABLE AS WRITTEN — needs an owner decision.** Dynamic content is score-keyed only; question answers are unavailable. See the build log and the open question in Task 9 notes.
 
 48 variants: 8 workflow categories × 6 pain types, triggered by Q7 + Q12.
 
@@ -1181,6 +1181,14 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-23 | 8 — ⚠️ Step 6 skipped as redundant and unbuildable | ⚠️ **PLAN AMENDED** | Step 6 tells you to build `Diagnostic Qualified — Out of Band` and then amend `Diagnostic Qualified`. **Neither is possible or needed.** (a) Step 3 builds the *inverse* audience — there is no `Diagnostic Qualified` audience to amend. (b) The positive out-of-band form restates all five hard gates conjunctively, which is precisely the 36-condition explosion the inverse construction exists to avoid. (c) **Step 3's blocks 6 and 7 already implement the raised bar**: disqualified-by-score = `DF≤44 OR (out-of-band AND DF≤59)`, which yields qualification at **45+ in band** and **60+ out of band**, exactly as designed. Step 6 is a leftover from an earlier positive-audience design. Task 10 hides the CTA from `Diagnostic Disqualified`, so no positive audience is required anywhere. |
 | 2026-08-23 | 8 — logic check against all eight personas | ✅ **PASSES ON PAPER** | P1 85 in-band no gate → qualified · P2 HG3 (runs smoothly) → disqualified · P3 46 **Under 25** → block 7a fires (46≤59) → disqualified · P4 81 **Over 500** → 81>59, no gate → qualified · P5 80, Q4=top priority so **HG5 does not fire** → qualified despite Spectator archetype · P6 HG2 (Individual Contributor) → disqualified despite DF 68 · P7 77 → qualified · P8 70 → qualified. Matches Step 7's expected table row for row. **Still paper only** — no submission has run. |
 | 2026-08-23 | 8 — Steps 2 and 7 deferred | ⏸ **BLOCKED ON TASK 9** | The P6-currently-qualifies baseline and the eight-persona verification both need completed submissions, which need result pages. Folded into **Task 11**. The precedence check the plan calls out — P6 in `Diagnostic Priority` **and** `Diagnostic Disqualified`, and still seeing no CTA — must be run there. |
+| 2026-08-23 | 9 — ✅ **CRITICAL NEGATIVE CHECK PASSES at config level** | ✅ | A `Category Scores` section set to **"Number of categories shown: All"** renders **only AI Readiness and Workflow Opportunity**. **Diagnostic Fit does not appear.** It is also absent from the `Individual category` section's category list. The `Hidden` toggle set in Task 3 is therefore respected by the result-page renderer — this is the exact failure that occurred in the Task 1 sandbox, and it is now fixed. **Still to do: the live end-to-end check on a real submission (Step 5).** |
+| 2026-08-23 | 9 — ⚠️ Diagnostic Fit *is* offered as a dynamic-content trigger | ⚠️ **FOOTGUN** | `Dynamic content is based on` lists **Diagnostic Fit** alongside the visible categories. Using it as a trigger does not display the value, so it is a legitimate (and convenient) way to drive conditional content. **But any copy written into those bands is chosen by the qualification score**, so wording like "you're a strong fit" would leak the internal decision. Task 10 must either avoid this trigger or keep the band copy free of qualification language. |
+| 2026-08-23 | 9 — ⚠️ **dynamic content is score-keyed only** | ⚠️ **PLAN AMENDED — Step 4 not buildable as written** | The `Dynamic content is based on` dropdown offers **only** Overall Score, AI Readiness, Workflow Opportunity, Diagnostic Fit. **Question answers are not available.** So the 48-variant insight paragraph keyed to Q7 + Q12 cannot use this mechanism — and neither can the plan's Q7-only fallback. The only answer-keyed lever is **section visibility → Audience Based**, which needs one audience *and one duplicated section* per variant: 8 audiences × 8 sections × 4 pages = **32 sections** for the Q7 fallback; 48 variants is impractical. Decision deferred to the owner — see the open question below. |
+| 2026-08-23 | 9 — ⚠️ dynamic content has 3 bands, not 4 | ⚠️ **NEW DEPENDENCY** | Bands are **Low / Medium / High** only, and their boundaries come from `Settings → Score Tiers`, **which has never been configured**. The design specifies four Workflow Opportunity tiers (Substantial 80+/Significant 60–79/Meaningful 35–59/Contained 0–34) and a two-way split at 60 for the positioning statement. Score Tiers must be set before the positioning copy is correct, and it is unclear whether tiers are per-scorecard or per-category — **verify before Task 11.** |
+| 2026-08-23 | 9 — section type notes | ℹ️ | `Individual category` **cannot pin a chosen category** — only `Highest Scoring` / `Lowest Scoring` — so it is unusable for "show AI Readiness here, Workflow Opportunity there". Use `Category Scores` instead. Generic `Show score tier` badges (Low/Medium/High) were switched **off**, since the design supplies its own tier language. `Answer insights` is answer-*distribution charts*, not conditional copy. |
+| 2026-08-23 | 9 — Step 3 satisfied by construction | ✅ | Creating the page via **"Start without a template"** yields a genuinely blank page with no default headline, so there is nothing to suppress. **Note:** the pre-built section templates *do* inject "Thank you for taking the {scorecard name}" — avoid them, or delete that line wherever one is used. |
+| 2026-08-23 | 9 — Architect page progress | 🚧 **PARTIAL** | `Result — The Architect` created and saved with three sections: **archetype hero** (name, tagline, description, next move — verbatim from `content/archetypes.md`), **Category Scores** (both visible scores, tier badges off), and **positioning + benchmark** (dynamic on Workflow Opportunity, all three bands written, McKinsey stat in each). **Not yet built:** primary CTA, booking CTA, not-qualified note, dynamic Q10 benchmark, insight paragraph. **Pages for Builder / Explorer / Spectator not yet started.** |
+| 2026-08-23 | 9 — editor gotcha | ⚠️ | In a CTA section, `cmd+A` inside a text block selects the **entire content group**, not the block — it deleted the body paragraph. Separately, typing into a position that has reflowed can **replace the button element itself**, and undo did not cleanly restore it (the section had to be deleted and rebuilt). **Edit these sections bottom-up**, and re-screenshot between every edit. |
 | 2026-08-21 | housekeeping | ✅ **DONE** | v1 renamed to `AI Readiness Assessment — v1 (archive)` (still at arielle-86mp1dws, draft, 50% built — preserved, not deleted). No more name collision. Sandbox `ZZ-SANDBOX` can be deleted at will. |
 
 ---
