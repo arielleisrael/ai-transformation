@@ -617,17 +617,19 @@ Where the three demotion gates get implemented. Priority ordering does the work 
 - Consumes: `AI Readiness` category percentage; exact answer wording from Q3, Q4, Q5.
 - Produces: exactly one archetype audience per respondent, consumed by End Logic and by Task 9's result pages.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > Each of the eight personas lands in exactly one archetype audience, matching the Expected Outcomes table. Critically: **P7 Nadia scores 91 and must land in Builder, not Architect** (G1); **P8 Sofia scores 69 and must land in Explorer, not Builder** (G2); **P5 Tom scores 55 and must land in Spectator, not Builder** (G3). One persona per gate.
 
-- [ ] **Step 2: Confirm they currently fail**
+- [ ] **Step 2: Confirm they currently fail** — ⏸ **DEFERRED TO TASK 11.** Needs a completed submission, which needs the result pages from Task 9.
 
 Before creating any audience, take the quiz as **P7 Nadia**. With no gates in place, 91 falls in the 80–100 band and would be an Architect. Confirm this is the current behavior. That is the bug the gates fix.
 
-- [ ] **Step 3: Create the four audiences in this exact order**
+- [x] **Step 3: Create the four audiences in this exact order**
 
-`Audiences → Create`. Order is load-bearing.
+`Audiences → Create`.
+
+**Correction, 2026-08-23: creation order is NOT load-bearing.** The Audiences list has no priority — it sorts by Name or Size, and audiences are overlapping membership sets (a 91-scoring Architect also satisfies Builder, Explorer and Spectator). First-match-wins priority is configured in **End Logic → Audience Redirects** at Step 4. Build the four in any order; get the ordering right there.
 
 **1. `Archetype — Architect`**
 ```
@@ -654,13 +656,13 @@ AND ( Q3  is not  "A few people are experimenting on their own"
 
 **4. `Archetype — Spectator`** — no conditions, or a condition matching everyone. This is the catch-all and **must sit last**.
 
-- [ ] **Step 4: Set End Logic**
+- [ ] **Step 4: Set End Logic** — ⏸ **BLOCKED ON TASK 9.** Return here once the four result pages exist. **This is where archetype priority is actually enforced** — the Audiences list itself has no ordering.
 
 `End Logic → Configure Logic → Audience Redirects`. Map each audience to its result page (created in Task 9 — return here if pages must exist first). Confirm the drag-to-order priority matches the order above.
 
 **Do not use "Outcome / Highest Category" routing.** These archetypes are ordinal levels, not parallel personality types; highest-category matching would be conceptually wrong and would inherit ScoreApp's arbitrary tie-breaking.
 
-- [ ] **Step 5: Verify all seven**
+- [ ] **Step 5: Verify all seven** — ⏸ **DEFERRED TO TASK 11**, which already runs all eight personas.
 
 | Persona | AI Readiness | Expected audience | Why |
 |---|---|---|---|
@@ -675,7 +677,7 @@ AND ( Q3  is not  "A few people are experimenting on their own"
 
 P5, P7 and P8 are the whole point of this task — one per demotion gate. If any lands in its un-demoted band, that gate's condition is wrong.
 
-- [ ] **Step 6: Log**
+- [x] **Step 6: Log**
 
 Record all eight observed audiences against expected.
 
@@ -1158,6 +1160,13 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-23 | 6 — UI gotcha | ⚠️ | In the lead-form option list, **Tab moves focus to the row's delete button, not the next field** — and typing any string containing a space then presses that button, silently deleting the row you just filled. Always click each option field directly. Once ~4 options exist the dialog stops recentering and scrolls internally, after which the empty row sits at a stable position following a scroll-to-bottom. |
 | 2026-08-23 | 6 — Step 5 deferred | ⏸ **BLOCKED ON TASK 9** | The two verification submissions (one with consent ticked, one without — "both should complete and show results") cannot be evaluated until result pages exist. Folded into **Task 11**, where P1 and P2 run the consent-on / consent-off pair and `Leads` is checked for differing opt-in status and captured function. |
 | 2026-08-23 | 6 — open item | ℹ️ | The lead form's **heading and subtext** ("Almost done. Where should we send your results?") are not in `Settings → Lead Form`, `Share Appearance`, or `Page Settings`. Expected to live on the result page as a lead-form section — **set during Task 9**. |
+| 2026-08-23 | 7 — four archetype audiences | ✅ **CREATED & SAVED** | `Archetype — Architect` (2 conditions), `Archetype — Builder` (6, two OR-groups), `Archetype — Explorer` (4, two OR-groups), `Archetype — Spectator` (1, catch-all). Every condition re-read from the saved record afterwards and matches the plan exactly. |
+| 2026-08-23 | 7 — condition builder shape | ℹ️ | Confirmed DNF as expected: each panel is one AND-group, `Add an OR condition` appends another group. The **duplicate-group icon** (top-right of a group) copies a whole group — the efficient way to express `A AND B AND (C OR D)`: build group 1, duplicate it, then change only the last condition. Category fields expose **`Category Score Percent`**, which is the percentage the plan's thresholds are written against. |
+| 2026-08-23 | 7 — ⚠️ gotcha: operator resets value | ⚠️ | Changing an answer condition's operator from `Is` to `Is not` **silently clears the selected answer**, leaving the value box blank. Re-select the answer every time. Conversely, changing the *question* keeps the operator and auto-fills the first answer as the value — convenient, but verify rather than assume: it happened to be the wanted answer for both G3 disjuncts, which is exactly the kind of coincidence that hides a mistake. |
+| 2026-08-23 | 7 — operator inventory | ℹ️ | Category conditions: Is · Is not · Is greater than or equal to · Is less than or equal to · Same as · **Is greater than or equal to category** · Is less than or equal to category. The last two are a different comparison (category-vs-category) and the dropdown renders the labels overlapping and cramped, so they are easy to mis-click — verify the chip text after selecting. Answer conditions: Is · Is not · Contains · Does not contain · Is answered · Is not answered · Is skipped. |
+| 2026-08-23 | 7 — ⚠️ correction: where priority lives | ⚠️ **PLAN AMENDED** | The plan's Step 3 says "create the four audiences in this exact order — order is load-bearing." **The Audiences list carries no priority.** It is a plain list sorted by Name or Size, and audiences are overlapping membership sets: a respondent scoring 91 with measurable results satisfies Architect *and* Builder *and* Explorer *and* Spectator simultaneously. First-match-wins priority exists only in **End Logic → Audience Redirects** (Step 4). Until that is configured no archetype is resolved, so creating the audiences proves the gate logic is expressible but does not yet assign anything. |
+| 2026-08-23 | 7 — display note | ℹ️ | An audience's **Overview** tab flattens all OR-groups into one flat condition list with no group boundary shown — Builder reads as six conditions with `AI Readiness ≥ 55` appearing twice. That repetition is the only visible trace of the two groups. Use **Edit** to see the actual OR structure. |
+| 2026-08-23 | 7 — Steps 2, 4, 5 deferred | ⏸ **BLOCKED ON TASK 9** | Step 4 (End Logic audience redirects) needs result pages to point at. Steps 2 and 5 (the P7-fails-without-gates baseline, and verifying all eight personas land in one audience each) need completed submissions, which need result pages. All three move to **Task 11**, which already runs every persona. |
 | 2026-08-21 | housekeeping | ✅ **DONE** | v1 renamed to `AI Readiness Assessment — v1 (archive)` (still at arielle-86mp1dws, draft, 50% built — preserved, not deleted). No more name collision. Sandbox `ZZ-SANDBOX` can be deleted at will. |
 
 ---
