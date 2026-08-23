@@ -423,11 +423,11 @@ The most intricate task: it contains the only unscored question, the only jump, 
 - Consumes: categories from Task 3.
 - Produces: the complete `Workflow Opportunity` score (0–100) and Pillar 1 of `Diagnostic Fit`.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > Submitting **P4 Ellen's** Q7–Q12 answers yields `Workflow Opportunity = 98`. Submitting **P2 Marcus's** yields `26`.
 
-- [ ] **Step 2: Build Q7 — unscored**
+- [x] **Step 2: Build Q7 — unscored**
 
 **"Think about one workflow that consistently costs more time, effort, or money than it should. Which category fits best?"** — single choice, Required, **zero points in every category**.
 
@@ -435,7 +435,7 @@ Reporting & data aggregation · Document creation & review · Client or customer
 
 Leave it uncategorised or explicitly set every option to 0 in all three categories. Q7's job is selecting the insight paragraph, not scoring. In v1 it scored 8–10 for named categories and 0 for "Other", so the honest answer silently tanked the respondent's score.
 
-- [ ] **Step 3: Build Q7b — the only jump**
+- [x] **Step 3: Build Q7b — the only jump**
 
 **"In a sentence, what is it?"** — **Open Text**, **Optional**, unscored.
 
@@ -443,9 +443,9 @@ Set jump logic on **Q7** so that selecting "Other — something else" routes to 
 
 This is the one permitted exception to the no-jump-logic rule, and only because Open Text is never scored — a skipped unscored question cannot change the denominator.
 
-If Task 2 found that ScoreApp offers a native "Other + free text" option on choice questions, use that instead and delete Q7b. Record which route was taken.
+**Route taken: native.** Q7 uses ScoreApp's built-in `"Other" option` toggle; no Q7b question and no jump logic were created. Whether that native option captures free text is unconfirmed — verify at Task 11 and add Q7b as Open Text if it does not.
 
-- [ ] **Step 4: Build Q8–Q10**
+- [x] **Step 4: Build Q8–Q10**
 
 All single choice, Required, no jump logic.
 
@@ -480,7 +480,7 @@ Monotonic on purpose. v1 scored 16+ *below* 6–15; more people on a repetitive 
 | 21–40 hours | 29 | 10 |
 | More than 40 hours | 35 | 12 |
 
-- [ ] **Step 5: Build Q11a**
+- [x] **Step 5: Build Q11a**
 
 **"Which best describes how this workflow runs today?"** — single choice, Required.
 
@@ -493,7 +493,7 @@ Monotonic on purpose. v1 scored 16+ *below* 6–15; more people on a repetitive 
 
 That last option is hard gate HG3. Its exact wording is referenced by an Audience condition in Task 8 — **do not reword it.**
 
-- [ ] **Step 6: Build Q11b — the only multi-select**
+- [x] **Step 6: Build Q11b — the only multi-select**
 
 **"Which of these also apply? Select all that apply."** — **multi-select**, Required, **no min/max selections**.
 
@@ -512,7 +512,7 @@ That last option is hard gate HG3. Its exact wording is referenced by an Audienc
 
 **"None of these" is worth 0**, so a respondent ticking it alongside symptoms cannot move the score — necessary because ScoreApp has no exclusive-option behavior.
 
-- [ ] **Step 7: Build Q12**
+- [x] **Step 7: Build Q12**
 
 **"What does this workflow cost your company most?"** — single choice, Required.
 
@@ -525,7 +525,7 @@ That last option is hard gate HG3. Its exact wording is referenced by an Audienc
 | Customer experience — slow or inconsistent handling costs us business | 9 | 3 |
 | Team morale — it's tedious and people hate it | 7 | 2 |
 
-- [ ] **Step 8: Verify**
+- [x] **Step 8: Verify**
 
 | Answers | Expected Workflow Opportunity |
 |---|---|
@@ -536,7 +536,7 @@ Then verify the multi-select specifically: take the quiz twice as P4 but tick **
 
 Also confirm Q7 = "Other" reveals Q7b, and that any other Q7 answer skips it.
 
-- [ ] **Step 9: Log**
+- [x] **Step 9: Log**
 
 Record both scores, the multi-select delta, and whether the jump fired correctly.
 
@@ -1142,6 +1142,9 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-21 | 4 — questions Q1–Q6 | ✅ **COMPLETE & SAVED** | All six built as **Multiple Choice Buttons** (better mobile tap targets than radio for a 14-question quiz). Q1 6 answers, Q2 7, Q3–Q6 4 each. Every value verified on screen after entry. Q1: 15/14/13/9/5, IC unscored. Q2: 1/4/8/8/5/3/2. Q3: 4·2, 11·6, 18·4, 25·2. Q4: 3, 10·4, 18·7, 25·8. Q5: 1·1, 8·6, 16·5, 25·2. Q6: 3·1, 9·4, 17·7, 25·6. Layer A maxes to 25×4 = 100 as designed. |
 | 2026-08-21 | 4 — UI technique | ℹ️ | Per-answer scoring: **ANSWERS** tab → toggle `Scoring` → `Choose an option` → category → points box to its right → `+ Add scoring` for a second category. **The second dropdown lists only unused categories and omits "Overall only"**, so its item offsets differ from the first. Dropdowns **flip upward** when near the viewport bottom. When batching browser actions, insert a 1s wait after any click that creates or focuses a field — without it the subsequent typing silently goes nowhere. |
 | 2026-08-21 | 4 — zero-value answers | ℹ️ | Answers whose value is 0 (Q1 Individual Contributor, Q4 "No formal strategy" in Diagnostic Fit) were left **unscored** rather than explicitly set to 0. Equivalent for single-select, since the question's potential is its highest-scoring answer. The gates that reference these answers key on **answer text**, not score, so they are unaffected. |
+| 2026-08-23 | 5 — questions Q7–Q12 | ✅ **COMPLETE & SAVED** | All seven built (Q11 splits into Q11a + Q11b). Q7 workflow category — 7 answers, unscored, native **"Other" option** toggle used. Q8 people: 2/1, 7/2, 12/4, 15/5. Q9 frequency: 15/5, 13/4, 10/3, 5/2, 1/—. Q10 hours: 4/1, 13/5, 22/8, 29/10, 35/12. Q11a state: 15/4, 13/3, 11/3, 1/—. Q11b symptoms (multi-select): five at 2/1 each, "None of these" unscored — Σ = 10 WO / 5 DF, exactly the budgets. Q12 cost: Money 10/4, Scale 10/4, Errors 9/3, Time 9/3, Customer experience 9/3, Team morale 7/2. Every value verified on screen after saving. |
+| 2026-08-23 | 5 — "Other" option | ℹ️ **Pending confirmation** | Q7 uses ScoreApp's native `"Other" option` toggle, which appends an "Other" answer automatically. **Whether it captures free text is not yet confirmed** — verify in the Task 11 preview run. If it does not, add Q7b as a separate Open Text question shown only when Q7 = Other (SF6 depends on that text). |
+| 2026-08-23 | 5 — UI notes | ℹ️ | Answer buttons reflow between 2 and 3 per row as text length changes, which moves `Add answer` — several answers silently failed to be created and had to be re-added. Question text wrapping to a second line shifts Answer 1 down ~22px. Changes are **not** auto-saved, and a single validation error anywhere blocks saving everything. |
 | 2026-08-21 | housekeeping | ✅ **DONE** | v1 renamed to `AI Readiness Assessment — v1 (archive)` (still at arielle-86mp1dws, draft, 50% built — preserved, not deleted). No more name collision. Sandbox `ZZ-SANDBOX` can be deleted at will. |
 
 ---
