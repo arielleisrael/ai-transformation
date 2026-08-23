@@ -550,11 +550,11 @@ Record both scores, the multi-select delta, and whether the jump fired correctly
 - Consumes: categories from Task 3.
 - Produces: Pillar 2's largest input, plus `function` and `opt_in` — both consumed by Audiences in Task 8 and by every email sequence in Task 13.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > Q13 exists, scores into `Diagnostic Fit` only, and adds nothing to either visible score. The contact form captures function and consent, and consent is optional rather than blocking.
 
-- [ ] **Step 2: Build Q13**
+- [x] **Step 2: Build Q13**
 
 New phase, "Ready to move". Placed **after** the workflow block and **before** contact capture — by then the respondent has articulated concrete pain, so the commitment question reads as a consequence rather than a sales probe.
 
@@ -569,22 +569,27 @@ New phase, "Ready to move". Placed **after** the workflow block and **before** c
 
 That last option is hard gate HG1. Its wording is referenced by an Audience in Task 8 — **do not reword it.**
 
-- [ ] **Step 3: Build the contact form**
+- [x] **Step 3: Build the contact form**
 
 `Settings → Lead Form`. Heading: **"Almost done. Where should we send your results?"** Subtext: **"We'll send your personalized AI Readiness Brief here — your archetype, your score, and a summary of your biggest opportunity."**
 
 | Field | Type | Required |
 |---|---|---|
 | First name | Text | Yes |
+| Last name | Text | Yes |
 | Company name | Text | Yes |
 | Email address | Email | Yes |
 | Which area do you lead or work in? | **Dropdown** | Yes |
+
+**Last name added 2026-08-23.** It ships enabled by default and `content/internal-brief-template.md` consumes it in both the subject line (`{first_name} {last_initial}.`) and the respondent block. Removing it would break the brief.
+
+**Set `DEFAULT LEAD FORM BEHAVIOUR` to `After Questions`.** It defaults to `Before Questions`, which forces signup ahead of Q1 and contradicts the whole design — the form belongs after Q13.
 
 Dropdown options: Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales & Marketing · HR & People · Customer Service · Other
 
 Lead-form fields cannot be scored. Function drives flag SF8 through an Audience, not through points — this is why Pillar 4 is Q1 alone at 15.
 
-- [ ] **Step 4: Configure consent**
+- [x] **Step 4: Configure consent**
 
 Set consent mode to **Explicit Consent (Optional)** — checkbox shown, submission allowed without ticking.
 
@@ -592,13 +597,13 @@ Optional rather than Required so a missing tick does not cost the lead: the resu
 
 Add the Privacy Policy URL if the account has one.
 
-- [ ] **Step 5: Verify**
+- [ ] **Step 5: Verify** — ⏸ **DEFERRED TO TASK 11.** Result pages do not exist until Task 9, so "both should complete and show results" cannot be evaluated yet. Run the consent-on / consent-off pair as part of the P1 and P2 persona runs.
 
 Submit once ticking consent and once not. Both should complete and show results. In `Leads`, confirm the two records differ in opt-in status and that function was captured.
 
 Confirm Q13 moved `Diagnostic Fit` but left `AI Readiness` and `Workflow Opportunity` unchanged.
 
-- [ ] **Step 6: Log**
+- [x] **Step 6: Log**
 
 Record consent mode, and confirm both submissions completed.
 
@@ -1145,6 +1150,14 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-23 | 5 — questions Q7–Q12 | ✅ **COMPLETE & SAVED** | All seven built (Q11 splits into Q11a + Q11b). Q7 workflow category — 7 answers, unscored, native **"Other" option** toggle used. Q8 people: 2/1, 7/2, 12/4, 15/5. Q9 frequency: 15/5, 13/4, 10/3, 5/2, 1/—. Q10 hours: 4/1, 13/5, 22/8, 29/10, 35/12. Q11a state: 15/4, 13/3, 11/3, 1/—. Q11b symptoms (multi-select): five at 2/1 each, "None of these" unscored — Σ = 10 WO / 5 DF, exactly the budgets. Q12 cost: Money 10/4, Scale 10/4, Errors 9/3, Time 9/3, Customer experience 9/3, Team morale 7/2. Every value verified on screen after saving. |
 | 2026-08-23 | 5 — "Other" option | ℹ️ **Pending confirmation** | Q7 uses ScoreApp's native `"Other" option` toggle, which appends an "Other" answer automatically. **Whether it captures free text is not yet confirmed** — verify in the Task 11 preview run. If it does not, add Q7b as a separate Open Text question shown only when Q7 = Other (SF6 depends on that text). |
 | 2026-08-23 | 5 — UI notes | ℹ️ | Answer buttons reflow between 2 and 3 per row as text length changes, which moves `Add answer` — several answers silently failed to be created and had to be re-added. Question text wrapping to a second line shifts Answer 1 down ~22px. Changes are **not** auto-saved, and a single validation error anywhere blocks saving everything. |
+| 2026-08-23 | 6 — Q13 | ✅ **COMPLETE & SAVED** | Multiple Choice Buttons, Required, no jump logic. Scores `Diagnostic Fit` only — 15 / 11 / 5, with "Unlikely — mostly curious right now" left unscored (HG1). AI Readiness and Workflow Opportunity untouched, confirmed by each answer carrying exactly one score row. Question Flow now reports **14 questions · 3 categories**. |
+| 2026-08-23 | 6 — contact form | ✅ **COMPLETE & SAVED** | `Settings → Lead Form`. Fields: First name, **Last name**, Email (all three built in and Required), Company name (Text, Required), "Which area do you lead or work in?" (Drop down, Required) with all eight options in spec order. |
+| 2026-08-23 | 6 — deviation: Last name kept | ℹ️ | The plan's field table omitted Last name, but it ships enabled by default and `content/internal-brief-template.md` §1 and §3 both consume it (`{first_name} {last_initial}.` in the subject line, `{last_name}` in the respondent block). Removing it would have broken the brief, so it was kept. |
+| 2026-08-23 | 6 — ⚠️ correction: form position | ✅ **FIXED** | `DEFAULT LEAD FORM BEHAVIOUR` defaults to **Before Questions**, which would have put contact capture ahead of Q1 and forced signup before anyone saw a question. Switched to **After Questions**, matching the design (contact capture follows Q13). Worth re-checking after any settings change — this default is easy to miss because it sits below the fold. |
+| 2026-08-23 | 6 — consent | ✅ **Explicit Consent (Optional)** | Selecting it reveals an `OPTIN WORDING` field, defaulting to the vague "Opt in to receive updates via email". Set to: *"Yes — send me follow-up insights on AI readiness and workflow automation by email."* **Not specified in any source-of-truth doc — flagged for the owner's review.** `PRIVACY STATEMENT` and `PRIVACY POLICY URL` left blank pending a URL from the account owner; fill before launch (Task 14). |
+| 2026-08-23 | 6 — UI gotcha | ⚠️ | In the lead-form option list, **Tab moves focus to the row's delete button, not the next field** — and typing any string containing a space then presses that button, silently deleting the row you just filled. Always click each option field directly. Once ~4 options exist the dialog stops recentering and scrolls internally, after which the empty row sits at a stable position following a scroll-to-bottom. |
+| 2026-08-23 | 6 — Step 5 deferred | ⏸ **BLOCKED ON TASK 9** | The two verification submissions (one with consent ticked, one without — "both should complete and show results") cannot be evaluated until result pages exist. Folded into **Task 11**, where P1 and P2 run the consent-on / consent-off pair and `Leads` is checked for differing opt-in status and captured function. |
+| 2026-08-23 | 6 — open item | ℹ️ | The lead form's **heading and subtext** ("Almost done. Where should we send your results?") are not in `Settings → Lead Form`, `Share Appearance`, or `Page Settings`. Expected to live on the result page as a lead-form section — **set during Task 9**. |
 | 2026-08-21 | housekeeping | ✅ **DONE** | v1 renamed to `AI Readiness Assessment — v1 (archive)` (still at arielle-86mp1dws, draft, 50% built — preserved, not deleted). No more name collision. Sandbox `ZZ-SANDBOX` can be deleted at will. |
 
 ---
