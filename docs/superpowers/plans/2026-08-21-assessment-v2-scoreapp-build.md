@@ -691,15 +691,15 @@ The invisible half. Two audiences on the hidden `Diagnostic Fit` category, carry
 - Consumes: `Diagnostic Fit` percentage; exact wording from Q1, Q3, Q4, Q5, Q8, Q10, Q11a, Q13.
 - Produces: `Diagnostic Qualified` and `Diagnostic Priority`, consumed by Task 10's section visibility and Task 13's sequences.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > **P1, P4, P5, P7, P8** land in `Diagnostic Qualified`. **P2, P3, P6** do not. P6 is the sharp test: 68 points, comfortably above 45, still excluded because HG2 fires.
 
-- [ ] **Step 2: Confirm it currently fails**
+- [ ] **Step 2: Confirm it currently fails** — ⏸ **DEFERRED TO TASK 11.** Needs a completed submission, which needs the result pages from Task 9.
 
 Take the quiz as **P6 Raj**. Diagnostic Fit should read 68. With no gates, that qualifies. Confirm — that is the bug.
 
-- [ ] **Step 3: Create `Diagnostic Disqualified` — the inverse, not the positive**
+- [x] **Step 3: Create `Diagnostic Disqualified` — the inverse, not the positive**
 
 **Build who is EXCLUDED, not who qualifies.** Verified 2026-08-21: the audience builder is OR-of-AND-groups with no nesting. The positive form distributes to 36 hand-entered conditions; the inverse collapses to **9**, because each hard gate is conjunctive and inverts into a single block.
 
@@ -721,7 +721,7 @@ Note block 7 replaces the separate out-of-band audience: an out-of-band responde
 
 HG5 is deliberately narrower than archetype gate G3 — it additionally requires Q4. A Spectator who clears HG5 is **not** in this audience and therefore **does** see the CTA. That is P5 Tom, and it is the point.
 
-- [ ] **Step 4: Create `Diagnostic Priority`**
+- [x] **Step 4: Create `Diagnostic Priority`**
 
 A positive audience this time, and simple because it has no OR-groups — it only ever *adds* emphasis, never grants a CTA:
 
@@ -731,7 +731,7 @@ Diagnostic Fit percentage  is greater than or equal to  65
 
 Drives internal ranking and the CRM tag. A respondent in both `Diagnostic Priority` and `Diagnostic Disqualified` is disqualified — the CTA hide rule in Task 10 wins, because hiding is applied at the section level regardless of other audience membership. Verify this precedence during Task 11 with **P6 Raj** (Diagnostic Fit 68, HG2 fired): he must land in `Diagnostic Priority` and still see **no CTA**.
 
-- [ ] **Step 5: Optional — split the gates into separate audiences for internal reporting**
+- [x] **Step 5: Optional — split the gates into separate audiences for internal reporting**
 
 The single `Diagnostic Disqualified` audience is enough to drive the CTA. But the internal brief and the four gate-specific nurture emails (Task 13) need to know *which* gate fired, and a single audience cannot tell you that.
 
@@ -739,9 +739,13 @@ If ScoreApp's Leads view is where you will triage, build five additional single-
 
 Skip this only if you intend to do that routing in the phase-2 webhook instead.
 
-- [ ] **Step 6: Handle the company-size threshold modifier**
+- [x] **Step 6: Handle the company-size threshold modifier** — ⚠️ **SKIPPED AS REDUNDANT, 2026-08-23.** Already implemented by Step 3 blocks 6 and 7; see below.
 
 Out-of-band companies face a raised bar: HOLD 60 / ACCEPT 80 instead of 45 / 65.
+
+> ⚠️ **Superseded 2026-08-23 — do not build what follows.** Step 3's blocks 6 and 7 already implement this. Disqualified-by-score is `DF ≤ 44 OR (out-of-band AND DF ≤ 59)`, which qualifies at **45+ in band** and **60+ out of band** — exactly the intended raised bar. The construction below cannot be executed as written anyway: it amends a `Diagnostic Qualified` audience that Step 3 never creates (Step 3 builds the inverse), and its positive form restates all five hard gates conjunctively, reintroducing the 36-condition explosion the inverse construction exists to avoid. Task 10 hides the CTA from `Diagnostic Disqualified`, so no positive audience is needed anywhere. Retained below for the record only.
+
+<details><summary>Superseded original text</summary>
 
 Add a third audience, `Diagnostic Qualified — Out of Band`:
 ```
@@ -760,7 +764,11 @@ so the two audiences are mutually exclusive and in-band respondents keep the 45 
 
 This is what makes **P3 Dana** (46, Under 25) fail while **P4 Ellen** (81, Over 500) passes.
 
-- [ ] **Step 7: Verify all seven**
+</details>
+
+**What actually ships:** nothing extra. P3 Dana (46, Under 25) is caught by block 7a because 46 ≤ 59; P4 Ellen (81, Over 500) clears it because 81 > 59 and no hard gate fires.
+
+- [ ] **Step 7: Verify all seven** — ⏸ **DEFERRED TO TASK 11**, which already runs all eight personas. Logic verified on paper (see build log).
 
 | Persona | Diagnostic Fit | Size band | Qualified? | Reason |
 |---|---|---|---|---|
@@ -773,7 +781,7 @@ This is what makes **P3 Dana** (46, Under 25) fail while **P4 Ellen** (81, Over 
 | P7 Nadia | 77 | in | **Yes** | ≥ 65, priority |
 | P8 Sofia | 70 | in | **Yes** | ≥ 65 despite zero leadership — SF7 flags it |
 
-- [ ] **Step 8: Log**
+- [x] **Step 8: Log**
 
 Record all eight, plus which audience construction was used.
 
@@ -1167,6 +1175,12 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-23 | 7 — ⚠️ correction: where priority lives | ⚠️ **PLAN AMENDED** | The plan's Step 3 says "create the four audiences in this exact order — order is load-bearing." **The Audiences list carries no priority.** It is a plain list sorted by Name or Size, and audiences are overlapping membership sets: a respondent scoring 91 with measurable results satisfies Architect *and* Builder *and* Explorer *and* Spectator simultaneously. First-match-wins priority exists only in **End Logic → Audience Redirects** (Step 4). Until that is configured no archetype is resolved, so creating the audiences proves the gate logic is expressible but does not yet assign anything. |
 | 2026-08-23 | 7 — display note | ℹ️ | An audience's **Overview** tab flattens all OR-groups into one flat condition list with no group boundary shown — Builder reads as six conditions with `AI Readiness ≥ 55` appearing twice. That repetition is the only visible trace of the two groups. Use **Edit** to see the actual OR structure. |
 | 2026-08-23 | 7 — Steps 2, 4, 5 deferred | ⏸ **BLOCKED ON TASK 9** | Step 4 (End Logic audience redirects) needs result pages to point at. Steps 2 and 5 (the P7-fails-without-gates baseline, and verifying all eight personas land in one audience each) need completed submissions, which need result pages. All three move to **Task 11**, which already runs every persona. |
+| 2026-08-23 | 8 — `Diagnostic Disqualified` | ✅ **BUILT & VERIFIED** | 8 OR-groups, **13 conditions**, exactly as Step 3 specifies. Re-read from the saved record condition by condition: Q13=Unlikely · Q1=Individual Contributor · Q11a=runs smoothly · (Q10=Less than 5 **AND** Q8=Just me) · (Q3=few experimenting **AND** Q4=no formal strategy **AND** Q5=not really using) · DF≤44 · (Q2=Under 25 **AND** DF≤59) · (Q2=Over 500 **AND** DF≤59). Uses only `Is` and `Is less than or equal to`, so it never touches the operator-resets-value bug from Task 7. |
+| 2026-08-23 | 8 — `Diagnostic Priority` | ✅ **BUILT** | `Diagnostic Fit` Category Score Percent ≥ 65. Single condition, as specified. |
+| 2026-08-23 | 8 — five gate audiences | ✅ **BUILT** (Step 5 taken) | `DQ-HG1 — Unwilling to act` · `DQ-HG2 — No access or authority` · `DQ-HG3 — No operational pain` · `DQ-HG4 — Too trivial to engage` (2 conditions) · `DQ-HG5 — Dormant on all three signals` (3 conditions). Built rather than skipped because Task 13's four gate-specific nurture emails need to know *which* gate fired, and the phase-2 webhook that would otherwise do that routing is explicitly out of scope for phase 1. |
+| 2026-08-23 | 8 — ⚠️ Step 6 skipped as redundant and unbuildable | ⚠️ **PLAN AMENDED** | Step 6 tells you to build `Diagnostic Qualified — Out of Band` and then amend `Diagnostic Qualified`. **Neither is possible or needed.** (a) Step 3 builds the *inverse* audience — there is no `Diagnostic Qualified` audience to amend. (b) The positive out-of-band form restates all five hard gates conjunctively, which is precisely the 36-condition explosion the inverse construction exists to avoid. (c) **Step 3's blocks 6 and 7 already implement the raised bar**: disqualified-by-score = `DF≤44 OR (out-of-band AND DF≤59)`, which yields qualification at **45+ in band** and **60+ out of band**, exactly as designed. Step 6 is a leftover from an earlier positive-audience design. Task 10 hides the CTA from `Diagnostic Disqualified`, so no positive audience is required anywhere. |
+| 2026-08-23 | 8 — logic check against all eight personas | ✅ **PASSES ON PAPER** | P1 85 in-band no gate → qualified · P2 HG3 (runs smoothly) → disqualified · P3 46 **Under 25** → block 7a fires (46≤59) → disqualified · P4 81 **Over 500** → 81>59, no gate → qualified · P5 80, Q4=top priority so **HG5 does not fire** → qualified despite Spectator archetype · P6 HG2 (Individual Contributor) → disqualified despite DF 68 · P7 77 → qualified · P8 70 → qualified. Matches Step 7's expected table row for row. **Still paper only** — no submission has run. |
+| 2026-08-23 | 8 — Steps 2 and 7 deferred | ⏸ **BLOCKED ON TASK 9** | The P6-currently-qualifies baseline and the eight-persona verification both need completed submissions, which need result pages. Folded into **Task 11**. The precedence check the plan calls out — P6 in `Diagnostic Priority` **and** `Diagnostic Disqualified`, and still seeing no CTA — must be run there. |
 | 2026-08-21 | housekeeping | ✅ **DONE** | v1 renamed to `AI Readiness Assessment — v1 (archive)` (still at arielle-86mp1dws, draft, 50% built — preserved, not deleted). No more name collision. Sandbox `ZZ-SANDBOX` can be deleted at will. |
 
 ---
