@@ -105,7 +105,7 @@ One score cannot carry both shapes.
 1. **Every question a gate references must be single-select.** Gates test for *specific answers*; multi-select makes "is Q5 the top answer?" unanswerable. Gate-referenced: **Q1, Q3, Q4, Q5, Q8, Q10, Q11a, Q13.**
 2. **Multi-select scoring is `Σ(selected) ÷ Σ(all options)`.** A checkbox question's weight equals the sum of all its options, so option values must sum to exactly the intended budget, and per-option severity must stay flat.
 3. **Never use `max selections`** — undocumented denominator behaviour would depress every score by a constant.
-4. **Never put jump logic on a scored question** — skipping changes total points available. The one jump (Q7 → Q7b) targets an unscored Open Text question.
+4. **Never put jump logic on a scored question** — skipping changes total points available. Q7 uses ScoreApp's native `Other` option; if Task 11 shows that it does not capture free text, the fallback jump may target only the unscored Q7b Open Text question.
 
 ---
 

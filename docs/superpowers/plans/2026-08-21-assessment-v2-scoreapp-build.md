@@ -38,7 +38,7 @@ git init && git add -A && git commit -m "chore: baseline before v2 assessment bu
 
 - **Plan tier:** ScoreApp Business ($99/mo) or higher. Audiences, multiple result pages, and section-level audience visibility all gate here.
 - **Never use `max selections`** on any question. Undocumented denominator behavior would depress every score by a constant and corrupt the tier cutoffs invisibly.
-- **Never put jump logic on a scored question.** Logic-skipping changes total points available, so two respondents get normalized against different denominators. The only permitted jump is Q7 → Q7b, and Q7b is unscored Open Text.
+- **Never put jump logic on a scored question.** Logic-skipping changes total points available, so two respondents get normalized against different denominators. Q7 currently uses ScoreApp's native `Other` option; if Task 11 shows that it does not capture free text, the only permitted fallback jump is Q7 → Q7b, and Q7b is unscored Open Text.
 - **Every scored question is Required.** This sidesteps the undocumented question of whether an optional blank leaves the denominator.
 - **Only one multi-select question exists: Q11b.** Its option values must sum to exactly its budget (10 in Layer B, 5 in Layer C). Per-option severity stays flat; differentiating it silently raises the question's weight.
 - **Layer C must never render.** No result page, PDF, or respondent-facing email may display the Diagnostic Fit category or any value derived from it.
@@ -431,15 +431,15 @@ The most intricate task: it contains the only unscored question, the only jump, 
 
 **"Think about one workflow that consistently costs more time, effort, or money than it should. Which category fits best?"** — single choice, Required, **zero points in every category**.
 
-Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other — something else
+Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other
 
 Leave it uncategorised or explicitly set every option to 0 in all three categories. Q7's job is selecting the insight paragraph, not scoring. In v1 it scored 8–10 for named categories and 0 for "Other", so the honest answer silently tanked the respondent's score.
 
 - [x] **Step 3: Build Q7b — the only jump**
 
-**"In a sentence, what is it?"** — **Open Text**, **Optional**, unscored.
+**Fallback only:** **"In a sentence, what is it?"** — **Open Text**, **Optional**, unscored.
 
-Set jump logic on **Q7** so that selecting "Other — something else" routes to Q7b, and every other option skips it to Q8.
+Q7 currently uses ScoreApp's native `Other` option. At Task 11, verify whether it captures free text. If it does not, create Q7b and set jump logic on **Q7** so that selecting `Other` routes to Q7b and every other option skips it to Q8.
 
 This is the one permitted exception to the no-jump-logic rule, and only because Open Text is never scored — a skipped unscored question cannot change the denominator.
 
@@ -534,7 +534,7 @@ That last option is hard gate HG3. Its exact wording is referenced by an Audienc
 
 Then verify the multi-select specifically: take the quiz twice as P4 but tick **1** symptom, then **4**. Workflow Opportunity should differ by exactly **6** (2 points × 3 extra symptoms). If it differs by more or less, the per-option values are wrong.
 
-Also confirm Q7 = "Other" reveals Q7b, and that any other Q7 answer skips it.
+Also confirm whether Q7 = `Other` captures free text natively. If the fallback Q7b is required, confirm that `Other` reveals it and every other Q7 answer skips it.
 
 - [x] **Step 9: Log**
 
@@ -1191,7 +1191,7 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-23 | 9 — editor gotcha | ⚠️ | In a CTA section, `cmd+A` inside a text block selects the **entire content group**, not the block — it deleted the body paragraph. Separately, typing into a position that has reflowed can **replace the button element itself**, and undo did not cleanly restore it (the section had to be deleted and rebuilt). **Edit these sections bottom-up**, and re-screenshot between every edit. |
 | 2026-08-23 | 9 — decision: insight paragraph route | ✅ **OWNER CHOSE Q7-ONLY** | Owner selected the Q7-only fallback over dropping the section or writing one static paragraph per page. Implementation: **8 audiences keyed to Q7**, then one audience-gated Content section per category per page. Each respondent sees the paragraph matching their workflow type, using the plan's designated **"Time (bottlenecks)"** variant as the copy for each category. Full 48-variant personalization moves to the phase-2 webhook. |
 | 2026-08-23 | 9 — eight Q7 audiences | ✅ **BUILT & VERIFIED** | `Q7 — Reporting & data aggregation` · `Document creation & review` · `Client or customer communications` · `Research & analysis` · `Approval & review processes` · `Employee or client onboarding` · `Sales operations & CRM` · `Other`. Each is a single condition on Q7 with the matching answer, confirmed on the audience list. **19 audiences total** on the scorecard now. |
-| 2026-08-23 | 9 — ⚠️ Q7 "Other" wording differs from the build sheet | ⚠️ **DOC FIX NEEDED** | The native `"Other" option` toggle created an answer labelled exactly **`Other`** — not `Other — something else` as `content/quiz-questions.md` §Q7 and the master reference both state. The audience keys on the real string, so the build is correct, but **the two source docs should be corrected** so future work does not key on the wrong text. |
+| 2026-08-23 | 9 — Q7 `Other` wording synchronized | ✅ **DOCS FIXED** | The native `"Other" option` toggle created an answer labelled exactly **`Other`**. The quiz questions, master reference, HTML/Word copies, and this build plan now use the live label. Q7b remains a fallback pending Task 11 confirmation of whether the native option captures free text. |
 | 2026-08-23 | 9 — Score Tiers configured | ✅ **RESOLVED** | `Settings → Score Tiers` set to the design's four Workflow Opportunity tiers: **Contained 0–34 · Meaningful 35–59 · Significant 60–79 · Substantial 80–100** (was the default Low 0–39 / Medium 40–79 / High 80–100). `+ Add Tier` allows more than three, so the four-tier design is fully expressible. |
 | 2026-08-23 | 9 — ✅ dynamic content bands come from Score Tiers | ✅ **CONFIRMED** | After saving the tiers, the section's band selector changed from `Low / Medium / High content` to **`Contained / Meaningful / Significant / Substantial content`**. Dynamic-content bands are derived directly from Score Tiers — both the count and the labels. This is what makes the four-tier design buildable, and it is the reason Score Tiers had to be set before replicating the pattern across the other three pages. |
 | 2026-08-23 | 9 — ⚠️ **adding a tier injects a lorem band into every existing dynamic section** | ⚠️ **REAL BUG CAUGHT** | Existing band copy is remapped **by position**: old Low → Contained, Medium → Meaningful, High → **Substantial**. The newly inserted **Significant** band arrived **pre-filled with template placeholder text** ("4 Minutes is all you get… Lorem ipsum"). Left unnoticed, every respondent scoring **60–79** on Workflow Opportunity would have seen lorem on their results page. Copy was written and saved. **Any future Score Tiers change requires auditing every dynamic-content section on every result page.** |
