@@ -60,7 +60,7 @@ Shown beneath both scores. This is the line designed to travel — the thing the
 
 | | Opportunity **low** (0–59) | Opportunity **high** (60–100) |
 |---|---|---|
-| **Readiness high** (55–100) | "You're in good shape. This particular workflow isn't your biggest lever — the next question worth asking is where your real constraint actually sits." | "You're positioned to move on this now. You have the organizational readiness *and* a workflow worth the effort. That combination is rarer than it sounds." |
+| **Readiness high** (55–100) | "You're in good shape. This particular workflow isn't your biggest lever — the next question worth asking is where your real constraint actually sits." | "You have strong organizational readiness and a workflow with meaningful improvement potential. That combination is rarer than it sounds." |
 | **Readiness low** (0–54) | "Start small. Neither your AI foundation nor this particular workflow is the urgent thing — which means you get to choose your first move deliberately rather than reactively." | "There's a real prize here — and a foundation to build first. Companies in this position often get the most value from fixing one workflow well and letting that become the proof that funds everything after it." |
 
 The bottom-right cell is the profile that matters most: a large opportunity in a company not yet organized to capture it. Say so honestly rather than implying they're ready when they aren't.
