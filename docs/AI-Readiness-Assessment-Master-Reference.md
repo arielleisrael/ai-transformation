@@ -18,6 +18,7 @@ This is the **canonical reference**. If any other file disagrees with it, this d
 | `content/results-copy.md` | Results page copy, **including the 48-variant insight matrix not reproduced here** (see §7.4). |
 | `content/internal-brief-template.md` | Internal brief template — summarized in §8. |
 | `content/follow-up-sequences.md` | Email copy — summarized in §9. |
+| `docs/ReinventOps_AI_Readiness_Assessment_v2_PreLaunch_Test_Plan.md` | Pre-launch validation plan — controlled test scenarios for all three scoring layers, gates, CTA behavior, flags, and internal routing. |
 | `docs/superpowers/specs/2026-08-21-quiz-scoring-architecture-design.md` | Design rationale: why each number is what it is, alternatives considered, worked examples. |
 
 **One thing is deliberately not here:** the 48 personalized insight paragraphs (8 workflow categories × 6 pain types). They are ~5,000 words of near-parallel copy that would dominate this document without making the logic clearer. They live in `content/results-copy.md` §Layer 3. Everything else is here in full.
@@ -627,6 +628,8 @@ Archetype and AI Readiness Score are the hero. Opportunity Score is secondary, p
 
 Shown beneath both scores. The line designed to travel — what they screenshot and send to leadership.
 
+**R-11, built 2026-08-24:** the actual share mechanism is ScoreApp's native Share section, placed at the end of each result page — a card with a headline, subhead, pre-filled share message, and Copy Link/Facebook/X/LinkedIn/WhatsApp buttons. No custom PDF or export build needed. Full copy in `content/results-copy.md` §Share Section.
+
 | | Opportunity low (0–59) | Opportunity high (60–100) |
 |---|---|---|
 | **Readiness high (55–100)** | "You're in good shape. This particular workflow isn't your biggest lever — the next question worth asking is where your real constraint actually sits." | "You're positioned to move on this now. You have the organizational readiness *and* a workflow worth the effort. That combination is rarer than it sounds." |
@@ -642,19 +645,21 @@ If ScoreApp supports only single-question conditional copy, use Q7 as the trigge
 
 ### 7.5 Benchmarks
 
-- **Static, all respondents:** knowledge workers spend ~23% of the workweek on partially or fully automatable tasks (McKinsey Global Institute, 2021). **Verify before launch** and update the citation if a newer figure exists.
+- **Static, all respondents:** more than half of U.S. work hours — 57% — could already be automated with today's AI technologies (McKinsey Global Institute, "Agents, robots, and us: Skill partnerships in the age of AI," November 2025). **Verified 2026-08-24** — the prior "23%, 2021" figure did not check out against any McKinsey publication and was replaced. Full sourcing note in `content/results-copy.md` §Benchmark Stats.
 - **Dynamic, by Q10:** annual hours and cost range from the table in §3.
 
 ### 7.6 CTA copy
 
 **Primary — all respondents.** "Get your AI Readiness Brief" → "Send my Brief"
 
-**Secondary — Layer C = ACCEPT or HOLD only.** Same Calendly link, two framings:
+**Secondary — Layer C = ACCEPT or HOLD only.** Headline "Don't stop at the score." Same Calendly link, two framings (full copy in `content/results-copy.md` §CTA):
 
 | Archetype | Body |
 |---|---|
-| Builder, Architect | "Talk through your results with our team. We'll examine the workflow you identified from both the business and technical sides and determine whether there's a practical opportunity worth pursuing — and roughly what it's worth." |
-| Spectator, Explorer | "You don't need an AI strategy to have this conversation — you need one workflow worth examining, and you've just described one. We'll look at it from both the business and technical sides and tell you honestly whether it's the right place to start." |
+| Builder, Architect | Assumes the workflow's real: "we'll dig into the workflow you identified, pinpoint where AI could save you meaningful time or money, and help you figure out whether the opportunity is worth pursuing." |
+| Spectator, Explorer | No-prerequisites reassurance: "you don't need an AI strategy to find out. You just need one workflow worth examining, and you've already described one." |
+
+Both close with "If there's something there, you'll leave knowing where to focus. If there isn't, you'll know that too." → button "Find Out If It's Worth Pursuing →" → "Free · No obligation".
 
 **Not-qualified note — Layer C = REJECT.** Four variants keyed to which gate fired (HG3/HG4 workflow is fine · HG1 not ready · HG5 early stage · HG2 access). Full copy in `content/results-copy.md`.
 

@@ -36,6 +36,7 @@ Three scoring layers read the same answers with different weightings. Two are sh
 ## 2. Phase 1 — About You
 
 ### Q1 — Role
+**Instruction (R-07, added 2026-08-24):** "Quick note before you start: answer for your company as a whole, not just your own team. If you don't have full visibility everywhere, answer based on what you can see — a partial view is still useful." Set via Q1's "Show instruction" toggle so it appears once, before the first question, rather than as a separate landing screen.
 **Text:** "What's your role at your company?"
 **Type:** Single choice · Required
 **Scores:** Layer C only (Pillar 4 — Access & Authority, 0–15)

@@ -10,6 +10,15 @@ Archetype hero copy lives in `content/archetypes.md`. Scoring definitions live i
 
 The respondent sees **two** scores. The archetype and AI Readiness Score are the hero; the Workflow Opportunity Score is secondary. This preserves the identity-discovery framing the quiz is built around rather than turning the page into a two-number dashboard.
 
+**Category descriptions (R-05, added 2026-08-24):** each score card carries a one-line plain-language definition, set once in ScoreApp's Categories screen (`Questions & Scoring → Categories`) and inherited automatically by all four result pages — not per-page copy.
+
+| Category | Description shown under the score |
+|---|---|
+| AI Readiness | "How far AI use has spread through your company — across your team, backed by leadership, and producing real results." |
+| Workflow Opportunity | "How much economic value is plausibly sitting in the workflow you described — based on the hours, frequency, and people involved." |
+
+**Why no tier badge.** ScoreApp's "Show score tier" toggle is scorecard-wide, not per-category — turning it on would also badge AI Readiness with the Contained/Meaningful/Significant/Substantial labels built for Workflow Opportunity (see §5.2), which reads oddly against a score whose real "band label" is the archetype name already shown as the page headline. Left off; the definition line above does the explanatory work instead.
+
 ### Primary Result: Archetype + AI Readiness Score
 
 The archetype is the hero of the page, displayed before any number. Full copy in `content/archetypes.md`.
@@ -61,8 +70,10 @@ The bottom-right cell is the profile that matters most: a large opportunity in a
 ## Benchmark Stats (Layer 2)
 
 ### Static Benchmark (shown to all respondents)
-"Knowledge workers spend an average of 23% of their workweek on tasks that could be partially or fully automated — nearly one full day per person, per week."
-Source: McKinsey Global Institute, "The future of work after COVID-19," 2021. Verify this stat before launch at mckinsey.com and update citation if a more recent figure is available.
+"McKinsey's latest research finds that more than half of all U.S. work hours — 57% — could already be automated with today's AI technologies. Most companies have barely started."
+Source: McKinsey Global Institute, "Agents, robots, and us: Skill partnerships in the age of AI," November 2025.
+
+**R-12 (2026-08-24):** the previous "23% of the workweek, McKinsey 2021" stat could not be verified — no McKinsey report, current or archived, states that figure for knowledge-worker automatable time. It reads as a fabricated citation that shipped unchecked. Replaced with a stat confirmed independently across three sources (Fortune, Lewis Silkin, Diginomica reporting on the same McKinsey Global Institute report): "today's technologies could theoretically automate more than half — 57% — of current US work hours." Note the source scope is *all US work hours*, not knowledge-worker hours specifically, so the copy says "U.S. work hours," not "knowledge workers' workweek" — don't narrow the claim back to knowledge workers without a knowledge-worker-specific source.
 
 ### Dynamic Benchmark (conditional on Q10 answer)
 
@@ -283,17 +294,29 @@ Same Calendly link in both cases; the framing changes with the archetype, becaus
 
 **For The Builder and The Architect:**
 
-**Headline:** "Book a free 30-minute AI Workflow ROI Diagnostic"
-**Body:** "Talk through your results with our team. We'll examine the workflow you identified from both the business and technical sides and determine whether there's a practical opportunity worth pursuing — and roughly what it's worth."
-**Button:** "View available times"
+**Headline:** "Don't stop at the score."
+**Body:** "Your results suggest there's a real opportunity inside your business. Now it's time to find out how big it is—and whether it's practical to act on.
+
+On a free call, we'll dig into the workflow you identified, pinpoint where AI could save you meaningful time or money, and help you figure out whether the opportunity is worth pursuing.
+
+**If there's something there, you'll leave knowing where to focus. If there isn't, you'll know that too.**"
+**Button:** "Find Out If It's Worth Pursuing →"
+**Footer:** "Free · No obligation"
 
 **For The Spectator and The Explorer:**
 
-**Headline:** "Book a free 30-minute AI Workflow ROI Diagnostic"
-**Body:** "You don't need an AI strategy to have this conversation — you need one workflow worth examining, and you've just described one. We'll look at it from both the business and technical sides and tell you honestly whether it's the right place to start."
-**Button:** "View available times"
+**Headline:** "Don't stop at the score."
+**Body:** "Your results suggest there may be a real opportunity inside your business — and you don't need an AI strategy to find out. You just need one workflow worth examining, and you've already described one.
+
+On a free call, we'll look at that workflow with you, pinpoint where AI could save you meaningful time or money, and help you figure out honestly whether it's worth pursuing.
+
+**If there's something there, you'll leave knowing where to focus. If there isn't, you'll know that too.**"
+**Button:** "Find Out If It's Worth Pursuing →"
+**Footer:** "Free · No obligation"
 
 > The second variant exists because a qualifying Spectator is not a lesser lead — they're a company with real pain and real intent that hasn't organized around AI yet. Framing the Diagnostic as a prerequisite-free first step is what makes it reachable for them.
+>
+> **v2.1 (2026-08-24):** Rewrote both variants around the user-supplied "Don't stop at the score" copy — sharper hook, clearer stakes ("worth knowing either way"), and a benefit-driven button label. Kept the archetype split rather than unifying to one CTA, since the two framings (assumed capability vs. no-prerequisites reassurance) are deliberate per §7.6 of the Master Reference and the "never imply the respondent failed" principle applies differently to each audience.
 
 ### Not-Qualified Note — shown instead of the secondary CTA (Layer C = REJECT)
 
@@ -312,6 +335,28 @@ Four variants, keyed to *why* they didn't qualify. Use the one matching the gate
 "Your results are worth sharing. The people who'd need to be part of a conversation about changing this workflow probably aren't in this assessment yet — so the most useful next step is showing them what you just found. Save this page and send it along."
 
 > **Design principle across all four:** never imply the respondent failed. They completed an honest assessment and received an honest answer. Every variant gives them something to do and a reason to keep the page.
+
+---
+
+## Share Section (Layer 5) — added 2026-08-24 (R-11)
+
+ScoreApp's native "Share" section, placed at the end of each result page (after the not-qualified note, before the footer). Same structure on all four pages; only the archetype name changes.
+
+**Headline:** "Don't keep this to yourself."
+**Subhead:** "Send it to your leadership team, your peers, or anyone who should see where your company stands."
+**Share message** (pre-filled social/copy-link text): "I just found out my company is a[n] {Archetype} on the AI Readiness Assessment — see where yours stands."
+**Card title:** "My {Archetype} score" (e.g. "My Architect score") — deliberately static text per page, not the `{Scorecard Name}` merge tag, since "My " + scorecard name reads awkwardly regardless of the scorecard's exact name.
+
+| Archetype | Share message | Card title |
+|---|---|---|
+| Architect | "I just found out my company is an Architect on the AI Readiness Assessment — see where yours stands." | My Architect score |
+| Builder | "I just found out my company is a Builder on the AI Readiness Assessment — see where yours stands." | My Builder score |
+| Explorer | "I just found out my company is an Explorer on the AI Readiness Assessment — see where yours stands." | My Explorer score |
+| Spectator | "I just found out my company is a Spectator on the AI Readiness Assessment — see where yours stands." | My Spectator score |
+
+Buttons (native, not custom copy): Copy Link, Facebook, X, LinkedIn, WhatsApp.
+
+**Side fix:** the scorecard's own name was "The AI Readiness Assessment," which combined with ScoreApp's default card-title template ("My {Scorecard Name} score") to read "My The AI Readiness Assessment score." Renamed the scorecard to "AI Readiness Assessment" in Scorecard Settings → General — fixes the grammar everywhere that merge tag is used, independent of the static per-archetype titles above.
 
 ---
 
