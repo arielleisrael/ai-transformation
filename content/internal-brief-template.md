@@ -16,14 +16,14 @@ Sent to Uzziah + Arielle, **30 minutes after submission**. Never sent to the res
 ## 1. Subject Line
 
 ```
-[{DECISION} {layer_c_score}/100 · {archetype}] {first_name} {last_initial}. at {company_name}
+[{DECISION} {layer_c_score}/100 · {archetype}] {first_name} at {company_name}
 ```
 
 **Examples:**
-- `[ACCEPT 89 · Builder] Sarah M. at Clearwater Consulting`
-- `[ACCEPT 81 · Explorer] James T. at Horizon Partners`
-- `[HOLD 52 · Explorer] Dana R. at Apex Group`
-- `[REJECT — HG3 · Architect] Marcus L. at Vantage Systems`
+- `[ACCEPT 89 · Builder] Sarah at Clearwater Consulting`
+- `[ACCEPT 81 · Explorer] James at Horizon Partners`
+- `[HOLD 52 · Explorer] Dana at Apex Group`
+- `[REJECT — HG3 · Architect] Marcus at Vantage Systems`
 
 The **Layer C decision leads**, not the respondent-facing score. A 92 AI Readiness Score with a REJECT is a real and common combination — the subject line has to make that unmissable so nobody opens a mature-sounding lead expecting a hot one.
 
@@ -46,7 +46,7 @@ Diagnostic Fit Score: {layer_c_score}/100
 ## 3. Respondent
 
 ```
-Name:        {first_name} {last_name}
+Name:        {first_name}
 Company:     {company_name}
 Email:       {email}
 Role:        {Q1}
@@ -216,6 +216,7 @@ UNSUBSCRIBED: {IF unsubscribed: "Yes — marketing/nurture suppressed" ELSE: "No
 
 ### 2026-08-25
 - **Removed marketing-consent field and gating.** No separate opt-in checkbox exists on the contact form anymore; Sequence 1 always sends. Replaced the `CONSENT`/`Marketing consent` lines with `UNSUBSCRIBED` status, which governs Sequences 2/3 only.
+- **Removed `{last_name}`/`{last_initial}` merge tags.** Live-verified the contact form never asks for a last name — ScoreApp's admin Lead Form settings list a "Last name" row as a locked, uneditable field showing "Required: Yes," but it does not actually render on the live form respondents see. Reworked the subject line to `{first_name} at {company_name}` and the respondent block to `Name: {first_name}` so the brief doesn't show a blank artifact where a last-initial would have been.
 
 ### v2.0 — 2026-08-21
 - **Restructured around Layer C.** Subject line now leads with the Diagnostic decision rather than the respondent-facing score, because high readiness + REJECT is a common and previously invisible combination.
