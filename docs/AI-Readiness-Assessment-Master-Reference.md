@@ -237,7 +237,7 @@ This fallback is safe to attach to jump logic precisely because it is unscored.
 #### Q10 · Hours Per Week
 *"How many hours per week does your team collectively spend on this workflow?"* — Single choice, required — **heaviest question in the quiz**
 
-| Answer | A | B | C | Annual hrs | Cost range |
+| Answer | A | B | C | Annual hrs | Cost range (internal only) |
 |---|---|---|---|---|---|
 | Less than 5 hours | — | 4 | 1 | 150+ | $7,500–$11,000 |
 | 5–10 hours | — | 13 | 5 | 375+ | $19,000–$28,000 |
@@ -246,6 +246,8 @@ This fallback is safe to attach to jump logic precisely because it is unscored.
 | More than 40 hours | — | 35 | 12 | 2,250+ | $113,000–$169,000 |
 
 Cost = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker rate.
+
+> **No monetary estimate on the public result page.** The assessment does not collect enough company-specific compensation, loaded labor rate, role mix, or automatable-percentage data to present a company-specific dollar figure with the confidence ReinventOps requires. The public result page's Dynamic Benchmark text shows the "Annual hrs" figure only — see `content/results-copy.md` §Benchmark Stats. The "Cost range (internal only)" column above feeds `{annual_cost_low}`/`{annual_cost_high}` in the internal respondent-brief email (`content/follow-up-sequences.md`) exclusively — it is never rendered on the public page.
 
 > ⚠️ **Screening estimates of labor cost — never present as recoverable savings.** The Diagnostic converts this into a defensible model: annual hours × loaded rate × automatable percentage + error/rework cost + capacity value − implementation and operating cost.
 
@@ -646,7 +648,7 @@ If ScoreApp supports only single-question conditional copy, use Q7 as the trigge
 ### 7.5 Benchmarks
 
 - **Static, all respondents:** more than half of U.S. work hours — 57% — could already be automated with today's AI technologies (McKinsey Global Institute, "Agents, robots, and us: Skill partnerships in the age of AI," November 2025). **Verified 2026-08-24** — the prior "23%, 2021" figure did not check out against any McKinsey publication and was replaced. Full sourcing note in `content/results-copy.md` §Benchmark Stats.
-- **Dynamic, by Q10:** annual hours and cost range from the table in §3.
+- **Dynamic, by Q10:** annual hours only, from the table in §3 — no dollar figure is shown on the public result page. See `content/results-copy.md` §Dynamic Benchmark for the exact wording and the "No monetary estimate on the public result page" note. The cost-range column in the §3 table is internal-only, feeding the respondent-brief email (§9).
 
 ### 7.6 CTA copy
 

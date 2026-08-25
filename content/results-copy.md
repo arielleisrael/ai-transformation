@@ -75,22 +75,24 @@ Source: McKinsey Global Institute, "Agents, robots, and us: Skill partnerships i
 
 **R-12 (2026-08-24):** the previous "23% of the workweek, McKinsey 2021" stat could not be verified — no McKinsey report, current or archived, states that figure for knowledge-worker automatable time. It reads as a fabricated citation that shipped unchecked. Replaced with a stat confirmed independently across three sources (Fortune, Lewis Silkin, Diginomica reporting on the same McKinsey Global Institute report): "today's technologies could theoretically automate more than half — 57% — of current US work hours." Note the source scope is *all US work hours*, not knowledge-worker hours specifically, so the copy says "U.S. work hours," not "knowledge workers' workweek" — don't narrow the claim back to knowledge workers without a knowledge-worker-specific source.
 
+> **No monetary estimate on the public result page.** The assessment does not collect enough company-specific compensation, loaded labor rate, role mix, or automatable-percentage data to present a company-specific dollar figure with the confidence ReinventOps requires. The annual-hours estimate above is the only economic figure shown to respondents. A monetary range remains an internal/Diagnostic-stage tool — see `content/follow-up-sequences.md` for where `{annual_cost_low}`/`{annual_cost_high}` are still used, internally, in the respondent-brief email.
+
 ### Dynamic Benchmark (conditional on Q10 answer)
 
 **If Q10 = "Less than 5 hours":**
-"Based on your answers, your team is spending an estimated 150+ hours per year on this workflow — equivalent to roughly $7,500–$11,000 in annual labor cost at average knowledge worker rates."
+"Based on your answers, your team is spending an estimated 150+ hours per year on this workflow — time that could be redirected toward higher-value work."
 
 **If Q10 = "5–10 hours":**
-"Based on your answers, your team is spending an estimated 375+ hours per year on this workflow — equivalent to roughly $19,000–$28,000 in annual labor cost at average knowledge worker rates."
+"Based on your answers, your team is spending an estimated 375+ hours per year on this workflow — time that could be redirected toward higher-value work."
 
 **If Q10 = "11–20 hours":**
-"Based on your answers, your team is spending an estimated 750+ hours per year on this workflow — equivalent to roughly $38,000–$56,000 in annual labor cost at average knowledge worker rates."
+"Based on your answers, your team is spending an estimated 750+ hours per year on this workflow — time that could be redirected toward higher-value work."
 
 **If Q10 = "21–40 hours":**
-"Based on your answers, your team is spending an estimated 1,500+ hours per year on this workflow — equivalent to roughly $75,000–$113,000 in annual labor cost at average knowledge worker rates."
+"Based on your answers, your team is spending an estimated 1,500+ hours per year on this workflow — time that could be redirected toward higher-value work."
 
 **If Q10 = "More than 40 hours":**
-"Based on your answers, your team is spending an estimated 2,250+ hours per year on this workflow — equivalent to roughly $113,000–$169,000 in annual labor cost at average knowledge worker rates."
+"Based on your answers, your team is spending an estimated 2,250+ hours per year on this workflow — time that could be redirected toward higher-value work."
 
 ---
 
