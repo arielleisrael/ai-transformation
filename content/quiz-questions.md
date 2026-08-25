@@ -29,7 +29,7 @@ Three scoring layers read the same answers with different weightings. Two are sh
 1. **Every question a gate references must be single-select.** Gates test for *specific answers*; multi-select makes "is Q5 the top answer?" unanswerable. Gate-referenced: **Q1, Q3, Q4, Q5, Q8, Q10, Q11a, Q13.**
 2. **Multi-select scoring is `Σ(selected) ÷ Σ(all options)`.** A checkbox question's weight equals the sum of all its options, so option values must sum to exactly the intended budget. Per-option severity must stay flat.
 3. **Never use `max selections`** — undocumented denominator behaviour would depress every score by a constant.
-4. **Never put jump logic on a scored question** — skipping changes total points available. The one jump (Q7 → Q7b) targets an unscored Open Text question.
+4. **Never put jump logic on a scored question** — skipping changes total points available. Q7 uses ScoreApp's native `Other` option; if Task 11 shows that it does not capture free text, the fallback jump may target only the unscored Q7b Open Text question.
 
 ---
 
@@ -148,18 +148,18 @@ Also triggers the **company-size threshold modifier** (§7.4) and soft flag SF1 
 | Approval & review processes | — | — | — |
 | Employee or client onboarding | — | — | — |
 | Sales operations & CRM | — | — | — |
-| Other — something else | — | — | — |
+| Other | — | — | — |
 
 **Job:** selects the insight paragraph on the results page (8 categories × 6 pain types = 48 variants in `results-copy.md`) and sets the FAEO Repeatability signal (named category → 4, Other → 2).
 
 > **Changed in v2.** Previously scored 8–10 across named categories and **0** for "Other," which meant choosing the honest answer silently tanked the respondent's score. The spread did almost no discriminating work. Now unscored.
 
-### Q7b — Workflow Description
+### Q7b — Workflow Description · CONDITIONAL FALLBACK (NOT CURRENTLY BUILT)
 **Text:** "In a sentence, what is it?"
-**Type:** Open Text · **Optional** · Shown by jump logic **only when Q7 = "Other — something else"**
+**Type:** Open Text · **Optional** · Create only if Task 11 confirms that ScoreApp's native `Other` option does not capture free text; if created, show by jump logic **only when Q7 = "Other"**
 **Scores:** Unscored (ScoreApp never scores Open Text)
 
-Captures workflows the taxonomy is missing. Safe to attach jump logic here precisely because it is unscored — a skipped scored question would change the denominator.
+This fallback would capture workflows the taxonomy is missing. It is safe to attach jump logic here precisely because it is unscored — a skipped scored question would change the denominator.
 
 ### Q8 — People Involved
 **Text:** "How many people on your team touch this workflow?"
@@ -373,7 +373,7 @@ Rationale: the archetype copy must be literally true of the answers given. Overc
 | SF3 | Q8 = "16 or more people" | Delivery complexity — probe scope containment |
 | SF4 | Archetype = Architect AND Q5 = "measurable results" | May already have internal capability — probe what is actually missing |
 | SF5 | Q13 = "Possibly — we're exploring" | Timing unconfirmed — establish the trigger event on the call |
-| SF6 | Q7 = "Other — something else" | Outside known taxonomy — see Q7b, confirm scope early |
+| SF6 | Q7 = "Other" | Outside known taxonomy — see Q7b, confirm scope early |
 | SF7 | Q4 = "No formal strategy yet" | No executive sponsor identified — ask who would have to sponsor this |
 | SF8 | Function ∈ {Operations, Technology, Transformation} AND Q1 ≥ Director | **Priority signal, not a caveat** — ideal champion profile per ICP §6 |
 | SF9 | Q11b includes "same information entered or copied more than once" | Direct integration opportunity — name the systems on the call |

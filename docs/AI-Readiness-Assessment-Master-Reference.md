@@ -105,7 +105,7 @@ One score cannot carry both shapes.
 1. **Every question a gate references must be single-select.** Gates test for *specific answers*; multi-select makes "is Q5 the top answer?" unanswerable. Gate-referenced: **Q1, Q3, Q4, Q5, Q8, Q10, Q11a, Q13.**
 2. **Multi-select scoring is `Σ(selected) ÷ Σ(all options)`.** A checkbox question's weight equals the sum of all its options, so option values must sum to exactly the intended budget, and per-option severity must stay flat.
 3. **Never use `max selections`** — undocumented denominator behaviour would depress every score by a constant.
-4. **Never put jump logic on a scored question** — skipping changes total points available. The one jump (Q7 → Q7b) targets an unscored Open Text question.
+4. **Never put jump logic on a scored question** — skipping changes total points available. Q7 uses ScoreApp's native `Other` option; if Task 11 shows that it does not capture free text, the fallback jump may target only the unscored Q7b Open Text question.
 
 ---
 
@@ -201,14 +201,14 @@ Also triggers the company-size threshold modifier (§6.6) and flag SF1 when Unde
 #### Q7 · Workflow Category
 *"Think about one workflow that consistently costs more time, effort, or money than it should. Which category fits best?"* — Single choice, required — **UNSCORED**
 
-Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other — something else
+Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other
 
 **Job:** selects the insight paragraph (§7.4) and sets the FAEO Repeatability signal. In v1 this scored 8–10 for named categories and **0** for "Other," so choosing the honest answer silently tanked the score. Now unscored.
 
-#### Q7b · Workflow Description
-*"In a sentence, what is it?"* — Open Text, **optional**, shown by jump logic **only when Q7 = Other** — unscored
+#### Q7b · Workflow Description · CONDITIONAL FALLBACK (NOT CURRENTLY BUILT)
+*"In a sentence, what is it?"* — Open Text, **optional**. Create only if Task 11 confirms that ScoreApp's native `Other` option does not capture free text; if created, show by jump logic **only when Q7 = Other** — unscored
 
-Safe to attach jump logic here precisely because it is unscored.
+This fallback is safe to attach to jump logic precisely because it is unscored.
 
 #### Q8 · People Involved
 *"How many people on your team touch this workflow?"* — Single choice, required

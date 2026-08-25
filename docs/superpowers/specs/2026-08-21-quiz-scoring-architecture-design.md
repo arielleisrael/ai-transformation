@@ -165,7 +165,7 @@ Two consequences that decide every input-type choice below:
 | Q5 | Current AI ROI | Single | Ordinal ladder; gates G1, G3, HG5 |
 | Q6 | AI ownership | Single | Ordinal ladder |
 | Q7 | Workflow category | Single | Q8–Q12 all describe *this* workflow; multi-select makes them incoherent |
-| Q7b | "Tell us briefly what it is" | **Open Text, unscored, conditional** | Shown by jump logic only when Q7 = Other |
+| Q7b | "Tell us briefly what it is" | **Open Text, unscored, conditional fallback** | Not currently built; create only if native `Other` does not capture free text, then show by jump logic only when Q7 = Other |
 | Q8 | People involved | Single | Exclusive bands; gate HG4 |
 | Q9 | Frequency | Single | Exclusive bands |
 | Q10 | Hours per week | Single | Exclusive bands; gate HG4 |
@@ -377,7 +377,7 @@ The live build scores 16+ *below* 6–15. The question review flagged this as un
 
 ### 5.1 Why Q7 becomes unscored
 
-In the live build the seven named categories score 8–10 while "Other / something else" scores 0. That spread does almost no discriminating work, and the "Other" penalty is a pure UX artifact — choosing the honest answer silently tanks the respondent's score. Q7's real job is selecting the insight paragraph. Internally it informs the Repeatability signal (§6.5), not the opportunity magnitude.
+In the live build the seven named categories score 8–10 while "Other" scores 0. That spread does almost no discriminating work, and the "Other" penalty is a pure UX artifact — choosing the honest answer silently tanks the respondent's score. Q7's real job is selecting the insight paragraph. Internally it informs the Repeatability signal (§6.5), not the opportunity magnitude.
 
 ### 5.2 Display tiers
 
@@ -519,7 +519,7 @@ CTA still shows; the internal brief carries the caveat.
 | SF3 | Q8 = "16 or more people" | Delivery complexity — many stakeholders. Probe scope containment. |
 | SF4 | Archetype = Architect AND Q5 = "measurable results" | May already have internal capability. Probe what is actually missing before committing founder time. |
 | SF5 | Q13 = "Possibly — we're exploring" | Timing unconfirmed. Establish the trigger event on the call. |
-| SF6 | Q7 = "Other / something else" | Workflow outside the known taxonomy — confirm scope and feasibility early. |
+| SF6 | Q7 = "Other" | Workflow outside the known taxonomy — confirm scope and feasibility early. |
 | SF7 | Q4 = "No formal strategy yet" | No executive sponsor identified. Ask who the internal champion is and who would have to sponsor this. |
 | SF8 | Function ∈ {Operations, Technology, Transformation} **AND** Q1 ≥ Director | **Priority signal, not a caveat.** Ideal champion profile per ICP §6. |
 | SF9 | Q11b includes "the same information gets entered or copied more than once" | Direct integration opportunity — name the systems on the call. |
@@ -717,7 +717,7 @@ Also newly established: a **public Open API exists** (article 217) and exposes `
 | # | Question | Blocks | Priority |
 |---|---|---|---|
 | 1 | **Confirm the multi-select denominator empirically.** Build a 6-option checkbox at 2 pts each, tick one, and read the percentage. 20% confirms `Σ(selected)/Σ(all)` as documented. | Q11b's weight inside Layer B | **First** |
-| 2 | Does an **"Other" option with free text** exist on choice questions? The API's `"type": "regular"` option discriminator hints something else exists, but no doc describes it. | Q7's Other capture. Fallback (Q7b Open Text via jump logic) already specified in §3.5 and works regardless | High |
+| 2 | Does an **"Other" option with free text** exist on choice questions? The API's `"type": "regular"` option discriminator hints another option type exists, but no doc describes it. | Q7's Other capture. Q7b Open Text is the documented fallback; it is not currently built and should be created only if native `Other` does not capture free text | High |
 | 3 | **Audience condition nesting** — is an AND of OR-groups expressible? | HG4 and HG5 (§8.4) | High |
 | 4 | Can a result-page section be **hidden by** audience membership, or only **shown to** it? | Fallback construction if #3 fails | Medium |
 | 5 | Does an **optional scored question left blank** (as opposed to logic-skipped) leave the denominator? Docs cover only logic-skipping, and contradict themselves between overall and category level. | 0–100 normalization consistency. Mitigated by making every scored question required | Medium |
@@ -726,7 +726,7 @@ Also newly established: a **public Open API exists** (article 217) and exposes `
 
 **Do not use `max selections` anywhere.** It exists, but whether it reduces the denominator is undocumented; if it does not, 100% becomes unreachable on that question and every respondent's score is depressed by a constant, corrupting tier cutoffs invisibly. No question in this design needs it.
 
-**Do not add jump logic to any scored question.** Logic-skipping changes the total points available, so two respondents would be normalized against different denominators. The only jump in this design is Q7 → Q7b, and Q7b is Open Text, which ScoreApp never scores.
+**Do not add jump logic to any scored question.** Logic-skipping changes the total points available, so two respondents would be normalized against different denominators. No jump is currently built for Q7. If Task 11 confirms that native `Other` does not capture free text, the permitted fallback is Q7 → Q7b, and Q7b is Open Text, which ScoreApp never scores.
 
 ### 10.3 Calibration
 

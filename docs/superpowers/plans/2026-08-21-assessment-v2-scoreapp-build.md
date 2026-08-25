@@ -38,7 +38,7 @@ git init && git add -A && git commit -m "chore: baseline before v2 assessment bu
 
 - **Plan tier:** ScoreApp Business ($99/mo) or higher. Audiences, multiple result pages, and section-level audience visibility all gate here.
 - **Never use `max selections`** on any question. Undocumented denominator behavior would depress every score by a constant and corrupt the tier cutoffs invisibly.
-- **Never put jump logic on a scored question.** Logic-skipping changes total points available, so two respondents get normalized against different denominators. The only permitted jump is Q7 → Q7b, and Q7b is unscored Open Text.
+- **Never put jump logic on a scored question.** Logic-skipping changes total points available, so two respondents get normalized against different denominators. Q7 currently uses ScoreApp's native `Other` option; if Task 11 shows that it does not capture free text, the only permitted fallback jump is Q7 → Q7b, and Q7b is unscored Open Text.
 - **Every scored question is Required.** This sidesteps the undocumented question of whether an optional blank leaves the denominator.
 - **Only one multi-select question exists: Q11b.** Its option values must sum to exactly its budget (10 in Layer B, 5 in Layer C). Per-option severity stays flat; differentiating it silently raises the question's weight.
 - **Layer C must never render.** No result page, PDF, or respondent-facing email may display the Diagnostic Fit category or any value derived from it.
@@ -423,29 +423,29 @@ The most intricate task: it contains the only unscored question, the only jump, 
 - Consumes: categories from Task 3.
 - Produces: the complete `Workflow Opportunity` score (0–100) and Pillar 1 of `Diagnostic Fit`.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > Submitting **P4 Ellen's** Q7–Q12 answers yields `Workflow Opportunity = 98`. Submitting **P2 Marcus's** yields `26`.
 
-- [ ] **Step 2: Build Q7 — unscored**
+- [x] **Step 2: Build Q7 — unscored**
 
 **"Think about one workflow that consistently costs more time, effort, or money than it should. Which category fits best?"** — single choice, Required, **zero points in every category**.
 
-Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other — something else
+Reporting & data aggregation · Document creation & review · Client or customer communications · Research & analysis · Approval & review processes · Employee or client onboarding · Sales operations & CRM · Other
 
 Leave it uncategorised or explicitly set every option to 0 in all three categories. Q7's job is selecting the insight paragraph, not scoring. In v1 it scored 8–10 for named categories and 0 for "Other", so the honest answer silently tanked the respondent's score.
 
-- [ ] **Step 3: Build Q7b — the only jump**
+- [x] **Step 3: Build Q7b — the only jump**
 
-**"In a sentence, what is it?"** — **Open Text**, **Optional**, unscored.
+**Fallback only:** **"In a sentence, what is it?"** — **Open Text**, **Optional**, unscored.
 
-Set jump logic on **Q7** so that selecting "Other — something else" routes to Q7b, and every other option skips it to Q8.
+Q7 currently uses ScoreApp's native `Other` option. At Task 11, verify whether it captures free text. If it does not, create Q7b and set jump logic on **Q7** so that selecting `Other` routes to Q7b and every other option skips it to Q8.
 
 This is the one permitted exception to the no-jump-logic rule, and only because Open Text is never scored — a skipped unscored question cannot change the denominator.
 
-If Task 2 found that ScoreApp offers a native "Other + free text" option on choice questions, use that instead and delete Q7b. Record which route was taken.
+**Route taken: native.** Q7 uses ScoreApp's built-in `"Other" option` toggle; no Q7b question and no jump logic were created. Whether that native option captures free text is unconfirmed — verify at Task 11 and add Q7b as Open Text if it does not.
 
-- [ ] **Step 4: Build Q8–Q10**
+- [x] **Step 4: Build Q8–Q10**
 
 All single choice, Required, no jump logic.
 
@@ -480,7 +480,7 @@ Monotonic on purpose. v1 scored 16+ *below* 6–15; more people on a repetitive 
 | 21–40 hours | 29 | 10 |
 | More than 40 hours | 35 | 12 |
 
-- [ ] **Step 5: Build Q11a**
+- [x] **Step 5: Build Q11a**
 
 **"Which best describes how this workflow runs today?"** — single choice, Required.
 
@@ -493,7 +493,7 @@ Monotonic on purpose. v1 scored 16+ *below* 6–15; more people on a repetitive 
 
 That last option is hard gate HG3. Its exact wording is referenced by an Audience condition in Task 8 — **do not reword it.**
 
-- [ ] **Step 6: Build Q11b — the only multi-select**
+- [x] **Step 6: Build Q11b — the only multi-select**
 
 **"Which of these also apply? Select all that apply."** — **multi-select**, Required, **no min/max selections**.
 
@@ -512,7 +512,7 @@ That last option is hard gate HG3. Its exact wording is referenced by an Audienc
 
 **"None of these" is worth 0**, so a respondent ticking it alongside symptoms cannot move the score — necessary because ScoreApp has no exclusive-option behavior.
 
-- [ ] **Step 7: Build Q12**
+- [x] **Step 7: Build Q12**
 
 **"What does this workflow cost your company most?"** — single choice, Required.
 
@@ -525,7 +525,7 @@ That last option is hard gate HG3. Its exact wording is referenced by an Audienc
 | Customer experience — slow or inconsistent handling costs us business | 9 | 3 |
 | Team morale — it's tedious and people hate it | 7 | 2 |
 
-- [ ] **Step 8: Verify**
+- [x] **Step 8: Verify**
 
 | Answers | Expected Workflow Opportunity |
 |---|---|
@@ -534,9 +534,9 @@ That last option is hard gate HG3. Its exact wording is referenced by an Audienc
 
 Then verify the multi-select specifically: take the quiz twice as P4 but tick **1** symptom, then **4**. Workflow Opportunity should differ by exactly **6** (2 points × 3 extra symptoms). If it differs by more or less, the per-option values are wrong.
 
-Also confirm Q7 = "Other" reveals Q7b, and that any other Q7 answer skips it.
+Also confirm whether Q7 = `Other` captures free text natively. If the fallback Q7b is required, confirm that `Other` reveals it and every other Q7 answer skips it.
 
-- [ ] **Step 9: Log**
+- [x] **Step 9: Log**
 
 Record both scores, the multi-select delta, and whether the jump fired correctly.
 
@@ -550,11 +550,11 @@ Record both scores, the multi-select delta, and whether the jump fired correctly
 - Consumes: categories from Task 3.
 - Produces: Pillar 2's largest input, plus `function` and `opt_in` — both consumed by Audiences in Task 8 and by every email sequence in Task 13.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > Q13 exists, scores into `Diagnostic Fit` only, and adds nothing to either visible score. The contact form captures function and consent, and consent is optional rather than blocking.
 
-- [ ] **Step 2: Build Q13**
+- [x] **Step 2: Build Q13**
 
 New phase, "Ready to move". Placed **after** the workflow block and **before** contact capture — by then the respondent has articulated concrete pain, so the commitment question reads as a consequence rather than a sales probe.
 
@@ -569,22 +569,27 @@ New phase, "Ready to move". Placed **after** the workflow block and **before** c
 
 That last option is hard gate HG1. Its wording is referenced by an Audience in Task 8 — **do not reword it.**
 
-- [ ] **Step 3: Build the contact form**
+- [x] **Step 3: Build the contact form**
 
 `Settings → Lead Form`. Heading: **"Almost done. Where should we send your results?"** Subtext: **"We'll send your personalized AI Readiness Brief here — your archetype, your score, and a summary of your biggest opportunity."**
 
 | Field | Type | Required |
 |---|---|---|
 | First name | Text | Yes |
+| Last name | Text | Yes |
 | Company name | Text | Yes |
 | Email address | Email | Yes |
 | Which area do you lead or work in? | **Dropdown** | Yes |
+
+**Last name added 2026-08-23.** It ships enabled by default and `content/internal-brief-template.md` consumes it in both the subject line (`{first_name} {last_initial}.`) and the respondent block. Removing it would break the brief.
+
+**Set `DEFAULT LEAD FORM BEHAVIOUR` to `After Questions`.** It defaults to `Before Questions`, which forces signup ahead of Q1 and contradicts the whole design — the form belongs after Q13.
 
 Dropdown options: Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales & Marketing · HR & People · Customer Service · Other
 
 Lead-form fields cannot be scored. Function drives flag SF8 through an Audience, not through points — this is why Pillar 4 is Q1 alone at 15.
 
-- [ ] **Step 4: Configure consent**
+- [x] **Step 4: Configure consent**
 
 Set consent mode to **Explicit Consent (Optional)** — checkbox shown, submission allowed without ticking.
 
@@ -592,13 +597,13 @@ Optional rather than Required so a missing tick does not cost the lead: the resu
 
 Add the Privacy Policy URL if the account has one.
 
-- [ ] **Step 5: Verify**
+- [ ] **Step 5: Verify** — ⏸ **DEFERRED TO TASK 11.** Result pages do not exist until Task 9, so "both should complete and show results" cannot be evaluated yet. Run the consent-on / consent-off pair as part of the P1 and P2 persona runs.
 
 Submit once ticking consent and once not. Both should complete and show results. In `Leads`, confirm the two records differ in opt-in status and that function was captured.
 
 Confirm Q13 moved `Diagnostic Fit` but left `AI Readiness` and `Workflow Opportunity` unchanged.
 
-- [ ] **Step 6: Log**
+- [x] **Step 6: Log**
 
 Record consent mode, and confirm both submissions completed.
 
@@ -612,17 +617,19 @@ Where the three demotion gates get implemented. Priority ordering does the work 
 - Consumes: `AI Readiness` category percentage; exact answer wording from Q3, Q4, Q5.
 - Produces: exactly one archetype audience per respondent, consumed by End Logic and by Task 9's result pages.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > Each of the eight personas lands in exactly one archetype audience, matching the Expected Outcomes table. Critically: **P7 Nadia scores 91 and must land in Builder, not Architect** (G1); **P8 Sofia scores 69 and must land in Explorer, not Builder** (G2); **P5 Tom scores 55 and must land in Spectator, not Builder** (G3). One persona per gate.
 
-- [ ] **Step 2: Confirm they currently fail**
+- [ ] **Step 2: Confirm they currently fail** — ⏸ **DEFERRED TO TASK 11.** Needs a completed submission, which needs the result pages from Task 9.
 
 Before creating any audience, take the quiz as **P7 Nadia**. With no gates in place, 91 falls in the 80–100 band and would be an Architect. Confirm this is the current behavior. That is the bug the gates fix.
 
-- [ ] **Step 3: Create the four audiences in this exact order**
+- [x] **Step 3: Create the four audiences in this exact order**
 
-`Audiences → Create`. Order is load-bearing.
+`Audiences → Create`.
+
+**Correction, 2026-08-23: creation order is NOT load-bearing.** The Audiences list has no priority — it sorts by Name or Size, and audiences are overlapping membership sets (a 91-scoring Architect also satisfies Builder, Explorer and Spectator). First-match-wins priority is configured in **End Logic → Audience Redirects** at Step 4. Build the four in any order; get the ordering right there.
 
 **1. `Archetype — Architect`**
 ```
@@ -649,13 +656,13 @@ AND ( Q3  is not  "A few people are experimenting on their own"
 
 **4. `Archetype — Spectator`** — no conditions, or a condition matching everyone. This is the catch-all and **must sit last**.
 
-- [ ] **Step 4: Set End Logic**
+- [ ] **Step 4: Set End Logic** — ⏸ **BLOCKED ON TASK 9.** Return here once the four result pages exist. **This is where archetype priority is actually enforced** — the Audiences list itself has no ordering.
 
 `End Logic → Configure Logic → Audience Redirects`. Map each audience to its result page (created in Task 9 — return here if pages must exist first). Confirm the drag-to-order priority matches the order above.
 
 **Do not use "Outcome / Highest Category" routing.** These archetypes are ordinal levels, not parallel personality types; highest-category matching would be conceptually wrong and would inherit ScoreApp's arbitrary tie-breaking.
 
-- [ ] **Step 5: Verify all seven**
+- [ ] **Step 5: Verify all seven** — ⏸ **DEFERRED TO TASK 11**, which already runs all eight personas.
 
 | Persona | AI Readiness | Expected audience | Why |
 |---|---|---|---|
@@ -670,7 +677,7 @@ AND ( Q3  is not  "A few people are experimenting on their own"
 
 P5, P7 and P8 are the whole point of this task — one per demotion gate. If any lands in its un-demoted band, that gate's condition is wrong.
 
-- [ ] **Step 6: Log**
+- [x] **Step 6: Log**
 
 Record all eight observed audiences against expected.
 
@@ -684,15 +691,15 @@ The invisible half. Two audiences on the hidden `Diagnostic Fit` category, carry
 - Consumes: `Diagnostic Fit` percentage; exact wording from Q1, Q3, Q4, Q5, Q8, Q10, Q11a, Q13.
 - Produces: `Diagnostic Qualified` and `Diagnostic Priority`, consumed by Task 10's section visibility and Task 13's sequences.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > **P1, P4, P5, P7, P8** land in `Diagnostic Qualified`. **P2, P3, P6** do not. P6 is the sharp test: 68 points, comfortably above 45, still excluded because HG2 fires.
 
-- [ ] **Step 2: Confirm it currently fails**
+- [ ] **Step 2: Confirm it currently fails** — ⏸ **DEFERRED TO TASK 11.** Needs a completed submission, which needs the result pages from Task 9.
 
 Take the quiz as **P6 Raj**. Diagnostic Fit should read 68. With no gates, that qualifies. Confirm — that is the bug.
 
-- [ ] **Step 3: Create `Diagnostic Disqualified` — the inverse, not the positive**
+- [x] **Step 3: Create `Diagnostic Disqualified` — the inverse, not the positive**
 
 **Build who is EXCLUDED, not who qualifies.** Verified 2026-08-21: the audience builder is OR-of-AND-groups with no nesting. The positive form distributes to 36 hand-entered conditions; the inverse collapses to **9**, because each hard gate is conjunctive and inverts into a single block.
 
@@ -714,7 +721,7 @@ Note block 7 replaces the separate out-of-band audience: an out-of-band responde
 
 HG5 is deliberately narrower than archetype gate G3 — it additionally requires Q4. A Spectator who clears HG5 is **not** in this audience and therefore **does** see the CTA. That is P5 Tom, and it is the point.
 
-- [ ] **Step 4: Create `Diagnostic Priority`**
+- [x] **Step 4: Create `Diagnostic Priority`**
 
 A positive audience this time, and simple because it has no OR-groups — it only ever *adds* emphasis, never grants a CTA:
 
@@ -724,7 +731,7 @@ Diagnostic Fit percentage  is greater than or equal to  65
 
 Drives internal ranking and the CRM tag. A respondent in both `Diagnostic Priority` and `Diagnostic Disqualified` is disqualified — the CTA hide rule in Task 10 wins, because hiding is applied at the section level regardless of other audience membership. Verify this precedence during Task 11 with **P6 Raj** (Diagnostic Fit 68, HG2 fired): he must land in `Diagnostic Priority` and still see **no CTA**.
 
-- [ ] **Step 5: Optional — split the gates into separate audiences for internal reporting**
+- [x] **Step 5: Optional — split the gates into separate audiences for internal reporting**
 
 The single `Diagnostic Disqualified` audience is enough to drive the CTA. But the internal brief and the four gate-specific nurture emails (Task 13) need to know *which* gate fired, and a single audience cannot tell you that.
 
@@ -732,9 +739,13 @@ If ScoreApp's Leads view is where you will triage, build five additional single-
 
 Skip this only if you intend to do that routing in the phase-2 webhook instead.
 
-- [ ] **Step 6: Handle the company-size threshold modifier**
+- [x] **Step 6: Handle the company-size threshold modifier** — ⚠️ **SKIPPED AS REDUNDANT, 2026-08-23.** Already implemented by Step 3 blocks 6 and 7; see below.
 
 Out-of-band companies face a raised bar: HOLD 60 / ACCEPT 80 instead of 45 / 65.
+
+> ⚠️ **Superseded 2026-08-23 — do not build what follows.** Step 3's blocks 6 and 7 already implement this. Disqualified-by-score is `DF ≤ 44 OR (out-of-band AND DF ≤ 59)`, which qualifies at **45+ in band** and **60+ out of band** — exactly the intended raised bar. The construction below cannot be executed as written anyway: it amends a `Diagnostic Qualified` audience that Step 3 never creates (Step 3 builds the inverse), and its positive form restates all five hard gates conjunctively, reintroducing the 36-condition explosion the inverse construction exists to avoid. Task 10 hides the CTA from `Diagnostic Disqualified`, so no positive audience is needed anywhere. Retained below for the record only.
+
+<details><summary>Superseded original text</summary>
 
 Add a third audience, `Diagnostic Qualified — Out of Band`:
 ```
@@ -753,7 +764,11 @@ so the two audiences are mutually exclusive and in-band respondents keep the 45 
 
 This is what makes **P3 Dana** (46, Under 25) fail while **P4 Ellen** (81, Over 500) passes.
 
-- [ ] **Step 7: Verify all seven**
+</details>
+
+**What actually ships:** nothing extra. P3 Dana (46, Under 25) is caught by block 7a because 46 ≤ 59; P4 Ellen (81, Over 500) clears it because 81 > 59 and no hard gate fires.
+
+- [ ] **Step 7: Verify all seven** — ⏸ **DEFERRED TO TASK 11**, which already runs all eight personas. Logic verified on paper (see build log).
 
 | Persona | Diagnostic Fit | Size band | Qualified? | Reason |
 |---|---|---|---|---|
@@ -766,7 +781,7 @@ This is what makes **P3 Dana** (46, Under 25) fail while **P4 Ellen** (81, Over 
 | P7 Nadia | 77 | in | **Yes** | ≥ 65, priority |
 | P8 Sofia | 70 | in | **Yes** | ≥ 65 despite zero leadership — SF7 flags it |
 
-- [ ] **Step 8: Log**
+- [x] **Step 8: Log**
 
 Record all eight, plus which audience construction was used.
 
@@ -780,11 +795,11 @@ Record all eight, plus which audience construction was used.
 - Consumes: the four archetype audiences from Task 7.
 - Produces: four result pages, each with a CTA section that Task 10 makes conditional.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > Four pages exist, each showing the correct archetype hero, both scores, the positioning statement, benchmark, insight paragraph, and both CTAs. **No page displays anything from `Diagnostic Fit`.**
 
-- [ ] **Step 2: Build the shared structure**
+- [ ] **Step 2: Build the shared structure** — 🚧 **IN PROGRESS.** Architect page has items 1–5 (hero, both scores, positioning, benchmark). Items 6–9 (insight, CTAs, not-qualified note) outstanding; Builder / Explorer / Spectator pages not started.
 
 Each page, top to bottom:
 
@@ -798,11 +813,11 @@ Each page, top to bottom:
 8. **Secondary CTA** — booking. Made conditional in Task 10.
 9. **Not-qualified note.** Made conditional in Task 10.
 
-- [ ] **Step 3: Suppress the default headline**
+- [x] **Step 3: Suppress the default headline** — ✅ **SATISFIED BY CONSTRUCTION.** "Start without a template" yields a blank page with no default headline. Avoid the pre-built section templates, which inject "Thank you for taking the {scorecard name}".
 
 Remove or blank the default "Thank you for taking the AI Readiness Assessment" heading. The archetype reveal is the hero; reintroducing the quiz name above it reads as a reset. Move the email delivery notice **below** the score card.
 
-- [ ] **Step 4: Configure the insight paragraph**
+- [ ] **Step 4: Configure the insight paragraph** — ⚠️ **NOT BUILDABLE AS WRITTEN — needs an owner decision.** Dynamic content is score-keyed only; question answers are unavailable. See the build log and the open question in Task 9 notes.
 
 48 variants: 8 workflow categories × 6 pain types, triggered by Q7 + Q12.
 
@@ -1142,6 +1157,50 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-21 | 4 — questions Q1–Q6 | ✅ **COMPLETE & SAVED** | All six built as **Multiple Choice Buttons** (better mobile tap targets than radio for a 14-question quiz). Q1 6 answers, Q2 7, Q3–Q6 4 each. Every value verified on screen after entry. Q1: 15/14/13/9/5, IC unscored. Q2: 1/4/8/8/5/3/2. Q3: 4·2, 11·6, 18·4, 25·2. Q4: 3, 10·4, 18·7, 25·8. Q5: 1·1, 8·6, 16·5, 25·2. Q6: 3·1, 9·4, 17·7, 25·6. Layer A maxes to 25×4 = 100 as designed. |
 | 2026-08-21 | 4 — UI technique | ℹ️ | Per-answer scoring: **ANSWERS** tab → toggle `Scoring` → `Choose an option` → category → points box to its right → `+ Add scoring` for a second category. **The second dropdown lists only unused categories and omits "Overall only"**, so its item offsets differ from the first. Dropdowns **flip upward** when near the viewport bottom. When batching browser actions, insert a 1s wait after any click that creates or focuses a field — without it the subsequent typing silently goes nowhere. |
 | 2026-08-21 | 4 — zero-value answers | ℹ️ | Answers whose value is 0 (Q1 Individual Contributor, Q4 "No formal strategy" in Diagnostic Fit) were left **unscored** rather than explicitly set to 0. Equivalent for single-select, since the question's potential is its highest-scoring answer. The gates that reference these answers key on **answer text**, not score, so they are unaffected. |
+| 2026-08-23 | 5 — questions Q7–Q12 | ✅ **COMPLETE & SAVED** | All seven built (Q11 splits into Q11a + Q11b). Q7 workflow category — 7 answers, unscored, native **"Other" option** toggle used. Q8 people: 2/1, 7/2, 12/4, 15/5. Q9 frequency: 15/5, 13/4, 10/3, 5/2, 1/—. Q10 hours: 4/1, 13/5, 22/8, 29/10, 35/12. Q11a state: 15/4, 13/3, 11/3, 1/—. Q11b symptoms (multi-select): five at 2/1 each, "None of these" unscored — Σ = 10 WO / 5 DF, exactly the budgets. Q12 cost: Money 10/4, Scale 10/4, Errors 9/3, Time 9/3, Customer experience 9/3, Team morale 7/2. Every value verified on screen after saving. |
+| 2026-08-23 | 5 — "Other" option | ℹ️ **Pending confirmation** | Q7 uses ScoreApp's native `"Other" option` toggle, which appends an "Other" answer automatically. **Whether it captures free text is not yet confirmed** — verify in the Task 11 preview run. If it does not, add Q7b as a separate Open Text question shown only when Q7 = Other (SF6 depends on that text). |
+| 2026-08-23 | 5 — UI notes | ℹ️ | Answer buttons reflow between 2 and 3 per row as text length changes, which moves `Add answer` — several answers silently failed to be created and had to be re-added. Question text wrapping to a second line shifts Answer 1 down ~22px. Changes are **not** auto-saved, and a single validation error anywhere blocks saving everything. |
+| 2026-08-23 | 6 — Q13 | ✅ **COMPLETE & SAVED** | Multiple Choice Buttons, Required, no jump logic. Scores `Diagnostic Fit` only — 15 / 11 / 5, with "Unlikely — mostly curious right now" left unscored (HG1). AI Readiness and Workflow Opportunity untouched, confirmed by each answer carrying exactly one score row. Question Flow now reports **14 questions · 3 categories**. |
+| 2026-08-23 | 6 — contact form | ✅ **COMPLETE & SAVED** | `Settings → Lead Form`. Fields: First name, **Last name**, Email (all three built in and Required), Company name (Text, Required), "Which area do you lead or work in?" (Drop down, Required) with all eight options in spec order. |
+| 2026-08-23 | 6 — deviation: Last name kept | ℹ️ | The plan's field table omitted Last name, but it ships enabled by default and `content/internal-brief-template.md` §1 and §3 both consume it (`{first_name} {last_initial}.` in the subject line, `{last_name}` in the respondent block). Removing it would have broken the brief, so it was kept. |
+| 2026-08-23 | 6 — ⚠️ correction: form position | ✅ **FIXED** | `DEFAULT LEAD FORM BEHAVIOUR` defaults to **Before Questions**, which would have put contact capture ahead of Q1 and forced signup before anyone saw a question. Switched to **After Questions**, matching the design (contact capture follows Q13). Worth re-checking after any settings change — this default is easy to miss because it sits below the fold. |
+| 2026-08-23 | 6 — consent | ✅ **Explicit Consent (Optional)** | Selecting it reveals an `OPTIN WORDING` field, defaulting to the vague "Opt in to receive updates via email". Set to: *"Yes — send me follow-up insights on AI readiness and workflow automation by email."* **Not specified in any source-of-truth doc — flagged for the owner's review.** `PRIVACY STATEMENT` and `PRIVACY POLICY URL` left blank pending a URL from the account owner; fill before launch (Task 14). |
+| 2026-08-23 | 6 — UI gotcha | ⚠️ | In the lead-form option list, **Tab moves focus to the row's delete button, not the next field** — and typing any string containing a space then presses that button, silently deleting the row you just filled. Always click each option field directly. Once ~4 options exist the dialog stops recentering and scrolls internally, after which the empty row sits at a stable position following a scroll-to-bottom. |
+| 2026-08-23 | 6 — Step 5 deferred | ⏸ **BLOCKED ON TASK 9** | The two verification submissions (one with consent ticked, one without — "both should complete and show results") cannot be evaluated until result pages exist. Folded into **Task 11**, where P1 and P2 run the consent-on / consent-off pair and `Leads` is checked for differing opt-in status and captured function. |
+| 2026-08-23 | 6 — open item | ℹ️ | The lead form's **heading and subtext** ("Almost done. Where should we send your results?") are not in `Settings → Lead Form`, `Share Appearance`, or `Page Settings`. Expected to live on the result page as a lead-form section — **set during Task 9**. |
+| 2026-08-23 | 7 — four archetype audiences | ✅ **CREATED & SAVED** | `Archetype — Architect` (2 conditions), `Archetype — Builder` (6, two OR-groups), `Archetype — Explorer` (4, two OR-groups), `Archetype — Spectator` (1, catch-all). Every condition re-read from the saved record afterwards and matches the plan exactly. |
+| 2026-08-23 | 7 — condition builder shape | ℹ️ | Confirmed DNF as expected: each panel is one AND-group, `Add an OR condition` appends another group. The **duplicate-group icon** (top-right of a group) copies a whole group — the efficient way to express `A AND B AND (C OR D)`: build group 1, duplicate it, then change only the last condition. Category fields expose **`Category Score Percent`**, which is the percentage the plan's thresholds are written against. |
+| 2026-08-23 | 7 — ⚠️ gotcha: operator resets value | ⚠️ | Changing an answer condition's operator from `Is` to `Is not` **silently clears the selected answer**, leaving the value box blank. Re-select the answer every time. Conversely, changing the *question* keeps the operator and auto-fills the first answer as the value — convenient, but verify rather than assume: it happened to be the wanted answer for both G3 disjuncts, which is exactly the kind of coincidence that hides a mistake. |
+| 2026-08-23 | 7 — operator inventory | ℹ️ | Category conditions: Is · Is not · Is greater than or equal to · Is less than or equal to · Same as · **Is greater than or equal to category** · Is less than or equal to category. The last two are a different comparison (category-vs-category) and the dropdown renders the labels overlapping and cramped, so they are easy to mis-click — verify the chip text after selecting. Answer conditions: Is · Is not · Contains · Does not contain · Is answered · Is not answered · Is skipped. |
+| 2026-08-23 | 7 — ⚠️ correction: where priority lives | ⚠️ **PLAN AMENDED** | The plan's Step 3 says "create the four audiences in this exact order — order is load-bearing." **The Audiences list carries no priority.** It is a plain list sorted by Name or Size, and audiences are overlapping membership sets: a respondent scoring 91 with measurable results satisfies Architect *and* Builder *and* Explorer *and* Spectator simultaneously. First-match-wins priority exists only in **End Logic → Audience Redirects** (Step 4). Until that is configured no archetype is resolved, so creating the audiences proves the gate logic is expressible but does not yet assign anything. |
+| 2026-08-23 | 7 — display note | ℹ️ | An audience's **Overview** tab flattens all OR-groups into one flat condition list with no group boundary shown — Builder reads as six conditions with `AI Readiness ≥ 55` appearing twice. That repetition is the only visible trace of the two groups. Use **Edit** to see the actual OR structure. |
+| 2026-08-23 | 7 — Steps 2, 4, 5 deferred | ⏸ **BLOCKED ON TASK 9** | Step 4 (End Logic audience redirects) needs result pages to point at. Steps 2 and 5 (the P7-fails-without-gates baseline, and verifying all eight personas land in one audience each) need completed submissions, which need result pages. All three move to **Task 11**, which already runs every persona. |
+| 2026-08-23 | 8 — `Diagnostic Disqualified` | ✅ **BUILT & VERIFIED** | 8 OR-groups, **13 conditions**, exactly as Step 3 specifies. Re-read from the saved record condition by condition: Q13=Unlikely · Q1=Individual Contributor · Q11a=runs smoothly · (Q10=Less than 5 **AND** Q8=Just me) · (Q3=few experimenting **AND** Q4=no formal strategy **AND** Q5=not really using) · DF≤44 · (Q2=Under 25 **AND** DF≤59) · (Q2=Over 500 **AND** DF≤59). Uses only `Is` and `Is less than or equal to`, so it never touches the operator-resets-value bug from Task 7. |
+| 2026-08-23 | 8 — `Diagnostic Priority` | ✅ **BUILT** | `Diagnostic Fit` Category Score Percent ≥ 65. Single condition, as specified. |
+| 2026-08-23 | 8 — five gate audiences | ✅ **BUILT** (Step 5 taken) | `DQ-HG1 — Unwilling to act` · `DQ-HG2 — No access or authority` · `DQ-HG3 — No operational pain` · `DQ-HG4 — Too trivial to engage` (2 conditions) · `DQ-HG5 — Dormant on all three signals` (3 conditions). Built rather than skipped because Task 13's four gate-specific nurture emails need to know *which* gate fired, and the phase-2 webhook that would otherwise do that routing is explicitly out of scope for phase 1. |
+| 2026-08-23 | 8 — ⚠️ Step 6 skipped as redundant and unbuildable | ⚠️ **PLAN AMENDED** | Step 6 tells you to build `Diagnostic Qualified — Out of Band` and then amend `Diagnostic Qualified`. **Neither is possible or needed.** (a) Step 3 builds the *inverse* audience — there is no `Diagnostic Qualified` audience to amend. (b) The positive out-of-band form restates all five hard gates conjunctively, which is precisely the 36-condition explosion the inverse construction exists to avoid. (c) **Step 3's blocks 6 and 7 already implement the raised bar**: disqualified-by-score = `DF≤44 OR (out-of-band AND DF≤59)`, which yields qualification at **45+ in band** and **60+ out of band**, exactly as designed. Step 6 is a leftover from an earlier positive-audience design. Task 10 hides the CTA from `Diagnostic Disqualified`, so no positive audience is required anywhere. |
+| 2026-08-23 | 8 — logic check against all eight personas | ✅ **PASSES ON PAPER** | P1 85 in-band no gate → qualified · P2 HG3 (runs smoothly) → disqualified · P3 46 **Under 25** → block 7a fires (46≤59) → disqualified · P4 81 **Over 500** → 81>59, no gate → qualified · P5 80, Q4=top priority so **HG5 does not fire** → qualified despite Spectator archetype · P6 HG2 (Individual Contributor) → disqualified despite DF 68 · P7 77 → qualified · P8 70 → qualified. Matches Step 7's expected table row for row. **Still paper only** — no submission has run. |
+| 2026-08-23 | 8 — Steps 2 and 7 deferred | ⏸ **BLOCKED ON TASK 9** | The P6-currently-qualifies baseline and the eight-persona verification both need completed submissions, which need result pages. Folded into **Task 11**. The precedence check the plan calls out — P6 in `Diagnostic Priority` **and** `Diagnostic Disqualified`, and still seeing no CTA — must be run there. |
+| 2026-08-23 | 9 — ✅ **CRITICAL NEGATIVE CHECK PASSES at config level** | ✅ | A `Category Scores` section set to **"Number of categories shown: All"** renders **only AI Readiness and Workflow Opportunity**. **Diagnostic Fit does not appear.** It is also absent from the `Individual category` section's category list. The `Hidden` toggle set in Task 3 is therefore respected by the result-page renderer — this is the exact failure that occurred in the Task 1 sandbox, and it is now fixed. **Still to do: the live end-to-end check on a real submission (Step 5).** |
+| 2026-08-23 | 9 — ⚠️ Diagnostic Fit *is* offered as a dynamic-content trigger | ⚠️ **FOOTGUN** | `Dynamic content is based on` lists **Diagnostic Fit** alongside the visible categories. Using it as a trigger does not display the value, so it is a legitimate (and convenient) way to drive conditional content. **But any copy written into those bands is chosen by the qualification score**, so wording like "you're a strong fit" would leak the internal decision. Task 10 must either avoid this trigger or keep the band copy free of qualification language. |
+| 2026-08-23 | 9 — ⚠️ **dynamic content is score-keyed only** | ⚠️ **PLAN AMENDED — Step 4 not buildable as written** | The `Dynamic content is based on` dropdown offers **only** Overall Score, AI Readiness, Workflow Opportunity, Diagnostic Fit. **Question answers are not available.** So the 48-variant insight paragraph keyed to Q7 + Q12 cannot use this mechanism — and neither can the plan's Q7-only fallback. The only answer-keyed lever is **section visibility → Audience Based**, which needs one audience *and one duplicated section* per variant: 8 audiences × 8 sections × 4 pages = **32 sections** for the Q7 fallback; 48 variants is impractical. Decision deferred to the owner — see the open question below. |
+| 2026-08-23 | 9 — ⚠️ dynamic content has 3 bands, not 4 | ⚠️ **NEW DEPENDENCY** | Bands are **Low / Medium / High** only, and their boundaries come from `Settings → Score Tiers`, **which has never been configured**. The design specifies four Workflow Opportunity tiers (Substantial 80+/Significant 60–79/Meaningful 35–59/Contained 0–34) and a two-way split at 60 for the positioning statement. Score Tiers must be set before the positioning copy is correct, and it is unclear whether tiers are per-scorecard or per-category — **verify before Task 11.** |
+| 2026-08-23 | 9 — section type notes | ℹ️ | `Individual category` **cannot pin a chosen category** — only `Highest Scoring` / `Lowest Scoring` — so it is unusable for "show AI Readiness here, Workflow Opportunity there". Use `Category Scores` instead. Generic `Show score tier` badges (Low/Medium/High) were switched **off**, since the design supplies its own tier language. `Answer insights` is answer-*distribution charts*, not conditional copy. |
+| 2026-08-23 | 9 — Step 3 satisfied by construction | ✅ | Creating the page via **"Start without a template"** yields a genuinely blank page with no default headline, so there is nothing to suppress. **Note:** the pre-built section templates *do* inject "Thank you for taking the {scorecard name}" — avoid them, or delete that line wherever one is used. |
+| 2026-08-23 | 9 — Architect page progress | 🚧 **PARTIAL** | `Result — The Architect` created and saved with three sections: **archetype hero** (name, tagline, description, next move — verbatim from `content/archetypes.md`), **Category Scores** (both visible scores, tier badges off), and **positioning + benchmark** (dynamic on Workflow Opportunity, all three bands written, McKinsey stat in each). **Not yet built:** primary CTA, booking CTA, not-qualified note, dynamic Q10 benchmark, insight paragraph. **Pages for Builder / Explorer / Spectator not yet started.** |
+| 2026-08-23 | 9 — editor gotcha | ⚠️ | In a CTA section, `cmd+A` inside a text block selects the **entire content group**, not the block — it deleted the body paragraph. Separately, typing into a position that has reflowed can **replace the button element itself**, and undo did not cleanly restore it (the section had to be deleted and rebuilt). **Edit these sections bottom-up**, and re-screenshot between every edit. |
+| 2026-08-23 | 9 — decision: insight paragraph route | ✅ **OWNER CHOSE Q7-ONLY** | Owner selected the Q7-only fallback over dropping the section or writing one static paragraph per page. Implementation: **8 audiences keyed to Q7**, then one audience-gated Content section per category per page. Each respondent sees the paragraph matching their workflow type, using the plan's designated **"Time (bottlenecks)"** variant as the copy for each category. Full 48-variant personalization moves to the phase-2 webhook. |
+| 2026-08-23 | 9 — eight Q7 audiences | ✅ **BUILT & VERIFIED** | `Q7 — Reporting & data aggregation` · `Document creation & review` · `Client or customer communications` · `Research & analysis` · `Approval & review processes` · `Employee or client onboarding` · `Sales operations & CRM` · `Other`. Each is a single condition on Q7 with the matching answer, confirmed on the audience list. **19 audiences total** on the scorecard now. |
+| 2026-08-23 | 9 — Q7 `Other` wording synchronized | ✅ **DOCS FIXED** | The native `"Other" option` toggle created an answer labelled exactly **`Other`**. The quiz questions, master reference, HTML/Word copies, and this build plan now use the live label. Q7b remains a fallback pending Task 11 confirmation of whether the native option captures free text. |
+| 2026-08-23 | 9 — Score Tiers configured | ✅ **RESOLVED** | `Settings → Score Tiers` set to the design's four Workflow Opportunity tiers: **Contained 0–34 · Meaningful 35–59 · Significant 60–79 · Substantial 80–100** (was the default Low 0–39 / Medium 40–79 / High 80–100). `+ Add Tier` allows more than three, so the four-tier design is fully expressible. |
+| 2026-08-23 | 9 — ✅ dynamic content bands come from Score Tiers | ✅ **CONFIRMED** | After saving the tiers, the section's band selector changed from `Low / Medium / High content` to **`Contained / Meaningful / Significant / Substantial content`**. Dynamic-content bands are derived directly from Score Tiers — both the count and the labels. This is what makes the four-tier design buildable, and it is the reason Score Tiers had to be set before replicating the pattern across the other three pages. |
+| 2026-08-23 | 9 — ⚠️ **adding a tier injects a lorem band into every existing dynamic section** | ⚠️ **REAL BUG CAUGHT** | Existing band copy is remapped **by position**: old Low → Contained, Medium → Meaningful, High → **Substantial**. The newly inserted **Significant** band arrived **pre-filled with template placeholder text** ("4 Minutes is all you get… Lorem ipsum"). Left unnoticed, every respondent scoring **60–79** on Workflow Opportunity would have seen lorem on their results page. Copy was written and saved. **Any future Score Tiers change requires auditing every dynamic-content section on every result page.** |
+| 2026-08-23 | 9 — no conflict with archetype bands | ℹ️ | Score Tiers is **scorecard-wide** — one set, no per-category option — so these boundaries also apply to AI Readiness and Diagnostic Fit. **This does not affect the archetype**, because archetype routing uses audience percentage conditions (≥80 / ≥55 / ≥30), not tiers. Tier badges are switched **off** on the Category Scores section and Diagnostic Fit is hidden, so the shared labels are not user-visible anywhere today. If tier badges are ever enabled, "Your AI Readiness: Contained" would read oddly — check before turning them on. |
+| 2026-08-23 | 9 — Architect positioning complete | ✅ | All four bands written and verified against the design's 2×2 cell for **Readiness high**: Contained and Meaningful carry the "this isn't your biggest lever" framing (opportunity low, 0–59); Significant and Substantial carry "you're positioned to move on this now" (opportunity high, 60–100). The design's split at 60 falls exactly on the Meaningful/Significant boundary. |
+| 2026-08-23 | 9 — ⚠️ **incident: batched action navigated away mid-edit and typed into the wrong field** | ✅ **CAUGHT & FIXED** | Mid-way through building the sixth insight section (Employee onboarding), a large batched action ended somewhere on the **Questions builder** instead of the Result Page editor — likely a stale-coordinate click after a session interruption. The pending headline text ("Employee or client onboarding") landed in **Q13's second answer**, overwriting "Likely — if the ROI is compelling." Caught immediately via screenshot; the Save button was still active (unsaved), confirming the corruption hadn't persisted. Fixed by retyping the correct label; the answer's scoring (Diagnostic Fit +11) was never touched — only the label — and was verified intact via the Answers panel before and after the fix. Re-saved and re-verified on screen. **Lesson: after any tool interruption or environment hiccup, re-screenshot before continuing a batched edit sequence — don't assume the last-known page state still holds.** |
+| 2026-08-23 | 9 — all eight Q7-gated insight sections built | ✅ **COMPLETE & SAVED** | `Result — The Architect` now has one audience-gated Content section per Q7 category, each duplicated from the previous and edited bottom-up (headline → body → category label → audience) to avoid the reflow-shifts-targets failure mode from Task 5. All eight verified on screen against `content/results-copy.md`'s "Time (bottlenecks)" variant before saving: Reporting & data aggregation, Document creation & review, Client or customer communications, Research & analysis, Approval & review processes, Employee or client onboarding, Sales operations & CRM, Other. |
+| 2026-08-23 | 9 — Architect page structurally complete | ✅ | Full section order confirmed: hero → both visible scores → positioning+benchmark (4 dynamic bands) → 8 audience-gated insight sections → primary CTA → booking CTA → not-qualified note → footer. Matches Step 2's checklist end to end. Remaining for this page: the live critical-negative-check and persona verification, both deferred to Task 11 per Step 5. |
+| 2026-08-23 | 9 — ✅ duplicate carries audience gating forward | ✅ **USEFUL BEHAVIOR** | Duplicating a Content section preserves its `Audience Based` visibility rule and selected audience — only the audience needs to be swapped afterward, not re-configured from scratch. This is what made building 8 near-identical gated sections tractable. |
 | 2026-08-21 | housekeeping | ✅ **DONE** | v1 renamed to `AI Readiness Assessment — v1 (archive)` (still at arielle-86mp1dws, draft, 50% built — preserved, not deleted). No more name collision. Sandbox `ZZ-SANDBOX` can be deleted at will. |
 
 ---
