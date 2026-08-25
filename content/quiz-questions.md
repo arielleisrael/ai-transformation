@@ -154,12 +154,12 @@ Also triggers the **company-size threshold modifier** (§7.4) and soft flag SF1 
 
 > **Changed in v2.** Previously scored 8–10 across named categories and **0** for "Other," which meant choosing the honest answer silently tanked the respondent's score. The spread did almost no discriminating work. Now unscored.
 
-### Q7b — Workflow Description
+### Q7b — Workflow Description · CONDITIONAL FALLBACK (NOT CURRENTLY BUILT)
 **Text:** "In a sentence, what is it?"
-**Type:** Open Text · **Optional** · Shown by jump logic **only when Q7 = "Other"**
+**Type:** Open Text · **Optional** · Create only if Task 11 confirms that ScoreApp's native `Other` option does not capture free text; if created, show by jump logic **only when Q7 = "Other"**
 **Scores:** Unscored (ScoreApp never scores Open Text)
 
-Captures workflows the taxonomy is missing. Safe to attach jump logic here precisely because it is unscored — a skipped scored question would change the denominator.
+This fallback would capture workflows the taxonomy is missing. It is safe to attach jump logic here precisely because it is unscored — a skipped scored question would change the denominator.
 
 ### Q8 — People Involved
 **Text:** "How many people on your team touch this workflow?"

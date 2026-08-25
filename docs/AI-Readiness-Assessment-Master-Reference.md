@@ -205,10 +205,10 @@ Reporting & data aggregation · Document creation & review · Client or customer
 
 **Job:** selects the insight paragraph (§7.4) and sets the FAEO Repeatability signal. In v1 this scored 8–10 for named categories and **0** for "Other," so choosing the honest answer silently tanked the score. Now unscored.
 
-#### Q7b · Workflow Description
-*"In a sentence, what is it?"* — Open Text, **optional**, shown by jump logic **only when Q7 = Other** — unscored
+#### Q7b · Workflow Description · CONDITIONAL FALLBACK (NOT CURRENTLY BUILT)
+*"In a sentence, what is it?"* — Open Text, **optional**. Create only if Task 11 confirms that ScoreApp's native `Other` option does not capture free text; if created, show by jump logic **only when Q7 = Other** — unscored
 
-Safe to attach jump logic here precisely because it is unscored.
+This fallback is safe to attach to jump logic precisely because it is unscored.
 
 #### Q8 · People Involved
 *"How many people on your team touch this workflow?"* — Single choice, required
