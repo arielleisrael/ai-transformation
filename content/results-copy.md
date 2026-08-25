@@ -288,7 +288,7 @@ If ScoreApp only supports single-question conditional copy, use Q7 as the primar
 **Body:** "We'll email you a personalized summary of your archetype, both of your scores, benchmark data, and a plain-English breakdown of what your biggest workflow opportunity could look like."
 **Button:** "Send my Brief"
 
-Consent checkbox state from the contact form governs whether any follow-up email may be sent. **No sequence fires without `opt_in = true`.**
+Submitting an email address places the respondent into the results/follow-up flow by default — no separate consent checkbox gates delivery. Every marketing/nurture email carries an Unsubscribe link (see `content/follow-up-sequences.md`).
 
 ### Secondary CTA — qualified respondents only (Layer C = ACCEPT or HOLD)
 

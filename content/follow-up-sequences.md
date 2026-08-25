@@ -2,8 +2,7 @@
 
 **Version 2.0 — 2026-08-21.** Updated for three-layer scoring, renamed archetypes, and consent gating.
 
-> ⚠️ **No sequence may fire unless `opt_in = true`.**
-> The contact form uses ScoreApp's **Explicit Consent (Optional)** mode, so a respondent can complete the assessment and see their results without opting in. ScoreApp stores the consent timestamp and the exact wording used, and passes `opt_in` on every webhook event. Respondents who did not opt in receive their on-screen results and nothing else — any outreach to them must be individual and manual.
+> **No separate opt-in gates delivery.** Submitting an email address on the results page places the respondent into Sequence 1 by default. Sequences 2 and 3 (nurture/follow-up) require an **Unsubscribe** link in every send; using it stops all future marketing/nurture email to that respondent. The one-time Sequence 1 result-delivery email is not affected by unsubscribe status.
 
 ---
 
@@ -11,7 +10,7 @@
 
 **Trigger:** respondent submits email on the results page CTA ("Send my Brief")
 **Timing:** immediately
-**Gate:** `opt_in = true`
+**Gate:** none (sends by default, regardless of unsubscribe status — this is the one-time result-delivery email, not marketing/nurture)
 **Subject:** Your AI Readiness Brief — {Q7 workflow category}
 
 ```
@@ -69,7 +68,7 @@ comes up in your planning conversations.
 
 **Trigger:** brief requested, no booking within 5 days
 **Timing:** day 5
-**Gate:** `opt_in = true` **AND** Layer C = ACCEPT or HOLD
+**Gate:** none (sends by default); respondent must not have unsubscribed from marketing/nurture email **AND** Layer C = ACCEPT or HOLD
 **Subject:** Re: Your AI Readiness Brief
 
 ```
@@ -98,7 +97,7 @@ No prep required. Just bring whatever's on your mind.
 
 **Trigger:** Layer C = **REJECT**
 **Timing:** 14 days after submission
-**Gate:** `opt_in = true`
+**Gate:** none (sends by default); respondent must not have unsubscribed from marketing/nurture email
 **Subject:** A follow-up on your AI Readiness Assessment
 
 > **Changed in v2.** The v1 trigger was "AI Observer archetype OR overall score < 35," which under the old build were the same condition. Neither applies now: archetype no longer determines qualification, and there is no single blended score. The trigger is the Layer C decision.
@@ -193,7 +192,7 @@ If that conversation happens and there's interest, I'm easy to reach.
 | ACCEPT | Yes | Yes | Yes, day 5 | No |
 | HOLD | Yes | Yes | Yes, day 5 | No |
 | REJECT | Yes | **No** | **No** | Yes, day 14 — variant by gate |
-| Any, `opt_in = false` | **No** | — | **No** | **No** |
+| Any, unsubscribed | Yes | Yes/No per Layer C above | **No** | **No** |
 
 ---
 
@@ -211,8 +210,11 @@ Native ScoreApp emails are not documented as supporting conditional blocks, so t
 
 ## Changelog
 
+### 2026-08-25
+- **Consent gating removed, unsubscribe gating added.** Sequence 1 (result delivery) always sends and is unaffected by unsubscribe status. Sequences 2 and 3 send by default but are suppressed for any respondent who has used the Unsubscribe link. There is no longer a separate marketing-consent checkbox on the contact form.
+
 ### v2.0 — 2026-08-21
-- **Consent gating added.** No sequence fires without `opt_in = true`.
+- ~~**Consent gating added.** No sequence fires without `opt_in = true`.~~ (superseded 2026-08-25, see above)
 - **Sequence 3 trigger changed** from archetype/blended-score to Layer C = REJECT, and split into four gate-specific variants.
 - **Sequence 1 now carries both scores** plus the Positioning Statement, and its booking block is conditional on Layer C.
 - **Sequence 2 explicitly excluded** for REJECT respondents.

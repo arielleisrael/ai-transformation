@@ -52,10 +52,8 @@ Email:       {email}
 Role:        {Q1}
 Function:    {lead_form_function}
 Submitted:   {submission_datetime}
-Marketing consent: {opt_in} ({opt_in_detail})
+Unsubscribed: {IF unsubscribed: "Yes — marketing/nurture suppressed" ELSE: "No"}
 ```
-
-> **If `opt_in` is false, no follow-up sequence may be sent.** Outreach must be individual and manual.
 
 ---
 
@@ -209,12 +207,15 @@ Five of the nine criteria in `docs/Fit-Adjusted Economic Opportunity (FAEO) Scor
 CALENDAR: Check Calendly notifications — if a booking arrived from {email}, they booked.
           If not, they had not booked as of the time this brief was sent.
 BRIEF EMAIL: {IF requested: "✅ Requested" ELSE: "❌ Not requested"}
-CONSENT:  {IF opt_in: "✅ Opted in — sequences active" ELSE: "❌ No consent — manual outreach only"}
+UNSUBSCRIBED: {IF unsubscribed: "Yes — marketing/nurture suppressed" ELSE: "No"}
 ```
 
 ---
 
 ## Changelog
+
+### 2026-08-25
+- **Removed marketing-consent field and gating.** No separate opt-in checkbox exists on the contact form anymore; Sequence 1 always sends. Replaced the `CONSENT`/`Marketing consent` lines with `UNSUBSCRIBED` status, which governs Sequences 2/3 only.
 
 ### v2.0 — 2026-08-21
 - **Restructured around Layer C.** Subject line now leads with the Diagnostic decision rather than the respondent-facing score, because high readiness + REJECT is a common and previously invisible combination.

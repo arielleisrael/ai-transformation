@@ -321,13 +321,10 @@ Subtext: *"We'll send your personalized AI Readiness Brief here — your archety
 | Company name | Text | Yes | |
 | Email address | Email | Yes | |
 | Function — *"Which area do you lead or work in?"* | Dropdown | Yes | Drives SF8 via an Audience on Lead Form Answers |
-| Marketing consent | Explicit Consent (Optional) | No | Gates all email sequences |
 
 **Function options:** Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales & Marketing · HR & People · Customer Service · Other
 
-Consent is **Optional, not Required**, so a missing tick doesn't cost the lead — results deliver instantly on screen regardless. ScoreApp stores a timestamp plus the exact opt-in wording and passes `opt_in` on every webhook event.
-
-> ⚠️ **No email sequence may fire without `opt_in = true`.**
+**No separate marketing-consent checkbox.** Submitting an email address for the assessment is the respondent's request for their result and places them into the intended results/follow-up flow by default — there is no additional opt-in action required. Every marketing/nurture email must carry a working **Unsubscribe** link; using it suppresses future marketing/nurture email to that respondent. The one-time result-delivery email is not a marketing email and is sent regardless of unsubscribe status, since it is the artifact the respondent explicitly requested by submitting the form.
 
 ---
 
@@ -695,14 +692,14 @@ High readiness plus REJECT is now a common combination, so the subject line has 
 
 Full copy in `content/follow-up-sequences.md`.
 
-> ⚠️ **No sequence fires without `opt_in = true`.** Respondents who don't opt in get their on-screen results and nothing else; any outreach must be individual and manual.
+**No separate opt-in gates delivery.** Sequence 1 (result delivery) sends by default to every submitter. Sequences 2 and 3 send by default too, subject to Layer C routing, but are suppressed for any respondent who has used the Unsubscribe link.
 
 | Layer C | Seq 1 Brief | Seq 1 booking block | Seq 2 Non-booker (day 5) | Seq 3 Nurture (day 14) |
 |---|---|---|---|---|
 | ACCEPT | Yes | Yes | Yes | No |
 | HOLD | Yes | Yes | Yes | No |
 | REJECT | Yes | **No** | **No** | Yes — variant by gate |
-| `opt_in = false` | **No** | — | **No** | **No** |
+| Any, unsubscribed | Yes | Yes/No per Layer C above | **No** | **No** |
 
 **Sequence 3 has four gate-specific variants** (3a workflow is fine · 3b not ready · 3c early stage · 3d access). They must not collapse into one generic email — "your workflow is fine," "you're not ready," and "you can't reach the buyer" are three different conversations, and a generic message gets all three wrong.
 
@@ -772,7 +769,7 @@ Two payload facts shape phase 2:
 | A category can be excluded from the total score | **Confirmed — account.** Separate `Hidden` toggle controls display |
 | Audiences support AND/OR across answers, category subscores, and total | **Confirmed** |
 | Multi-select scores `Σ(selected) ÷ Σ(all options)`; no cap setting | **Confirmed — account** |
-| Native GDPR consent with timestamp + wording, passed as `opt_in` | **Confirmed** |
+| Native GDPR consent with timestamp + wording, passed as `opt_in` | **Confirmed** (platform capability only — as of 2026-08-25 the assessment no longer surfaces this as a respondent-facing checkbox; see §3 and §9) |
 | Jump logic cannot branch per-answer on a multi-select | **Confirmed** |
 | A public Open API exists (the only place `score_potential` is exposed) | **Confirmed** |
 

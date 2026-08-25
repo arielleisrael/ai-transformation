@@ -142,7 +142,7 @@ Cost estimate check: Q10 visible ranges must match: \<5h = 150+ hrs / \$7.5K–\
 
 ☐ Record the internal notification/brief outcome, hard gate, Diagnostic Fit decision, flags, and any CRM/audience tag that is visible to you.
 
-☐ For scenarios with opt_in = No, confirm the on-screen result still appears and no automated respondent email sequence fires.
+☐ Confirm no separate opt-in checkbox appears on the contact form, the on-screen result always appears, and the Sequence 1 result-delivery email always sends; confirm the Unsubscribe link (test on a scratch address) suppresses Sequences 2/3 but not Sequence 1.
 
 ☐ After all runs, compare scenarios relative to each other; do not judge only whether each isolated score matches arithmetic.
 
@@ -3046,7 +3046,7 @@ Overall QA: PASS / FAIL / REVIEW Notes: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 ☐ REJECT pages used the correct not-qualified note family for HG1, HG2, HG3/HG4, and HG5.
 
-☐ Marketing-consent behavior was correct: opt-in false received on-screen results but no automated respondent email sequence.
+☐ No separate opt-in checkbox appears on the contact form; the results email and default follow-up sequence send regardless; Unsubscribe suppresses future marketing/nurture email.
 
 ☐ Internal notifications/briefs made the Layer C decision unmistakable and did not confuse a high readiness score with a hot lead.
 
