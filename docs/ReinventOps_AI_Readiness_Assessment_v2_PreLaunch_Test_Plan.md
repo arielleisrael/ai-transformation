@@ -188,6 +188,7 @@ Account-level preflight checks
 | 20     | Layer C Boundary / 45 Must Hold + Show CTA                       | 26    | Spectator     | 47 / Meaningful   | 45    | HOLD / QUALIFY ON CALL | YES     |
 | 21     | Layer C Boundary / 64 Must Remain HOLD                           | 69    | Explorer      | 69 / Significant  | 64    | HOLD / QUALIFY ON CALL | YES     |
 | 22     | Layer C Boundary / 65 Must Become ACCEPT                         | 69    | Explorer      | 71 / Significant  | 65    | ACCEPT                 | YES     |
+| 23     | Over-500 Raised-Threshold Boundary                                | 38    | Explorer      | 50 / Meaningful   | 57    | REJECT / NOT NOW       | NO      |
 
 Relative-ranking expectations
 
@@ -202,6 +203,8 @@ Relative-ranking expectations
 • Scenario 12 must be rejected only because the Under-25 threshold is raised; Scenario 13 proves that a sufficiently strong Under-25 exception can still qualify.
 
 • Scenario 14 proves the same exception logic for Over-500 companies.
+
+• Scenario 23 proves the Over-500 raised-threshold REJECT boundary directly: Scenario 12's exact answer set with only Q2 swapped to Over 500 must still land in the high-50s on Layer C and must reject with no CTA, because the raised 60 REJECT boundary — not the standard 45 — applies to Over-500 the same way it applies to Under-25.
 
 • Scenario 15 should not lose visible or hidden score merely because the workflow taxonomy answer is 'Other.'
 
@@ -1890,6 +1893,128 @@ Expected result
 **Layer C thresholds:** HOLD ≥ 60; ACCEPT ≥ 80. **Hard gates:** None **\| Soft flags:** SF1, SF3, SF8, SF9, SF10 **\| Positioning quadrant:** High readiness / High opportunity
 
 **Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+
+Paste live result screenshot(s) here
+
+<table>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong><br />
+<br />
+PASTE RESULT SCREENSHOT(S) HERE<br />
+<br />
+</strong></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+Actual A score: \_\_\_\_\_\_ Archetype: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ Actual B score/tier: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  
+Actual C decision / internal score: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ CTA shown? YES / NO  
+Hard gate / flags observed: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_  
+Overall QA: PASS / FAIL / REVIEW Notes: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Scenario 23: Over-500 Raised-Threshold Boundary
+
+**Caleb — Pebble Ridge Studio**  
+Validate the company-size modifier on the other end of the size spectrum: identical to Scenario 12 except Q2 = Over 500. A Diagnostic Fit score that lands in the high-50s must reject with no CTA, because Over-500 uses the same raised REJECT boundary (60) as Under-25 rather than the standard 45.
+
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Question</strong></th>
+<th><strong>Enter this answer exactly</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Q1 — Role</strong></td>
+<td>Owner / Founder / CEO</td>
+</tr>
+<tr class="even">
+<td><strong>Q2 — Company size</strong></td>
+<td>Over 500</td>
+</tr>
+<tr class="odd">
+<td><strong>Q3 — AI adoption breadth</strong></td>
+<td>We use AI across teams, but each team does it differently — no shared approach</td>
+</tr>
+<tr class="even">
+<td><strong>Q4 — Leadership AI strategy</strong></td>
+<td>We're starting to discuss it at a leadership level</td>
+</tr>
+<tr class="odd">
+<td><strong>Q5 — Current AI ROI</strong></td>
+<td>We're using AI tools but haven't seen clear business impact</td>
+</tr>
+<tr class="even">
+<td><strong>Q6 — AI ownership</strong></td>
+<td>A few informal champions, but it isn't anyone's actual job</td>
+</tr>
+<tr class="odd">
+<td><strong>Q7 — Workflow category</strong></td>
+<td>Reporting &amp; data aggregation</td>
+</tr>
+<tr class="even">
+<td><strong>Q8 — People involved</strong></td>
+<td>2–5 people</td>
+</tr>
+<tr class="odd">
+<td><strong>Q9 — Frequency</strong></td>
+<td>Weekly</td>
+</tr>
+<tr class="even">
+<td><strong>Q10 — Hours per week</strong></td>
+<td>5–10 hours</td>
+</tr>
+<tr class="odd">
+<td><strong>Q11a — Automation level</strong></td>
+<td>Partly automated, but it still takes significant hands-on work</td>
+</tr>
+<tr class="even">
+<td><strong>Q11b — Symptoms — select all listed</strong></td>
+<td>• It's complex, with a lot of steps or handoffs</td>
+</tr>
+<tr class="odd">
+<td><strong>Q12 — Primary cost</strong></td>
+<td>Team morale — it's tedious and people hate it</td>
+</tr>
+<tr class="even">
+<td><strong>Q13 — Willingness to act</strong></td>
+<td>Possibly — we're exploring</td>
+</tr>
+<tr class="odd">
+<td><strong>Q14 — Contact capture</strong></td>
+<td>First name: Caleb<br />
+Company: Pebble Ridge Studio<br />
+Email: use controlled test inbox/alias<br />
+Function: Operations<br />
+Marketing consent: Yes</td>
+</tr>
+</tbody>
+</table>
+
+Expected result
+
+| **AI Readiness**         | 38              | **Provisional**      | Explorer                     |
+|--------------------------|-----------------|----------------------|-------------------------------|
+| **Final archetype**      | Explorer        | **Demotion gate(s)** | None                         |
+| **Workflow Opportunity** | 50 — Meaningful | **Cost estimate**    | 375+ hrs / \$19,000–\$28,000 |
+| **Diagnostic Fit**       | 57              | **Decision / CTA**   | REJECT / NOT NOW / NO        |
+
+**Layer C thresholds:** HOLD ≥ 60; ACCEPT ≥ 80 (Over-500 raised threshold, same as Under-25). **Hard gates:** None **\| Soft flags:** SF1, SF5, SF8 **\| Positioning quadrant:** Low readiness / Low opportunity
+
+**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+
+**Failure signal:** if the booking CTA appears for this scenario, the Over-500 modifier is not configured correctly in the ScoreApp CTA Audience — the audience is likely gating on a flat Diagnostic Fit % (e.g., ≥45) instead of the two-tier raised-threshold condition (≥65 standard, ≥80 when Q2 ∈ {Under 25, Over 500}). See `content/quiz-questions.md` §8 "CTA audience."
 
 Paste live result screenshot(s) here
 
