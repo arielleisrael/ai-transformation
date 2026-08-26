@@ -74,6 +74,32 @@ Shown beneath both scores. This is the line designed to travel — the thing the
 
 The bottom-right cell is the profile that matters most: a large opportunity in a company not yet organized to capture it. Say so honestly rather than implying they're ready when they aren't.
 
+**Staged next actions (added 2026-08-25, per UX review §7):** three concrete steps per quadrant, shown under "What to do next" below the positioning statement.
+
+**Readiness high + Opportunity high:**
+Headline: "Choose one end-to-end workflow to redesign."
+1. Validate the baseline cost and cycle time for the workflow you named.
+2. Map the decisions, handoffs, and data dependencies inside it.
+3. Run a constrained redesign pilot with measurable success criteria.
+
+**Readiness high + Opportunity low:**
+Headline: "Look for your real constraint elsewhere."
+1. Confirm this workflow with the team closest to it — is it really running as smoothly as it scored?
+2. Shortlist one or two other workflows to score the same way.
+3. Take the highest-opportunity one to a focused review.
+
+**Readiness low + Opportunity high:**
+Headline: "Build the foundation by fixing this one workflow."
+1. Name an owner for this workflow and get leadership visibility on it.
+2. Fix this single workflow before attempting anything broader.
+3. Use the result as the internal proof point that funds what comes next.
+
+**Readiness low + Opportunity low:**
+Headline: "Make your first move deliberately, not reactively."
+1. Pick one small, low-risk process to learn on — this workflow is a reasonable candidate.
+2. Set a defined trial window with a clear before/after measure.
+3. Use what you learn to decide where AI adoption goes next.
+
 ---
 
 ## Benchmark Stats (Layer 2)
