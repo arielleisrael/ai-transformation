@@ -18,6 +18,7 @@ This is the **canonical reference**. If any other file disagrees with it, this d
 | `content/results-copy.md` | Results page copy, **including the 48-variant insight matrix not reproduced here** (see §7.4). |
 | `content/internal-brief-template.md` | Internal brief template — summarized in §8. |
 | `content/follow-up-sequences.md` | Email copy — summarized in §9. |
+| `docs/ReinventOps_AI_Readiness_Assessment_v2_PreLaunch_Test_Plan.md` | Pre-launch validation plan — controlled test scenarios for all three scoring layers, gates, CTA behavior, flags, and internal routing. |
 | `docs/superpowers/specs/2026-08-21-quiz-scoring-architecture-design.md` | Design rationale: why each number is what it is, alternatives considered, worked examples. |
 
 **One thing is deliberately not here:** the 48 personalized insight paragraphs (8 workflow categories × 6 pain types). They are ~5,000 words of near-parallel copy that would dominate this document without making the logic clearer. They live in `content/results-copy.md` §Layer 3. Everything else is here in full.
@@ -236,7 +237,7 @@ This fallback is safe to attach to jump logic precisely because it is unscored.
 #### Q10 · Hours Per Week
 *"How many hours per week does your team collectively spend on this workflow?"* — Single choice, required — **heaviest question in the quiz**
 
-| Answer | A | B | C | Annual hrs | Cost range |
+| Answer | A | B | C | Annual hrs | Cost range (internal only) |
 |---|---|---|---|---|---|
 | Less than 5 hours | — | 4 | 1 | 150+ | $7,500–$11,000 |
 | 5–10 hours | — | 13 | 5 | 375+ | $19,000–$28,000 |
@@ -245,6 +246,8 @@ This fallback is safe to attach to jump logic precisely because it is unscored.
 | More than 40 hours | — | 35 | 12 | 2,250+ | $113,000–$169,000 |
 
 Cost = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker rate.
+
+> **No monetary estimate on the public result page.** The assessment does not collect enough company-specific compensation, loaded labor rate, role mix, or automatable-percentage data to present a company-specific dollar figure with the confidence ReinventOps requires. The public result page's Dynamic Benchmark text shows the "Annual hrs" figure only — see `content/results-copy.md` §Benchmark Stats. The "Cost range (internal only)" column above feeds `{annual_cost_low}`/`{annual_cost_high}` in the internal respondent-brief email (`content/follow-up-sequences.md`) exclusively — it is never rendered on the public page.
 
 > ⚠️ **Screening estimates of labor cost — never present as recoverable savings.** The Diagnostic converts this into a defensible model: annual hours × loaded rate × automatable percentage + error/rework cost + capacity value − implementation and operating cost.
 
@@ -318,13 +321,10 @@ Subtext: *"We'll send your personalized AI Readiness Brief here — your archety
 | Company name | Text | Yes | |
 | Email address | Email | Yes | |
 | Function — *"Which area do you lead or work in?"* | Dropdown | Yes | Drives SF8 via an Audience on Lead Form Answers |
-| Marketing consent | Explicit Consent (Optional) | No | Gates all email sequences |
 
 **Function options:** Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales & Marketing · HR & People · Customer Service · Other
 
-Consent is **Optional, not Required**, so a missing tick doesn't cost the lead — results deliver instantly on screen regardless. ScoreApp stores a timestamp plus the exact opt-in wording and passes `opt_in` on every webhook event.
-
-> ⚠️ **No email sequence may fire without `opt_in = true`.**
+**No separate marketing-consent checkbox.** Submitting an email address for the assessment is the respondent's request for their result and places them into the intended results/follow-up flow by default — there is no additional opt-in action required. Every marketing/nurture email must carry a working **Unsubscribe** link; using it suppresses future marketing/nurture email to that respondent. The one-time result-delivery email is not a marketing email and is sent regardless of unsubscribe status, since it is the artifact the respondent explicitly requested by submitting the form.
 
 ---
 
@@ -627,9 +627,11 @@ Archetype and AI Readiness Score are the hero. Opportunity Score is secondary, p
 
 Shown beneath both scores. The line designed to travel — what they screenshot and send to leadership.
 
+**R-11, built 2026-08-24:** the actual share mechanism is ScoreApp's native Share section, placed at the end of each result page — a card with a headline, subhead, pre-filled share message, and Copy Link/Facebook/X/LinkedIn/WhatsApp buttons. No custom PDF or export build needed. Full copy in `content/results-copy.md` §Share Section.
+
 | | Opportunity low (0–59) | Opportunity high (60–100) |
 |---|---|---|
-| **Readiness high (55–100)** | "You're in good shape. This particular workflow isn't your biggest lever — the next question worth asking is where your real constraint actually sits." | "You're positioned to move on this now. You have the organizational readiness *and* a workflow worth the effort. That combination is rarer than it sounds." |
+| **Readiness high (55–100)** | "You're in good shape. This particular workflow isn't your biggest lever — the next question worth asking is where your real constraint actually sits." | "You have strong organizational readiness and a workflow with meaningful improvement potential. That combination is rarer than it sounds." |
 | **Readiness low (0–54)** | "Start small. Neither your AI foundation nor this particular workflow is the urgent thing — which means you get to choose your first move deliberately rather than reactively." | "There's a real prize here — and a foundation to build first. Companies in this position often get the most value from fixing one workflow well and letting that become the proof that funds everything after it." |
 
 The bottom-right cell matters most: a large opportunity in a company not yet organized to capture it. Say so honestly rather than implying readiness they don't have.
@@ -642,19 +644,21 @@ If ScoreApp supports only single-question conditional copy, use Q7 as the trigge
 
 ### 7.5 Benchmarks
 
-- **Static, all respondents:** knowledge workers spend ~23% of the workweek on partially or fully automatable tasks (McKinsey Global Institute, 2021). **Verify before launch** and update the citation if a newer figure exists.
-- **Dynamic, by Q10:** annual hours and cost range from the table in §3.
+- **Static, all respondents:** more than half of U.S. work hours — 57% — could already be automated with today's AI technologies (McKinsey Global Institute, "Agents, robots, and us: Skill partnerships in the age of AI," November 2025). **Verified 2026-08-24** — the prior "23%, 2021" figure did not check out against any McKinsey publication and was replaced. Full sourcing note in `content/results-copy.md` §Benchmark Stats.
+- **Dynamic, by Q10:** annual hours only, from the table in §3 — no dollar figure is shown on the public result page. See `content/results-copy.md` §Dynamic Benchmark for the exact wording and the "No monetary estimate on the public result page" note. The cost-range column in the §3 table is internal-only, feeding the respondent-brief email (§9).
 
 ### 7.6 CTA copy
 
 **Primary — all respondents.** "Get your AI Readiness Brief" → "Send my Brief"
 
-**Secondary — Layer C = ACCEPT or HOLD only.** Same Calendly link, two framings:
+**Secondary — Layer C = ACCEPT or HOLD only.** Headline "Don't stop at the score." Same Calendly link, two framings (full copy in `content/results-copy.md` §CTA):
 
 | Archetype | Body |
 |---|---|
-| Builder, Architect | "Talk through your results with our team. We'll examine the workflow you identified from both the business and technical sides and determine whether there's a practical opportunity worth pursuing — and roughly what it's worth." |
-| Spectator, Explorer | "You don't need an AI strategy to have this conversation — you need one workflow worth examining, and you've just described one. We'll look at it from both the business and technical sides and tell you honestly whether it's the right place to start." |
+| Builder, Architect | Assumes the workflow's real: "we'll dig into the workflow you identified, pinpoint where AI could save you meaningful time or money, and help you figure out whether the opportunity is worth pursuing." |
+| Spectator, Explorer | No-prerequisites reassurance: "you don't need an AI strategy to find out. You just need one workflow worth examining, and you've already described one." |
+
+Both close with "If there's something there, you'll leave knowing where to focus. If there isn't, you'll know that too." → button "Find Out If It's Worth Pursuing →" → "Free · No obligation".
 
 **Not-qualified note — Layer C = REJECT.** Four variants keyed to which gate fired (HG3/HG4 workflow is fine · HG1 not ready · HG5 early stage · HG2 access). Full copy in `content/results-copy.md`.
 
@@ -688,14 +692,14 @@ High readiness plus REJECT is now a common combination, so the subject line has 
 
 Full copy in `content/follow-up-sequences.md`.
 
-> ⚠️ **No sequence fires without `opt_in = true`.** Respondents who don't opt in get their on-screen results and nothing else; any outreach must be individual and manual.
+**No separate opt-in gates delivery.** Sequence 1 (result delivery) sends by default to every submitter. Sequences 2 and 3 send by default too, subject to Layer C routing, but are suppressed for any respondent who has used the Unsubscribe link.
 
 | Layer C | Seq 1 Brief | Seq 1 booking block | Seq 2 Non-booker (day 5) | Seq 3 Nurture (day 14) |
 |---|---|---|---|---|
 | ACCEPT | Yes | Yes | Yes | No |
 | HOLD | Yes | Yes | Yes | No |
 | REJECT | Yes | **No** | **No** | Yes — variant by gate |
-| `opt_in = false` | **No** | — | **No** | **No** |
+| Any, unsubscribed | Yes | Yes/No per Layer C above | **No** | **No** |
 
 **Sequence 3 has four gate-specific variants** (3a workflow is fine · 3b not ready · 3c early stage · 3d access). They must not collapse into one generic email — "your workflow is fine," "you're not ready," and "you can't reach the buyer" are three different conversations, and a generic message gets all three wrong.
 
@@ -765,7 +769,7 @@ Two payload facts shape phase 2:
 | A category can be excluded from the total score | **Confirmed — account.** Separate `Hidden` toggle controls display |
 | Audiences support AND/OR across answers, category subscores, and total | **Confirmed** |
 | Multi-select scores `Σ(selected) ÷ Σ(all options)`; no cap setting | **Confirmed — account** |
-| Native GDPR consent with timestamp + wording, passed as `opt_in` | **Confirmed** |
+| Native GDPR consent with timestamp + wording, passed as `opt_in` | **Confirmed** (platform capability only — as of 2026-08-25 the assessment no longer surfaces this as a respondent-facing checkbox; see §3 and §9) |
 | Jump logic cannot branch per-answer on a multi-select | **Confirmed** |
 | A public Open API exists (the only place `score_potential` is exposed) | **Confirmed** |
 

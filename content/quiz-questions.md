@@ -36,6 +36,7 @@ Three scoring layers read the same answers with different weightings. Two are sh
 ## 2. Phase 1 — About You
 
 ### Q1 — Role
+**Instruction (R-07, added 2026-08-24):** "Quick note before you start: answer for your company as a whole, not just your own team. If you don't have full visibility everywhere, answer based on what you can see — a partial view is still useful." Set via Q1's "Show instruction" toggle so it appears once, before the first question, rather than as a separate landing screen.
 **Text:** "What's your role at your company?"
 **Type:** Single choice · Required
 **Scores:** Layer C only (Pillar 4 — Access & Authority, 0–15)
@@ -290,15 +291,12 @@ Cost range = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker
 | Company name | Text | Yes | |
 | Email address | Email | Yes | |
 | **Function** — "Which area do you lead or work in?" | **Dropdown** | Yes | Drives SF8 via an Audience on Lead Form Answers |
-| **Marketing consent** | **Explicit Consent (Optional)** | No | Gates all email sequences |
 
 **Function options:** Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales & Marketing · HR & People · Customer Service · Other
 
 Function sits here rather than in the quiz because it is profile data, reads naturally beside company name, and costs no assessment question. The trade-off is that it **awards no points** — it drives a flag, not a score.
 
-**Consent is set to Optional, not Required**, so a missing tick does not cost the lead — the results page delivers instantly on screen regardless. ScoreApp stores a timestamp plus the exact opt-in wording and passes `opt_in` on every webhook event.
-
-> ⚠️ **All three email sequences must be gated on `opt_in = true`.**
+**No separate marketing-consent checkbox.** Submitting an email address for the assessment is the respondent's request for their result and places them into the intended results/follow-up flow by default — there is no additional opt-in action required. Every marketing/nurture email must carry a working **Unsubscribe** link; using it suppresses future marketing/nurture email to that respondent. The one-time result-delivery email is not a marketing email and is sent regardless of unsubscribe status, since it is the artifact the respondent explicitly requested by submitting the form.
 
 ---
 

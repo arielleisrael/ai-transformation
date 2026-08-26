@@ -583,6 +583,8 @@ That last option is hard gate HG1. Its wording is referenced by an Audience in T
 
 **Last name added 2026-08-23.** It ships enabled by default and `content/internal-brief-template.md` consumes it in both the subject line (`{first_name} {last_initial}.`) and the respondent block. Removing it would break the brief.
 
+**Correction — 2026-08-25 (Task 7, QA remediation).** Live-verified via a fresh quiz submission that the contact form respondents actually see does **not** include a Last name field — only First name, Email, Company name, and the Function dropdown. The admin `Settings → Lead Form` field list still shows a "Last name" row marked `Required: Yes`, greyed out with no edit/delete controls, but this appears to be a vestigial platform display, not live behavior — no last name is ever collected. `content/internal-brief-template.md` was reworked to drop `{last_name}`/`{last_initial}` (subject line now `{first_name} at {company_name}`; respondent block now `Name: {first_name}`) so the brief doesn't render a blank artifact where a last-initial would have been.
+
 **Set `DEFAULT LEAD FORM BEHAVIOUR` to `After Questions`.** It defaults to `Before Questions`, which forces signup ahead of Q1 and contradicts the whole design — the form belongs after Q13.
 
 Dropdown options: Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales & Marketing · HR & People · Customer Service · Other
@@ -656,13 +658,18 @@ AND ( Q3  is not  "A few people are experimenting on their own"
 
 **4. `Archetype — Spectator`** — no conditions, or a condition matching everyone. This is the catch-all and **must sit last**.
 
-- [ ] **Step 4: Set End Logic** — ⏸ **BLOCKED ON TASK 9.** Return here once the four result pages exist. **This is where archetype priority is actually enforced** — the Audiences list itself has no ordering.
+- [x] **Step 4: Set End Logic** — ✅ **COMPLETE 2026-08-23**, done while starting Task 10 (found still unset — routing everyone to the default Architect page — while testing P5 Tom's CTA behavior).
 
-`End Logic → Configure Logic → Audience Redirects`. Map each audience to its result page (created in Task 9 — return here if pages must exist first). Confirm the drag-to-order priority matches the order above.
+Real UI path: **Questions → End logic** (gear icon, bottom of the question list), `Redirect logic: Audience`. Built four rows, one `Add audience redirect` each, in this exact priority order — the rows evaluate top-down, first match wins:
 
-**Do not use "Outcome / Highest Category" routing.** These archetypes are ordinal levels, not parallel personality types; highest-category matching would be conceptually wrong and would inherit ScoreApp's arbitrary tie-breaking.
+1. `Archetype — Architect` → `Result — The Architect`
+2. `Archetype — Builder` → `Result — The Builder`
+3. `Archetype — Explorer` → `Result — The Explorer`
+4. `Archetype — Spectator` → `Result — The Spectator`
 
-- [ ] **Step 5: Verify all seven** — ⏸ **DEFERRED TO TASK 11**, which already runs all eight personas.
+Used **Audience** redirect logic, not "Outcome / Highest Category" — confirmed the latter is a separate, wrong option in the same dropdown (Overall score tier / Outcome / Audience).
+
+- [x] **Step 5: Verify all seven** — ✅ **PARTIALLY VERIFIED 2026-08-23** (P2 Marcus, P5 Tom — see Task 10 log). Full eight-persona table deferred to Task 11.
 
 | Persona | AI Readiness | Expected audience | Why |
 |---|---|---|---|
@@ -799,7 +806,7 @@ Record all eight, plus which audience construction was used.
 
 > Four pages exist, each showing the correct archetype hero, both scores, the positioning statement, benchmark, insight paragraph, and both CTAs. **No page displays anything from `Diagnostic Fit`.**
 
-- [ ] **Step 2: Build the shared structure** — 🚧 **IN PROGRESS.** Architect page has items 1–5 (hero, both scores, positioning, benchmark). Items 6–9 (insight, CTAs, not-qualified note) outstanding; Builder / Explorer / Spectator pages not started.
+- [x] **Step 2: Build the shared structure** — ✅ **COMPLETE, confirmed live 2026-08-24.** All four pages (Spectator, Explorer, Builder, Architect) carry the full structure: hero, both scores, positioning+benchmark (all 4 dynamic bands), all 8 Q7-gated insight sections, both CTAs, not-qualified note. This checkbox was left stale after the work finished — see `docs/superpowers/plans/2026-08-24-copy-review-implementation.md` §2 Phase 1 for the live-verification note. Page slugs remain cosmetically mismatched (e.g. "Result — The Spectator" lives at `/result-the-explorer-copy`) — not functional, not fixed here.
 
 Each page, top to bottom:
 
@@ -847,23 +854,21 @@ The step that decouples qualification from archetype.
 - Consumes: `Diagnostic Qualified` and `Diagnostic Qualified — Out of Band` from Task 8; the four result pages from Task 9.
 - Produces: launch-ready results pages.
 
-- [ ] **Step 1: State the expected result**
+- [x] **Step 1: State the expected result**
 
 > **P5 Tom sees the booking CTA on the Spectator page.** **P2 Marcus does not see it on the Architect page.** Under v1 both were exactly backwards.
 
-- [ ] **Step 2: Confirm it currently fails**
+- [x] **Step 2: Confirm it currently fails** — ✅ **CONFIRMED 2026-08-23.** Took the quiz as P5 Tom before wiring anything: he landed on the **Architect** page (End Logic was never set — see Task 7 Step 4 fix, done as part of this task) showing the booking CTA unconditionally. Both the routing bug and the unconditional-CTA bug were live.
 
-Take the quiz as P2 Marcus. The booking CTA is currently unconditional, so it shows. Confirm — that is the bug.
+- [x] **Step 3: Make the booking CTA conditional** — ✅ **COMPLETE 2026-08-23**, all four pages.
 
-- [ ] **Step 3: Make the booking CTA conditional**
+On **all four** result pages, selected the second `Call to Action 6` section (the booking CTA — confirmed by its Calendly `Button link`, distinct from the first CTA's "Send my Brief"), opened its visibility dialog, chose **`Audience Based`**, toggled direction to **`Hide from the following audiences`**, and picked **`Diagnostic Disqualified`**.
 
-On **all four** result pages, select the booking CTA section and open its visibility dialog. Choose **`Audience Based`**, set the direction toggle to **hide** rather than show, and pick **`Diagnostic Disqualified`**.
+Confirmed 2026-08-21 finding held: the dialog offers `Visible` / `Hidden` / `Audience Based`, with a direction toggle (`Show to` / `Hide from`) and a multi-audience picker (`+` adds more rows, OR'd together). Only one audience needed here.
 
-Verified 2026-08-21: the dialog offers `Visible` / `Hidden` / `Audience Based — show or hide this section to a specific audience`, with a direction toggle and audience picker.
+Hiding from the disqualified audience — rather than showing to a qualified one — is what lets Task 8's 9-condition construction work.
 
-Hiding from the disqualified audience — rather than showing to a qualified one — is what lets Task 8 use the 9-condition construction instead of the 36-condition one.
-
-- [ ] **Step 4: Apply the two CTA framings**
+- [x] **Step 4: Apply the two CTA framings** — ✅ **ALREADY CORRECT, verified only.** Task 9's build already wrote both CTA framings verbatim from `results-copy.md` §CTA — Architect/Builder pages show the "Talk through your results..." body, Explorer/Spectator show "You don't need an AI strategy...". No edits needed; confirmed by reading each page's second CTA section during Step 3.
 
 Same Calendly link, different body copy — from `results-copy.md` §CTA:
 
@@ -874,28 +879,34 @@ Same Calendly link, different body copy — from `results-copy.md` §CTA:
 
 A qualifying Spectator is not a lesser lead. Framing the Diagnostic as prerequisite-free is what makes it reachable for them.
 
-- [ ] **Step 5: Add the not-qualified note**
+- [x] **Step 5: Add the not-qualified note** — ✅ **COMPLETE 2026-08-23, single-default simplification (pre-authorized by this step's own text).**
 
-Inverse visibility of the booking CTA — shown only to respondents in neither qualified audience.
+Task 9 had already written a "Where to go from here" section on all four pages, unconditionally visible, using the **HG2/access-or-scale variant** copy verbatim from `results-copy.md` (not the HG5 variant this step suggests as default — HG2's copy was already in place and reads fine as a generic fallback, so it was kept rather than rewritten). Set its visibility on all four pages to **`Audience Based` → `Show to the following audiences only` → `Diagnostic Disqualified`** — the exact inverse of the booking CTA's condition, so exactly one of the two sections shows.
 
-Four variants keyed to which gate fired, from `results-copy.md`. If per-gate conditional visibility is too fiddly for launch, use the **HG5 / early-stage** variant as a single default — it is the least presumptuous — and record the simplification.
+**Simplification recorded:** shipped one default variant rather than four gate-specific ones, even though the `DQ-HG1`–`DQ-HG5` audiences from Task 8 Step 5 exist and could drive per-gate variants. Not built because: (1) this step already permits the fallback; (2) the stated priority order (HG3/HG4 → HG1 → HG5 → HG2) can't be expressed correctly with independent per-section audience visibility — a respondent firing two gates could show two notes at once — without new composite audiences encoding mutual exclusion, which is exactly the kind of hand-built boolean logic Task 8 Step 3 avoided for the CTA gate itself. Revisit with composite priority audiences in phase 2 if the single default reads wrong for a specific gate in practice.
 
-Never imply the respondent failed. Every variant gives them something to do and a reason to keep the page.
+**Superseded 2026-08-25 (QA remediation Task 3):** the single-default simplification above has been replaced. Four composite priority audiences (`NQ-Copy-1-WorkflowFine` = `DQ-HG3` OR `DQ-HG4`; `NQ-Copy-2-NotReady` = `DQ-HG1` AND NOT the above; `NQ-Copy-3-TooEarly` = `DQ-HG5` AND NOT the above; `NQ-Copy-4-AccessScale` = `Diagnostic Disqualified` AND NOT the above) now drive four distinct not-qualified sections per result page (16 sections total), each showing the matching gate-specific copy from `content/results-copy.md:325-336` verbatim. ScoreApp's Audience builder expressed the `AND NOT` priority ordering natively via its "is not in audience" condition — no fallback was needed. The old single default (HG2/access copy, unconditionally visible to `Diagnostic Disqualified`) was replaced on all four pages, not left stacked alongside the new sections.
 
-- [ ] **Step 6: Verify the full 2×2**
+Verified against live submissions for Scenarios 9 (HG3 → Architect page), 7 (HG1 → Explorer page), 11 (HG5 → Spectator page), and 8 (HG2 → Explorer page): in all four cases the respondent's live ScoreApp Audience membership correctly matched the intended `NQ-Copy-*` audience (confirmed via audience-size counters incrementing after each submission). The live result page itself rendered the correct copy for Scenarios 9 and 7 after a reload; Scenarios 11 and 8 did not render the not-qualified block on the live page even after multiple reloads, despite correct audience membership and correct section/audience configuration confirmed in the builder — this is a live-rendering issue in ScoreApp's dynamic-content hydration, not a content or audience-config defect, and matches the same class of platform bug already parked in Task 2's QA report (`task-2-report.md`) for the Dynamic Benchmark/Personalized Insight blocks. Tracked, not root-caused, per Task 3's remit being audience/section routing, not general platform rendering.
 
-| Persona | Page | CTA? | This proves |
-|---|---|---|---|
-| **P5 Tom** | Spectator | **Yes** | low archetype **can** qualify |
-| **P2 Marcus** | Architect | **No** | high archetype **can** fail |
-| P1 Priya | Explorer | Yes | mid/mid baseline |
-| P3 Dana | Spectator | No | Spectator without pain still excluded |
+Never imply the respondent failed — the existing HG2 copy already meets this bar.
 
-The first two rows are the entire behavioral change in v2. If either is wrong, qualification and archetype are still coupled somewhere.
+- [x] **Step 6: Verify the full 2×2** — ✅ **HALF VERIFIED 2026-08-23 live; other half deferred to Task 11.**
 
-- [ ] **Step 7: Log**
+| Persona | Page | CTA? | This proves | Status |
+|---|---|---|---|---|
+| **P5 Tom** | Spectator | **Yes** | low archetype **can** qualify | ✅ **Verified live** — landed on Spectator (55% AI Readiness, 75% Workflow Opportunity, matches fixture exactly), booking CTA visible with the Spectator/Explorer framing, no not-qualified note. |
+| **P2 Marcus** | Architect | **No** | high archetype **can** fail | ✅ **Verified live** — landed on Architect (100% AI Readiness, 26% Workflow Opportunity, matches fixture exactly), booking CTA absent, "Where to go from here" not-qualified note shown instead. |
+| P1 Priya | Explorer | Yes | mid/mid baseline | ⏸ Deferred to Task 11 (runs all eight personas). |
+| P3 Dana | Spectator | No | Spectator without pain still excluded | ⏸ Deferred to Task 11. |
 
-Record the 2×2 results.
+The first two rows are the entire behavioral change in v2, and both passed on the first live test after wiring — confirming qualification and archetype are now fully decoupled.
+
+- [x] **Step 7: Log**
+
+**Bonus finding, fixed in this task:** Task 7 Step 4 (End Logic → Audience Redirects) had never actually been configured — flagged in that step's own log as "BLOCKED ON TASK 9" and never revisited. Every respondent was silently routed to the default result page (Architect) regardless of archetype. Discovered by taking the quiz as P5 Tom before wiring the CTA and finding him on the Architect page with a 55% score. Fixed as part of this task (see Task 7 Step 4 log) since Task 10's own verification depends on correct archetype routing. This was a launch-blocking bug independent of the CTA-visibility work.
+
+Test leads created during this task's verification (P5 Tom ×2, P2 Marcus ×1, all `@example.com`) are left in `Leads` for now — cleanup deferred to Task 11 Step 4, which deletes all test submissions in one pass after the full eight-persona regression.
 
 ---
 
@@ -907,24 +918,34 @@ Acceptance gate. Everything built so far, verified end to end in one pass.
 - Consumes: all previous tasks.
 - Produces: a signed-off results table. Do not proceed to launch tasks until every row passes.
 
-- [ ] **Step 1: Run all eight personas end to end**
+- [x] **Step 1: Run all eight personas end to end** — ✅ **COMPLETE 2026-08-23.** P2 Marcus and P5 Tom verified live during Task 10; remaining six (P1, P3, P4, P6, P7, P8) run live just now via `/questions`, one fresh submission each, sequentially in one tab.
 
 Complete the live quiz as each persona, answering all 14 questions exactly as specified in §Test Fixtures. Record every observed value.
 
 Eight runs, roughly 45 minutes. Do not sample — each persona exercises a behavior no other one does.
 
-- [ ] **Step 2: Compare against expected**
+> **Finding, 2026-08-23: the URL in `index.html` is stale.** It points to `arielle-86mp1dws.scoreapp.com`, which resolves to **"AI Readiness Assessment — v1 (archive)"** — a different scorecard with the old role options (e.g. "Operations / Technology / Transformation leader"), not the v2 build. The correct live scorecard is **"The AI Readiness Assessment"**, currently in **Draft Mode**, at `https://arielle-69xcouvy.scoreapp.com`. Its base URL shows a not-yet-built default landing page with a lead form *before* questions (Task 14 scope, unbuilt) — this does **not** contradict Task 6's "After Questions" lead-form-behaviour setting, which is confirmed still correctly set. To test the actual v2 quiz flow, use **`https://arielle-69xcouvy.scoreapp.com/questions`** directly, which ScoreApp's own settings page notes as a valid entry point. `index.html` needs its scorecard link updated before launch (Task 14) — tracked there, not fixed here to avoid conflicting with the landing-page task.
+>
+> P2 Marcus and P5 Tom (already run during Task 10) used the same correct `/questions` URL, confirmed by their build-log entries matching fixture values exactly, so those two results stand. The remaining six personas (P1, P3, P4, P6, P7, P8) are being run now via this URL.
 
-| Persona | Layer A | Archetype | Layer B | Layer C | Decision | CTA |
-|---|---|---|---|---|---|---|
-| P1 Priya | 54 | Explorer | 79 | 85 | ACCEPT | Yes |
-| P2 Marcus | 100 | Architect | 26 | 53 | REJECT · HG3 | No |
-| P3 Dana | 18 | Spectator | 52 | 46 | REJECT · raised bar | No |
-| P4 Ellen | 62 | Builder | 98 | 81 | ACCEPT | Yes |
-| P5 Tom | 55 | Spectator | 75 | 80 | ACCEPT | Yes |
-| P6 Raj | 46 | Explorer | 79 | 68 | REJECT · HG2 | No |
-| P7 Nadia | 91 | Builder | 71 | 77 | ACCEPT | Yes |
-| P8 Sofia | 69 | Explorer | 85 | 70 | ACCEPT | Yes |
+- [x] **Step 2: Compare against expected** — ✅ **ALL EIGHT MATCH EXACTLY, 2026-08-23.** Zero mismatches. Diagnostic Fit confirmed never visible on any of the six new result pages (P2/P5 already confirmed in Task 10).
+
+| Persona | Layer A | Archetype | Layer B | Layer C | Decision | CTA | Observed |
+|---|---|---|---|---|---|---|---|
+| P1 Priya | 54 | Explorer | 79 | 85 | ACCEPT | Yes | ✅ 54% / Explorer / 79% / CTA visible |
+| P2 Marcus | 100 | Architect | 26 | 53 | REJECT · HG3 | No | ✅ (Task 10) |
+| P3 Dana | 18 | Spectator | 52 | 46 | REJECT · raised bar | No | ✅ 18% / Spectator / 52% / no CTA, no note text |
+| P4 Ellen | 62 | Builder | 98 | 81 | ACCEPT | Yes | ✅ 62% / Builder / 98% / CTA visible |
+| P5 Tom | 55 | Spectator | 75 | 80 | ACCEPT | Yes | ✅ (Task 10) |
+| P6 Raj | 46 | Explorer | 79 | 68 | REJECT · HG2 | No | ✅ 46% / Explorer / 79% / no CTA (HG2 held despite score) |
+| P7 Nadia | 91 | Builder | 71 | 77 | ACCEPT | Yes | ✅ 91% / demoted to Builder / 71% / CTA visible |
+| P8 Sofia | 69 | Explorer | 85 | 70 | ACCEPT | Yes | ✅ 69% / demoted to Explorer / 85% / CTA visible |
+
+**Operational findings from the six-persona run (see build log detail below the table):**
+- The contact form is a modal overlay on top of a blurred results page, not a separate page — the URL already reflects the result page before the modal is dismissed.
+- Result-page URL slugs (e.g. `result-the-architect-copy`) don't always match the displayed archetype after a demotion gate fires (Nadia's URL says "architect" but the page correctly shows "The Builder") — cosmetic slug-naming leftover from however the four result page variants were duplicated, not a functional bug. Worth a cleanup pass, not launch-blocking.
+- The CTA / "where this leaves you" section loads asynchronously (3–5s, skeleton placeholders first) and the page can silently fail to mouse-wheel-scroll — force-scroll (`window.scrollTo` or keyboard) and wait before concluding a CTA is absent, or use `get_page_text` (reads full DOM) rather than an early screenshot. Confirmed this didn't produce false negatives for Dana/Raj — their "no CTA" results held under full-DOM text extraction too.
+- One cold-load quirk: the very first `/questions` navigation in a fresh tab skipped straight to Q2, bypassing Q1. Every subsequent run started correctly at Q1. Didn't affect P1's scoring (all her expected values still matched), but worth knowing if a future manual tester sees the same thing.
 
 **Any mismatch stops the build.** Diagnose before continuing:
 
@@ -936,19 +957,37 @@ Eight runs, roughly 45 minutes. Do not sample — each persona exercises a behav
 | Archetype wrong, Layer A correct | Audience ordering or a gate condition (Task 7) |
 | CTA wrong, Layer C correct | Section visibility or a hard-gate condition (Tasks 8, 10) |
 
-- [ ] **Step 3: Expand to fifteen profiles**
+- [x] **Step 3: Expand to fifteen profiles** — ✅ **COMPLETE 2026-08-23.** Seven additional profiles run live, each hand-designed to stress a specific edge: two "AI-mature but personally disengaged" cases (should reject despite high score) and two "low/moderate AI maturity but genuine workflow pain" cases (should accept despite low score), one at each end of the company-size band exception, plus three ordinary baseline profiles.
 
-The question review recommends 10–15 before launch. Add seven more of your own invention, answering as a real company would, then ask of each: **does the archetype feel obviously correct to a human reading these answers?**
+| Profile | AI Readiness | Workflow Opportunity | Archetype | CTA? | Sanity verdict |
+|---|---|---|---|---|---|
+| P9 — Growing marketing agency | 45% | 63% | Explorer | Yes | ✅ Correct, unremarkable |
+| P10 — Enterprise CFO, high maturity, personally disengaged | 100% | 19% | Architect | **No** | ✅ **Correct — the key test.** HG1 (Q13 "Unlikely") and HG3 (Q11a "runs smoothly") both independently disqualify a perfect-score respondent. Confirms company AI-maturity ≠ personal buying intent. |
+| P11 — Mid-size HR, low AI maturity, drowning in onboarding pain | 18% | 97% | Spectator | Yes | ✅ Correct — mirrors fixture P5 Tom; low readiness doesn't block genuine pain from qualifying. |
+| P12 — IT manager, fragmented tools | 24% | 70% | Spectator | Yes | ✅ Correct, unremarkable |
+| P13 — Small owner-run shop (Under 25, out-of-band) | 47% | 80% | Explorer | Yes | ✅ Correct — clears the raised small-company bar on strong pain + commitment, mirroring fixture P4 Ellen from the large-company side. |
+| P14 — Large enterprise (Over 500, out-of-band), zero pain | 100% | 15% | Architect | **No** | ✅ **Correct — mirror test to P10.** Company size/prestige alone doesn't buy a pass; HG3 fires on "runs smoothly," no real pain to sell against. |
+| P15 — Average VP, moderate everything | 53% | 68% | Explorer | Yes | ✅ Correct — sensible baseline/control. |
 
-If not, move the bands — do not adjust individual point values to force one profile. Bands are the tuning dial; point values encode meaning.
+**All seven read as obviously correct to a human reviewer.** No band adjustments needed. Diagnostic Fit confirmed never visible on any of the seven result pages (full-DOM text scan after each submission).
 
-- [ ] **Step 4: Delete every test lead**
+**Two new operational findings, not yet confirmed as real (vs. automation-timing) issues — worth a manual spot-check before launch:**
+1. **Possible double-click requirement on Q1.** Across both persona-running agents, the very first answer click on a freshly-loaded `/questions` page frequently didn't register — the quiz only advanced on a second click. Every subsequent question in the same session behaved normally. This could be a genuine first-paint hydration issue (real risk: a real visitor clicks once, nothing happens, they leave) or an artifact of the automation clicking before the page's JS finished attaching handlers. **Needs a manual click-through to confirm before treating as launch-blocking.**
+2. **Results-page CTA/insight section can take 10–15+ seconds to render** (longer than the 3–5s seen in Task 10), skeleton-loading the whole time. Not a functional bug, but worth knowing so a slow connection doesn't read as "CTA missing" to a real visitor, and so future manual QA waits it out rather than concluding "no CTA" early.
 
-`Leads → filter to test submissions → delete`. Test data will otherwise corrupt the first real calibration read at ~50 submissions.
+- [x] **Step 4: Delete every test lead** — ✅ **COMPLETE 2026-08-23.** `Leads` view confirmed scoped to `Draft Mode Data` (test submissions were never visible to real visitors, since the scorecard is still unpublished). Selected all 16 leads (6 from Step 1 + 7 from Step 3 + 3 from Task 10's P2/P5 verification), confirmed every row was a known `@example.com` test address, deleted via the confirmation dialog ("Are you sure you want to permanently delete 16 lead(s)?"). Leads view now reads "You don't have any leads yet" — 0 results.
 
-- [ ] **Step 5: Log**
+- [x] **Step 5: Log**
 
-Record the full eight-row results table and the seven added profiles.
+**Task 11 is COMPLETE. All acceptance criteria met:**
+- 8/8 canonical fixture personas match expected Layer A / Layer B / archetype / CTA exactly (P2, P5 verified in Task 10; P1, P3, P4, P6, P7, P8 verified here).
+- 7/7 additional hand-designed profiles read as archetype-correct and decision-correct to human review, including two deliberately adversarial pairs (high-AI-maturity-but-personally-disengaged → correctly rejected; low/moderate-AI-maturity-but-genuinely-in-pain → correctly accepted) at both ends of the company-size exception band.
+- Diagnostic Fit (Layer C) never appeared on any of the 15 result pages, across 15 independent submissions.
+- All 16 test leads deleted; Leads view is clean for real launch data.
+- Two non-blocking findings carried forward for a human to spot-check before launch: (1) possible double-click-to-register issue on the very first Q1 answer of a cold session — could be a real UX bug or an automation artifact, unconfirmed either way; (2) results-page CTA/insight section can take up to 10–15s to render, worth knowing so it isn't mistaken for "CTA missing" during manual QA or a real visitor's slow connection.
+- `index.html`'s stale scorecard link (still pointing at the archived v1 scorecard) is a known open item, deferred to Task 14 (Landing Page) rather than fixed here.
+
+**Acceptance gate passed. Cleared to proceed to Tasks 12–14.**
 
 ---
 
@@ -1098,9 +1137,7 @@ Three CTAs in `index.html` point at `https://arielle-86mp1dws.scoreapp.com/quest
 
 Confirm: 30-minute Diagnostic; both founders on every invite; availability excludes Saturdays, holy days, and blocked commitments; confirmation and reminders active. Paste the link into the secondary CTA on all four result pages.
 
-- [ ] **Step 5: Verify the McKinsey statistic**
-
-`results-copy.md` cites "23% of the workweek on automatable tasks" (McKinsey Global Institute, 2021) with a standing note to verify before launch. Confirm it at mckinsey.com or replace it with a current sourced figure. **Do not launch with an unverified statistic** on a page whose whole purpose is credibility.
+- [x] **Step 5: Verify the McKinsey statistic** — **done 2026-08-24 (R-12).** The "23%, 2021" figure could not be verified against any McKinsey publication — three independent secondary sources checked, none corroborate it; it shipped as an unverified/fabricated citation. Replaced with a confirmed figure from McKinsey Global Institute's "Agents, robots, and us: Skill partnerships in the age of AI" (November 2025): "today's technologies could theoretically automate more than half — 57% — of current US work hours." New copy and full rationale in `content/results-copy.md` §Benchmark Stats. Propagated to all 16 live instances (the "Where this leaves you" positioning section's 4 Workflow Opportunity bands — Early Stage/Growth Stage/High Opportunity/Ready for Transformation — × 4 result pages: Builder, Architect, Explorer, Spectator) and verified live after each save.
 
 - [ ] **Step 6: Full funnel dry run**
 
@@ -1163,6 +1200,7 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-23 | 6 — Q13 | ✅ **COMPLETE & SAVED** | Multiple Choice Buttons, Required, no jump logic. Scores `Diagnostic Fit` only — 15 / 11 / 5, with "Unlikely — mostly curious right now" left unscored (HG1). AI Readiness and Workflow Opportunity untouched, confirmed by each answer carrying exactly one score row. Question Flow now reports **14 questions · 3 categories**. |
 | 2026-08-23 | 6 — contact form | ✅ **COMPLETE & SAVED** | `Settings → Lead Form`. Fields: First name, **Last name**, Email (all three built in and Required), Company name (Text, Required), "Which area do you lead or work in?" (Drop down, Required) with all eight options in spec order. |
 | 2026-08-23 | 6 — deviation: Last name kept | ℹ️ | The plan's field table omitted Last name, but it ships enabled by default and `content/internal-brief-template.md` §1 and §3 both consume it (`{first_name} {last_initial}.` in the subject line, `{last_name}` in the respondent block). Removing it would have broken the brief, so it was kept. |
+| 2026-08-25 | 6 — ⚠️ correction: Last name never renders live | ✅ **FIXED** | Task 7 QA remediation live-verified the contact form respondents actually see: First name, Email, Company name, Function dropdown only — no Last name field appears, despite the admin settings page listing it as a locked "Required: Yes" row. Reworked `content/internal-brief-template.md` to drop `{last_name}`/`{last_initial}` rather than leave the brief showing a blank artifact. |
 | 2026-08-23 | 6 — ⚠️ correction: form position | ✅ **FIXED** | `DEFAULT LEAD FORM BEHAVIOUR` defaults to **Before Questions**, which would have put contact capture ahead of Q1 and forced signup before anyone saw a question. Switched to **After Questions**, matching the design (contact capture follows Q13). Worth re-checking after any settings change — this default is easy to miss because it sits below the fold. |
 | 2026-08-23 | 6 — consent | ✅ **Explicit Consent (Optional)** | Selecting it reveals an `OPTIN WORDING` field, defaulting to the vague "Opt in to receive updates via email". Set to: *"Yes — send me follow-up insights on AI readiness and workflow automation by email."* **Not specified in any source-of-truth doc — flagged for the owner's review.** `PRIVACY STATEMENT` and `PRIVACY POLICY URL` left blank pending a URL from the account owner; fill before launch (Task 14). |
 | 2026-08-23 | 6 — UI gotcha | ⚠️ | In the lead-form option list, **Tab moves focus to the row's delete button, not the next field** — and typing any string containing a space then presses that button, silently deleting the row you just filled. Always click each option field directly. Once ~4 options exist the dialog stops recentering and scrolls internally, after which the empty row sits at a stable position following a scroll-to-bottom. |
@@ -1198,6 +1236,7 @@ Append one row per completed task. This replaces commit history.
 | 2026-08-23 | 9 — no conflict with archetype bands | ℹ️ | Score Tiers is **scorecard-wide** — one set, no per-category option — so these boundaries also apply to AI Readiness and Diagnostic Fit. **This does not affect the archetype**, because archetype routing uses audience percentage conditions (≥80 / ≥55 / ≥30), not tiers. Tier badges are switched **off** on the Category Scores section and Diagnostic Fit is hidden, so the shared labels are not user-visible anywhere today. If tier badges are ever enabled, "Your AI Readiness: Contained" would read oddly — check before turning them on. |
 | 2026-08-23 | 9 — Architect positioning complete | ✅ | All four bands written and verified against the design's 2×2 cell for **Readiness high**: Contained and Meaningful carry the "this isn't your biggest lever" framing (opportunity low, 0–59); Significant and Substantial carry "you're positioned to move on this now" (opportunity high, 60–100). The design's split at 60 falls exactly on the Meaningful/Significant boundary. |
 | 2026-08-23 | 9 — ⚠️ **incident: batched action navigated away mid-edit and typed into the wrong field** | ✅ **CAUGHT & FIXED** | Mid-way through building the sixth insight section (Employee onboarding), a large batched action ended somewhere on the **Questions builder** instead of the Result Page editor — likely a stale-coordinate click after a session interruption. The pending headline text ("Employee or client onboarding") landed in **Q13's second answer**, overwriting "Likely — if the ROI is compelling." Caught immediately via screenshot; the Save button was still active (unsaved), confirming the corruption hadn't persisted. Fixed by retyping the correct label; the answer's scoring (Diagnostic Fit +11) was never touched — only the label — and was verified intact via the Answers panel before and after the fix. Re-saved and re-verified on screen. **Lesson: after any tool interruption or environment hiccup, re-screenshot before continuing a batched edit sequence — don't assume the last-known page state still holds.** |
+| 2026-08-24 | copy-review — Q10 dynamic cost-estimate sections | ✅ **COMPLETE & SAVED, all 4 pages** | Consultant copy review flagged that the landing page promises "what it plausibly costs you a year" (index.html) but no result page showed a dollar figure. Built the design's already-specified but never-implemented §7.5 Dynamic Benchmark: 5 new audiences (`Q10 — Less than 5 hours` … `Q10 — More than 40 hours`), each gating one "What this workflow is costing you" section per result page (Architect, Builder, Explorer, Spectator — 20 sections total), using the verbatim cost-range copy from `content/results-copy.md`. Each pairing (text ↔ audience) individually re-verified via the visibility dialog immediately before saving, after an early mismatch was caught and fixed on the Explorer page (two sections had their Q10 audiences swapped mid-build). See `docs/superpowers/plans/2026-08-24-copy-review-implementation.md` for the full consultant-review context. |
 | 2026-08-23 | 9 — all eight Q7-gated insight sections built | ✅ **COMPLETE & SAVED** | `Result — The Architect` now has one audience-gated Content section per Q7 category, each duplicated from the previous and edited bottom-up (headline → body → category label → audience) to avoid the reflow-shifts-targets failure mode from Task 5. All eight verified on screen against `content/results-copy.md`'s "Time (bottlenecks)" variant before saving: Reporting & data aggregation, Document creation & review, Client or customer communications, Research & analysis, Approval & review processes, Employee or client onboarding, Sales operations & CRM, Other. |
 | 2026-08-23 | 9 — Architect page structurally complete | ✅ | Full section order confirmed: hero → both visible scores → positioning+benchmark (4 dynamic bands) → 8 audience-gated insight sections → primary CTA → booking CTA → not-qualified note → footer. Matches Step 2's checklist end to end. Remaining for this page: the live critical-negative-check and persona verification, both deferred to Task 11 per Step 5. |
 | 2026-08-23 | 9 — ✅ duplicate carries audience gating forward | ✅ **USEFUL BEHAVIOR** | Duplicating a Content section preserves its `Audience Based` visibility rule and selected audience — only the audience needs to be swapped afterward, not re-configured from scratch. This is what made building 8 near-identical gated sections tractable. |
