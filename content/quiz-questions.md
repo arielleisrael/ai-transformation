@@ -298,6 +298,18 @@ Function sits here rather than in the quiz because it is profile data, reads nat
 
 **No separate marketing-consent checkbox.** Submitting an email address for the assessment is the respondent's request for their result and places them into the intended results/follow-up flow by default — there is no additional opt-in action required. Every marketing/nurture email must carry a working **Unsubscribe** link; using it suppresses future marketing/nurture email to that respondent. The one-time result-delivery email is not a marketing email and is sent regardless of unsubscribe status, since it is the artifact the respondent explicitly requested by submitting the form.
 
+### Helper Text / Tooltips (added 2026-08-25, per UX review)
+
+Optional tooltip/helper text for terms that can be interpreted differently, shown on hover or via an info icon next to the relevant question — not added to the answer labels themselves.
+
+| Question | Term | Helper text |
+|---|---|---|
+| Q2 — AI adoption | "infrastructure" (in "AI is woven into our operations — it's infrastructure, not just a tool") | "By 'infrastructure,' we mean AI is built into how work actually gets done — not a tool people open sometimes, but part of the default way tasks happen." |
+| Q4 — Leadership AI Strategy | "AI plan" | "'AI plan' means a documented direction — not necessarily a full strategy document, but a shared sense within leadership of where AI fits and what's next." |
+| Q5 — Is AI moving the needle | "measurable business results" | "This means results you could show someone outside your team — time saved, cost reduced, revenue affected — not just a general sense that AI is helping." |
+| Q7 — Workflow category | "workflow" | "A workflow is any repeatable process your team runs — not just software-driven ones. Reporting, client onboarding, and approvals all count." |
+| Q10 — Current automation state | "automation" / "partly automated" | "'Partly automated' means some steps happen without a person doing them by hand; 'entirely manual' means a person performs every step." |
+
 ---
 
 ## 7. Scoring
