@@ -19,6 +19,15 @@ The respondent sees **two** scores. The archetype and AI Readiness Score are the
 
 **Why no tier badge.** ScoreApp's "Show score tier" toggle is scorecard-wide, not per-category — turning it on would also badge AI Readiness with the Contained/Meaningful/Significant/Substantial labels built for Workflow Opportunity (see §5.2), which reads oddly against a score whose real "band label" is the archetype name already shown as the page headline. Left off; the definition line above does the explanatory work instead.
 
+**AI Readiness band labels (added 2026-08-25, per UX review §5):** shown on the AI Readiness score card as the plain-language band, parallel to the Workflow Opportunity tier names below.
+
+| Score | Band label |
+|---|---|
+| 80–100 | Advanced readiness |
+| 55–79 | Building readiness |
+| 30–54 | Early readiness |
+| 0–29 | Starting point |
+
 ### Primary Result: Archetype + AI Readiness Score
 
 The archetype is the hero of the page, displayed before any number. Full copy in `content/archetypes.md`.
