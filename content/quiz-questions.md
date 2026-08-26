@@ -219,7 +219,7 @@ Cost range = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker
 | It runs smoothly — I'm mostly here to explore what's possible | — | 1 | **0 · HG3** |
 
 ### Q11b — Symptoms · MULTI-SELECT
-**Text:** "Which of these also apply? Select all that apply."
+**Text:** "Which of these also apply? Select all that apply, or choose 'None of these.'"
 **Type:** **Multi-select (checkboxes)** · Required
 **Scores:** Layer B 0–10 · Layer C Pillar 1 0–5
 
