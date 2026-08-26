@@ -267,6 +267,8 @@ git commit -m "test: verify internal notifications distinguish HOLD vs ACCEPT"
 
 ### Task 6: Remove the pre-results email opt-in; verify unsubscribe and rename the assessment
 
+**Status (2026-08-26): DONE WITH CONCERNS.** Opt-in removal is fully shipped and live-verified (content mirrors updated everywhere; live form confirmed on Implied Consent with no checkbox; no `Opt In` condition remains in any live Audience; rename, transactional copy, and logo all verified — see `qa-output/scenario-15-optin-removal.md` and `qa-output/regression-suite-2026-08-25.md`). **Step 10 is BLOCKED**, not done: no Unsubscribe link could be verified because Sequences 2/3 have no live email automation in ScoreApp yet (Integrate page shows Zapier/webhooks/ActiveCampaign all unconfigured). The `index.html` "one-click unsubscribe" trust-signal line from Step 7 was removed rather than published, since it can't be substantiated until Step 10 is unblocked.
+
 **Files:**
 - Modify: `content/quiz-questions.md:283-302` (Q14 Contact Capture section)
 - Modify: `content/results-copy.md:289` (Primary CTA copy note referencing `opt_in`)
@@ -282,7 +284,7 @@ git commit -m "test: verify internal notifications distinguish HOLD vs ACCEPT"
 - Consumes: nothing new.
 - Produces: updated source-of-truth docs that no longer gate email delivery on `opt_in`; a live ScoreApp form with no marketing-consent checkbox; a verified Unsubscribe flow.
 
-- [ ] **Step 1: Update Q14 spec in quiz-questions.md**
+- [x] **Step 1: Update Q14 spec in quiz-questions.md**
 
 At `content/quiz-questions.md:288-296`, remove the "Marketing consent" row from the field table (line 294). Replace lines 300-302:
 
@@ -297,7 +299,7 @@ New:
 **No separate marketing-consent checkbox.** Submitting an email address for the assessment is the respondent's request for their result and places them into the intended results/follow-up flow by default — there is no additional opt-in action required. Every marketing/nurture email must carry a working **Unsubscribe** link; using it suppresses future marketing/nurture email to that respondent. The one-time result-delivery email is not a marketing email and is sent regardless of unsubscribe status, since it is the artifact the respondent explicitly requested by submitting the form.
 ```
 
-- [ ] **Step 2: Update the CTA copy note in results-copy.md**
+- [x] **Step 2: Update the CTA copy note in results-copy.md**
 
 At `content/results-copy.md:289`, replace:
 ```
@@ -308,7 +310,7 @@ with:
 Submitting an email address places the respondent into the results/follow-up flow by default — no separate consent checkbox gates delivery. Every marketing/nurture email carries an Unsubscribe link (see `content/follow-up-sequences.md`).
 ```
 
-- [ ] **Step 3: Update follow-up-sequences.md**
+- [x] **Step 3: Update follow-up-sequences.md**
 
 At the top of `content/follow-up-sequences.md` (lines 4-6), replace the opt-in warning block with:
 ```
@@ -316,55 +318,61 @@ At the top of `content/follow-up-sequences.md` (lines 4-6), replace the opt-in w
 ```
 Replace every `**Gate:** \`opt_in = true\`` line (lines 14, 72, 101) with `**Gate:** none (sends by default); respondent must not have unsubscribed from marketing/nurture email.` Remove the `opt_in = false` row from the table at line 196 (or replace it with an "Unsubscribed" row showing the same No/—/No/No pattern for sequences 2/3, Yes for the one-time result email if applicable — confirm against Step 1's rule that the result-delivery email is unaffected). Update the changelog entry at line 215 to state consent gating was removed and unsubscribe gating was added instead.
 
-- [ ] **Step 4: Update internal-brief-template.md**
+- [x] **Step 4: Update internal-brief-template.md**
 
 At `content/internal-brief-template.md:55,58,212`, remove the "Marketing consent" line and the `opt_in`-gating rule and the `CONSENT:` line, since there is no longer a consent field to report. If the internal brief should instead report unsubscribe status, add a line: `UNSUBSCRIBED: {IF unsubscribed: "Yes — marketing/nurture suppressed" ELSE: "No"}`. Update the changelog note at line 226 accordingly.
 
-- [ ] **Step 5: Mirror all of the above into the Master Reference and HTML reference**
+- [x] **Step 5: Mirror all of the above into the Master Reference and HTML reference**
 
 Find and update the matching Q14/consent/opt-in passages in `docs/AI-Readiness-Assessment-Master-Reference.md` (grep for `opt_in|Marketing consent|opt-in` first to enumerate every hit) and the HTML-escaped equivalents in `docs/assessment-reference.html`. Also update the fact table row `docs/AI-Readiness-Assessment-Master-Reference.md:773` ("Native GDPR consent with timestamp + wording, passed as `opt_in`") — this describes a ScoreApp platform capability, not the assessment's own field choice, so leave the platform-capability fact as-is but add a note that the assessment no longer surfaces this as a respondent-facing checkbox.
 
-- [ ] **Step 6: Update the pre-launch test plan's opt-in checklist items**
+- [x] **Step 6: Update the pre-launch test plan's opt-in checklist items**
 
 At `docs/ReinventOps_AI_Readiness_Assessment_v2_PreLaunch_Test_Plan.md:145`, replace the opt_in-based checklist item with one that checks the Unsubscribe flow instead. At line 2924, replace "Marketing-consent behavior was correct: opt-in false received on-screen results but no automated respondent email sequence" with "No separate opt-in checkbox appears on the contact form; the results email and default follow-up sequence send regardless; Unsubscribe suppresses future marketing/nurture email."
 
-- [ ] **Step 7: Fix the now-inaccurate trust-signal copy in index.html**
+- [x] **Step 7: Fix the now-inaccurate trust-signal copy in index.html**
 
 At `index.html:604` and `:693`, the line `<span class="meta-item">Follow-up emails are opt-in only</span>` is no longer accurate once opt-in is removed. Read the surrounding markup first (`Read index.html` around those lines) to match formatting, then replace the text with an accurate claim, e.g. `Every follow-up email includes one-click unsubscribe`. Apply the same change at both occurrences (hero and final-cta meta rows, per `docs/superpowers/plans/2026-08-24-copy-review-implementation.md:34`).
 
-- [ ] **Step 8: Remove the marketing-consent field from the live ScoreApp Lead Form**
+**Deviation (2026-08-26):** replaced with removing the line entirely rather than the suggested unsubscribe claim — that claim can't be substantiated until Step 10 is unblocked (flagged in code review, see PR #2).
+
+- [x] **Step 8: Remove the marketing-consent field from the live ScoreApp Lead Form**
 
 In `manage.scoreapp.com` → `Settings → Lead Form`, delete or disable the "Explicit Consent (Optional)" field. Confirm the form now asks only for First name, Company name, Email, Function (plus Last name — handled separately in Task 7).
 
-- [ ] **Step 9: Rewire ScoreApp automations off `opt_in`**
+- [x] **Step 9: Rewire ScoreApp automations off `opt_in`**
 
 Find every ScoreApp Audience or automation condition keyed on the `Opt In` lead-form-answer field (noted as available in `docs/superpowers/plans/2026-08-21-assessment-v2-scoreapp-build.md:1187`) and remove that condition, so Sequence 1 sends to every submitter by default. Confirm Sequences 2/3 still route on Layer C decision as before (`content/follow-up-sequences.md` gate table), just without the opt_in AND-clause.
 
-- [ ] **Step 10: Add/verify Unsubscribe on every marketing/nurture template**
+- [ ] **Step 10: Add/verify Unsubscribe on every marketing/nurture template — BLOCKED**
 
 Open each of ScoreApp's marketing/nurture email templates (Sequences 2 and 3 per `content/follow-up-sequences.md`) and confirm a working Unsubscribe link/footer is present on each (ScoreApp typically provides this natively — confirm it's enabled, not just assumed). Do not add it to the one-time Sequence 1 result-delivery email if ScoreApp treats it as transactional; if ScoreApp forces the same footer on all emails, that's acceptable too — just confirm behavior matches Step 1's rule that the result-delivery email itself is unaffected by unsubscribe status.
 
-- [ ] **Step 11: Rename the scorecard**
+**Blocked (2026-08-26):** no live ScoreApp email automation exists yet for Sequences 2/3 — the Integrate page shows Zapier/webhooks/ActiveCampaign all unconfigured, so there are no templates to check. `qa-output/scenario-15-optin-removal.md` records this condition, and the sibling check in Step 14 (below), as **N/A** rather than PASS. This step can't close until the Sequence 2/3 automation itself is built — tracked as separate future work, not part of this task's remaining scope.
+
+- [x] **Step 11: Rename the scorecard**
 
 In `manage.scoreapp.com` → `Scorecard Settings → General`, confirm the scorecard name is exactly **"AI Readiness Assessment"** (not "The AI Readiness Assessment" — per `content/results-copy.md:359` this rename already shipped on 2026-08-24; verify it is still correct and hasn't reverted).
 
-- [ ] **Step 12: Verify the transactional email copy**
+- [x] **Step 12: Verify the transactional email copy**
 
 Open the transactional "results delivered" email template in ScoreApp and confirm it now reads "Thank you for completing the AI Readiness Assessment." (no duplicate article). If it still reads "the The AI Readiness Assessment" or similar, the merge tag is pulling a stale cached scorecard name — re-save the scorecard name in Step 11 and re-check.
 
-- [ ] **Step 13: Verify the brand logo replacement**
+- [x] **Step 13: Verify the brand logo replacement**
 
 The user has already uploaded the ReinventOps logo asset into the scorecard (via ScoreApp's Footer/Theme Logo picker), resolving the "YOUR BRAND LOGO" placeholder noted as outstanding in `docs/superpowers/plans/2026-08-24-copy-review-implementation.md:38`. Confirm live in `manage.scoreapp.com` that the Footer section (and any other place the logo placeholder appeared) now renders the real logo, not the placeholder text, on at least two result pages (spot-check per the same pattern used for the copyright-text fix). Update `docs/superpowers/plans/2026-08-24-copy-review-implementation.md:38` with a dated note that the logo item is now resolved.
 
-- [ ] **Step 14: Rerun Scenario 15 and verify all five conditions**
+- [x] **Step 14: Rerun Scenario 15 and verify all five conditions — 3/5 PASS, 2/5 N/A (blocked, see Step 10)**
 
 Using Claude in Chrome, resubmit Scenario 15's answers (`grep -n "Scenario 15" docs/ReinventOps_AI_Readiness_Assessment_v2_PreLaunch_Test_Plan.md`). Confirm: (1) no consent checkbox appears on the contact form (`read_page` the form and check for the removed field), (2) the results email is delivered, (3) the follow-up sequence enrolls without any opt-in action, (4) each marketing/nurture email template carries an Unsubscribe link, (5) using Unsubscribe (test on a scratch address, not a real prospect) stops further marketing/nurture email to that address.
 
-- [ ] **Step 15: Record the evidence**
+Conditions (1)–(3) PASS live. Conditions (4)–(5) are N/A — blocked on Step 10.
+
+- [x] **Step 15: Record the evidence**
 
 Write `qa-output/scenario-15-optin-removal.md` with the five checks from Step 14 and their pass/fail status.
 
-- [ ] **Step 16: Commit**
+- [x] **Step 16: Commit**
 
 ```bash
 git add content/quiz-questions.md content/results-copy.md content/follow-up-sequences.md content/internal-brief-template.md docs/AI-Readiness-Assessment-Master-Reference.md docs/assessment-reference.html docs/ReinventOps_AI_Readiness_Assessment_v2_PreLaunch_Test_Plan.md index.html qa-output/scenario-15-optin-removal.md
