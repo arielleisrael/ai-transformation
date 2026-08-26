@@ -134,7 +134,7 @@ Cost estimate check: Q10 visible ranges must match: \<5h = 150+ hrs / \$7.5K–\
 
 ☐ Enter every answer exactly as written. Q11b is multi-select; select every listed symptom in the scenario, including 'None of these' when explicitly instructed.
 
-☐ Use a controlled inbox/alias. Use the fictional first name and company name shown. Use the specified Function and marketing-consent choice.
+☐ Use a controlled inbox/alias. Use the fictional first name and company name shown. Use the specified Function. The contact form uses Implied Consent — there is no opt-in checkbox to set.
 
 ☐ Capture enough of the live result page to show the archetype, AI Readiness Score, Workflow Opportunity Score/tier, cost estimate, positioning statement, personalized workflow/pain copy, and CTA or no-CTA state.
 
@@ -293,8 +293,7 @@ Confirm that a central-ICP prospect with fragmented AI adoption, real productivi
 <td>First name: Jordan<br />
 Company: Northstar Process Co.<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -309,7 +308,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF8, SF9 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -413,8 +412,7 @@ Confirm that very high AI readiness does not create a false-positive lead when t
 <td>First name: Priya<br />
 Company: Apex Insight Partners<br />
 Email: use controlled test inbox/alias<br />
-Function: Technology / IT / Engineering<br />
-Marketing consent: Yes</td>
+Function: Technology / IT / Engineering</td>
 </tr>
 </tbody>
 </table>
@@ -429,7 +427,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** HG3 **\| Soft flags:** SF4, SF5, SF8 **\| Positioning quadrant:** High readiness / Low opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 Paste live result screenshot(s) here
 
@@ -536,8 +534,7 @@ Validate the core decoupling: a low-readiness Spectator with serious economic pa
 <td>First name: Marcus<br />
 Company: Redline Services<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -552,7 +549,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF3, SF8, SF10 **\| Positioning quadrant:** Low readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -660,8 +657,7 @@ Validate Layer A gate G3: raw readiness reaches the Builder band, but the exact 
 <td>First name: Elena<br />
 Company: Beacon Strategy Works<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -676,7 +672,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF3, SF8, SF9, SF10 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -781,8 +777,7 @@ Validate Layer A gate G1: an Architect-band raw score without measurable busines
 <td>First name: Simone<br />
 Company: Meridian Digital<br />
 Email: use controlled test inbox/alias<br />
-Function: Transformation / Strategy / Innovation<br />
-Marketing consent: Yes</td>
+Function: Transformation / Strategy / Innovation</td>
 </tr>
 </tbody>
 </table>
@@ -797,7 +792,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF8 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -902,8 +897,7 @@ Validate Layer A gate G2: Builder-band-or-higher readiness with no formal leader
 <td>First name: Daniel<br />
 Company: Graystone Holdings<br />
 Email: use controlled test inbox/alias<br />
-Function: Finance<br />
-Marketing consent: Yes</td>
+Function: Finance</td>
 </tr>
 </tbody>
 </table>
@@ -918,7 +912,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF7, SF9 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -1023,8 +1017,7 @@ Validate hard gate HG1: willingness='Unlikely' must force REJECT and suppress th
 <td>First name: Maya<br />
 Company: Cirrus Labs<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -1039,7 +1032,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** HG1 **\| Soft flags:** SF8, SF9 **\| Positioning quadrant:** Low readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 Paste live result screenshot(s) here
 
@@ -1144,8 +1137,7 @@ Validate hard gate HG2: an Individual Contributor must be REJECT regardless of s
 <td>First name: Alex<br />
 Company: Harborline Systems<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -1160,7 +1152,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** HG2 **\| Soft flags:** SF9 **\| Positioning quadrant:** Low readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 Paste live result screenshot(s) here
 
@@ -1264,8 +1256,7 @@ Validate hard gate HG3 independently at a high numeric fit score: 'runs smoothly
 <td>First name: Renee<br />
 Company: Vertex Ops<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -1280,7 +1271,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** HG3 **\| Soft flags:** SF4, SF8 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 Paste live result screenshot(s) here
 
@@ -1384,8 +1375,7 @@ Validate hard gate HG4: 'Less than 5 hours' AND 'Just me' must force REJECT even
 <td>First name: Omar<br />
 Company: Fieldstone Advisory<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -1400,7 +1390,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** HG4 **\| Soft flags:** SF8 **\| Positioning quadrant:** Low readiness / Low opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 Paste live result screenshot(s) here
 
@@ -1508,8 +1498,7 @@ Validate hard gate HG5: the exact low-adoption/no-strategy/no-use triple must fo
 <td>First name: Leah<br />
 Company: Cedar Bridge<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -1524,7 +1513,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** HG5 **\| Soft flags:** SF3, SF7, SF8, SF9, SF10 **\| Positioning quadrant:** Low readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 Paste live result screenshot(s) here
 
@@ -1628,8 +1617,7 @@ Validate the company-size modifier: a sub-25 company scoring above the standard 
 <td>First name: Caleb<br />
 Company: Pebble Ridge Studio<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -1644,7 +1632,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 60; ACCEPT ≥ 80. **Hard gates:** None **\| Soft flags:** SF1, SF5, SF8 **\| Positioning quadrant:** Low readiness / Low opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 Paste live result screenshot(s) here
 
@@ -1752,8 +1740,7 @@ Confirm that the size modifier is a stricter bar, not a hard rejection: an unusu
 <td>First name: Sofia<br />
 Company: ForgeWorks<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -1768,7 +1755,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 60; ACCEPT ≥ 80. **Hard gates:** None **\| Soft flags:** SF1, SF3, SF8, SF9, SF10 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -1876,8 +1863,7 @@ Confirm that a very large company can qualify only when evidence is strong enoug
 <td>First name: Victor<br />
 Company: Crescent Enterprise Group<br />
 Email: use controlled test inbox/alias<br />
-Function: Technology / IT / Engineering<br />
-Marketing consent: Yes</td>
+Function: Technology / IT / Engineering</td>
 </tr>
 </tbody>
 </table>
@@ -1892,7 +1878,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 60; ACCEPT ≥ 80. **Hard gates:** None **\| Soft flags:** SF1, SF3, SF8, SF9, SF10 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -1996,8 +1982,7 @@ Validate the company-size modifier on the other end of the size spectrum: identi
 <td>First name: Caleb<br />
 Company: Pebble Ridge Studio<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -2012,7 +1997,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 60; ACCEPT ≥ 80 (Over-500 raised threshold, same as Under-25). **Hard gates:** None **\| Soft flags:** SF1, SF5, SF8 **\| Positioning quadrant:** Low readiness / Low opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 **Failure signal:** if the booking CTA appears for this scenario, the Over-500 modifier is not configured correctly in the ScoreApp CTA Audience — the audience is likely gating on a flat Diagnostic Fit % (e.g., ≥45) instead of the two-tier raised-threshold condition (≥65 standard, ≥80 when Q2 ∈ {Under 25, Over 500}). See `content/quiz-questions.md` §8 "CTA audience."
 
@@ -2123,8 +2108,7 @@ Validate that 'Other' is unscored, Q7b appears and captures free text, SF6 fires
 <td>First name: Luis<br />
 Company: OpenRoute Labs<br />
 Email: use controlled test inbox/alias<br />
-Function: Customer Service<br />
-Marketing consent: No</td>
+Function: Customer Service</td>
 </tr>
 </tbody>
 </table>
@@ -2139,7 +2123,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF6, SF10 **\| Positioning quadrant:** Low readiness / High opportunity
 
-**Respondent email expectation:** No automated respondent email sequence; on-screen result still displays.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -2248,8 +2232,7 @@ Validate bounded multi-select behavior: five real symptoms must contribute exact
 <td>First name: Naomi<br />
 Company: RelayPoint<br />
 Email: use controlled test inbox/alias<br />
-Function: Operations<br />
-Marketing consent: Yes</td>
+Function: Operations</td>
 </tr>
 </tbody>
 </table>
@@ -2264,7 +2247,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF8, SF9, SF10 **\| Positioning quadrant:** Low readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -2368,8 +2351,7 @@ Validate the exact Builder threshold from below: AI Readiness 54 must route to E
 <td>First name: Hannah<br />
 Company: Atlas Documents<br />
 Email: use controlled test inbox/alias<br />
-Function: Finance<br />
-Marketing consent: Yes</td>
+Function: Finance</td>
 </tr>
 </tbody>
 </table>
@@ -2384,7 +2366,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF2 **\| Positioning quadrant:** Low readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -2488,8 +2470,7 @@ Validate the exact Builder threshold: AI Readiness 55 must route to Builder when
 <td>First name: Devon<br />
 Company: Brightpath Services<br />
 Email: use controlled test inbox/alias<br />
-Function: Finance<br />
-Marketing consent: Yes</td>
+Function: Finance</td>
 </tr>
 </tbody>
 </table>
@@ -2504,7 +2485,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF2 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -2608,8 +2589,7 @@ Validate the lower Diagnostic Fit threshold from below: 44 with no hard gate mus
 <td>First name: Ian<br />
 Company: ReviewWorks<br />
 Email: use controlled test inbox/alias<br />
-Function: Finance<br />
-Marketing consent: Yes</td>
+Function: Finance</td>
 </tr>
 </tbody>
 </table>
@@ -2624,7 +2604,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF2, SF3, SF5, SF7 **\| Positioning quadrant:** Low readiness / Low opportunity
 
-**Respondent email expectation:** Opted in: results/brief without booking block; gate-specific nurture path for REJECT.
+**Respondent email expectation:** results/brief without booking block; gate-specific nurture path for REJECT.
 
 Paste live result screenshot(s) here
 
@@ -2729,8 +2709,7 @@ Validate the lower Diagnostic Fit threshold: 45 with no hard gate must become HO
 <td>First name: Irene<br />
 Company: ReviewWorks Plus<br />
 Email: use controlled test inbox/alias<br />
-Function: Finance<br />
-Marketing consent: Yes</td>
+Function: Finance</td>
 </tr>
 </tbody>
 </table>
@@ -2745,7 +2724,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF2, SF3, SF5, SF7 **\| Positioning quadrant:** Low readiness / Low opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -2849,8 +2828,7 @@ Validate the ACCEPT threshold from below: 64 with no hard gate must remain HOLD 
 <td>First name: Marco<br />
 Company: SalesFlow One<br />
 Email: use controlled test inbox/alias<br />
-Function: Sales &amp; Marketing<br />
-Marketing consent: Yes</td>
+Function: Sales &amp; Marketing</td>
 </tr>
 </tbody>
 </table>
@@ -2865,7 +2843,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF5, SF7 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 
@@ -2970,8 +2948,7 @@ Validate the ACCEPT threshold: 65 with no hard gate must become ACCEPT.
 <td>First name: Mia<br />
 Company: SalesFlow Two<br />
 Email: use controlled test inbox/alias<br />
-Function: Sales &amp; Marketing<br />
-Marketing consent: Yes</td>
+Function: Sales &amp; Marketing</td>
 </tr>
 </tbody>
 </table>
@@ -2986,7 +2963,7 @@ Expected result
 
 **Layer C thresholds:** HOLD ≥ 45; ACCEPT ≥ 65. **Hard gates:** None **\| Soft flags:** SF5, SF7 **\| Positioning quadrant:** High readiness / High opportunity
 
-**Respondent email expectation:** Opted in: results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
+**Respondent email expectation:** results/brief sequence with booking block; non-booker follow-up may fire; no REJECT nurture.
 
 Paste live result screenshot(s) here
 

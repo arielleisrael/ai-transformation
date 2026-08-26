@@ -58,8 +58,6 @@ Use browser automation to run every scenario in the AI Readiness Assessment v2.0
 
 • Do not use real prospect identities or external customer email addresses.
 
-• Do not opt a test profile into marketing unless the scenario explicitly says Consent = Yes.
-
 • If a CAPTCHA, bot challenge, rate limit, or authentication wall appears, stop and report it rather than attempting to bypass it.
 
 • If a scenario reveals a defect, record it and continue when possible. Do not silently patch the production assessment mid-suite.
@@ -72,7 +70,7 @@ Use browser automation to run every scenario in the AI Readiness Assessment v2.0
 
 3\. Answer each question using visible question/answer text. For Q11b, select every listed symptom. For Q7 = Other, confirm Q7b appears and enter the exact open-text description.
 
-4\. Use the scenario-specific first name/company/function/consent. Generate a unique controlled test email alias for that scenario.
+4\. Use the scenario-specific first name/company/function. Generate a unique controlled test email alias for that scenario. The contact form uses Implied Consent — no opt-in checkbox is present, so there is nothing to select.
 
 5\. Submit the assessment and wait for the result page to fully settle (including delayed client-side score/result rendering).
 
