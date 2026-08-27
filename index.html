@@ -15,59 +15,20 @@
   <style>
   /* === DESIGN TOKENS === */
   :root {
-    --bg:          #F5F4FF;
-    --bg-surface:  #FFFFFF;
-    --bg-raised:   #ECEEFF;
-    --text-primary:   #0B0E2C;
-    --text-secondary: #44477A;
-    --text-muted:     #9094C4;
-    --accent:         #5341F2;
-    --accent-light:   #7C6CF8;
-    --accent-glow:    rgba(83, 65, 242, 0.13);
-    --cta:            #F59E0B;
-    --cta-hover:      #FBBF24;
-    --cta-text:       #0B0E2C;
-    --cta-shadow:     rgba(245, 158, 11, 0.36);
-    --border:         rgba(83, 65, 242, 0.10);
-    --orb-opacity:    0.07;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg:          #080C22;
-      --bg-surface:  #0D1340;
-      --bg-raised:   #141B52;
-      --text-primary:   #EDEEFF;
-      --text-secondary: #9EA3CC;
-      --text-muted:     #575E90;
-      --accent:         #6B59F5;
-      --accent-light:   #9B8FFB;
-      --accent-glow:    rgba(107, 89, 245, 0.22);
-      --cta:            #FBBF24;
-      --cta-hover:      #FCD34D;
-      --cta-text:       #0B0E2C;
-      --cta-shadow:     rgba(251, 191, 36, 0.28);
-      --border:         rgba(107, 89, 245, 0.14);
-      --orb-opacity:    0.18;
-    }
-  }
-
-  :root[data-theme="dark"] {
-    --bg:          #080C22;
-    --bg-surface:  #0D1340;
-    --bg-raised:   #141B52;
-    --text-primary:   #EDEEFF;
-    --text-secondary: #9EA3CC;
-    --text-muted:     #575E90;
-    --accent:         #6B59F5;
-    --accent-light:   #9B8FFB;
-    --accent-glow:    rgba(107, 89, 245, 0.22);
-    --cta:            #FBBF24;
-    --cta-hover:      #FCD34D;
-    --cta-text:       #0B0E2C;
-    --cta-shadow:     rgba(251, 191, 36, 0.28);
-    --border:         rgba(107, 89, 245, 0.14);
-    --orb-opacity:    0.18;
+    --bg:             #FFFFFF;
+    --bg-surface:     #FFFFFF;
+    --bg-raised:      #E8ECF0;
+    --text-primary:   #2E3338;
+    --text-secondary: #4A545E;
+    --text-muted:     #8FA3B5;
+    --accent:         #0F3D37;
+    --accent-light:   #1B5C52;
+    --accent-glow:    rgba(15, 61, 55, 0.08);
+    --cta:            #0F3D37;
+    --cta-hover:      #1B5C52;
+    --cta-text:       #FFFFFF;
+    --cta-shadow:     rgba(15, 61, 55, 0.32);
+    --border:         rgba(15, 61, 55, 0.12);
   }
 
   /* === RESET & BASE === */
@@ -134,32 +95,6 @@
     background: var(--bg);
   }
 
-  .hero-orb {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    filter: blur(80px);
-    opacity: var(--orb-opacity);
-  }
-  .orb-1 {
-    width: 580px; height: 580px;
-    background: radial-gradient(circle at center, #5341F2 0%, transparent 70%);
-    top: -15%; left: -10%;
-    animation: orbDrift1 20s ease-in-out infinite;
-  }
-  .orb-2 {
-    width: 460px; height: 460px;
-    background: radial-gradient(circle at center, #9333EA 0%, transparent 70%);
-    top: 5%; right: -8%;
-    animation: orbDrift2 26s ease-in-out infinite;
-  }
-  .orb-3 {
-    width: 380px; height: 380px;
-    background: radial-gradient(circle at center, #10B981 0%, transparent 70%);
-    bottom: -5%; left: 30%;
-    animation: orbDrift3 32s ease-in-out infinite;
-  }
-
   .hero .eyebrow {
     margin-bottom: 1.75rem;
     position: relative;
@@ -179,19 +114,8 @@
     opacity: 0;
     animation: riseIn 0.55s ease forwards 0.25s;
   }
-  .gradient-word {
-    background: linear-gradient(90deg,
-      #2563EB 0%,
-      #9333EA 25%,
-      #EA580C 50%,
-      #10B981 75%,
-      #2563EB 100%
-    );
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: spectrumShift 9s ease-in-out infinite;
+  .accent-word {
+    color: var(--accent);
   }
   .hero-sub {
     font-size: 1.05rem;
@@ -512,27 +436,6 @@
     0%, 100% { transform: translateY(0); }
     50%       { transform: translateY(-9px); }
   }
-  @keyframes spectrumShift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  @keyframes orbDrift1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33%       { transform: translate(55px, 35px) scale(1.07); }
-    66%       { transform: translate(-30px, 55px) scale(0.94); }
-  }
-  @keyframes orbDrift2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    40%       { transform: translate(-65px, 25px) scale(1.09); }
-    80%       { transform: translate(30px, -40px) scale(0.96); }
-  }
-  @keyframes orbDrift3 {
-    0%, 100% { transform: translate(0, 0); }
-    30%       { transform: translate(45px, -55px); }
-    65%       { transform: translate(-35px, 25px); }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -540,11 +443,6 @@
     }
     .hero .eyebrow, .hero-h1, .hero-sub, .hero-actions { opacity: 1; }
     .reveal { opacity: 1; transform: none; }
-    .gradient-word {
-      background: none;
-      -webkit-text-fill-color: var(--accent-light);
-      color: var(--accent-light);
-    }
   }
 
   /* === RESPONSIVE === */
@@ -556,9 +454,6 @@
     .find-grid { grid-template-columns: 1fr; }
     .for-inner { grid-template-columns: 1fr; gap: 3rem; }
     .meta-row { gap: 0.9rem; }
-    .orb-1 { width: 340px; height: 340px; }
-    .orb-2 { width: 280px; height: 280px; }
-    .orb-3 { width: 240px; height: 240px; }
   }
   @media (max-width: 440px) {
     .hero-h1 { letter-spacing: -0.025em; }
@@ -576,12 +471,8 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-orb orb-1" aria-hidden="true"></div>
-  <div class="hero-orb orb-2" aria-hidden="true"></div>
-  <div class="hero-orb orb-3" aria-hidden="true"></div>
-
   <p class="eyebrow">Free Assessment</p>
-  <h1 class="hero-h1">Your company has an <span class="gradient-word">AI identity</span>. Find out what it is.</h1>
+  <h1 class="hero-h1">Your company has an <span class="accent-word">AI identity</span>. Find out what it is.</h1>
   <p class="hero-sub">
     Discover where your company truly stands on the AI journey — and get a clear, honest picture of your biggest transformation opportunity.
   </p>
