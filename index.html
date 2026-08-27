@@ -210,37 +210,31 @@
     position: relative;
     overflow: hidden;
     cursor: default;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 8px 36px rgba(15, 61, 55, 0.28);
     transition: transform 0.3s ease;
+    animation: cardFloat 7s ease-in-out infinite;
   }
   .archetype-card:hover {
     transform: translateY(-6px) scale(1.02);
     animation-play-state: paused;
   }
-  .card-shine {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(155deg, rgba(255,255,255,0.16) 0%, transparent 55%);
-    pointer-events: none;
-  }
   .ac-1 {
-    background: linear-gradient(155deg, #1A3460 0%, #2563EB 100%);
-    box-shadow: 0 8px 36px rgba(37, 99, 235, 0.28);
-    animation: cardFloat 7s ease-in-out infinite 0s;
+    background-image: linear-gradient(rgba(15, 61, 55, 0.58), rgba(15, 61, 55, 0.58)), url('assets/images/archetype-spectator.jpg');
+    animation-delay: 0s;
   }
   .ac-2 {
-    background: linear-gradient(155deg, #4A1A82 0%, #9333EA 100%);
-    box-shadow: 0 8px 36px rgba(147, 51, 234, 0.28);
-    animation: cardFloat 7s ease-in-out infinite 1.4s;
+    background-image: linear-gradient(rgba(15, 61, 55, 0.58), rgba(15, 61, 55, 0.58)), url('assets/images/archetype-explorer.jpg');
+    animation-delay: 1.4s;
   }
   .ac-3 {
-    background: linear-gradient(155deg, #7B2B0E 0%, #EA580C 100%);
-    box-shadow: 0 8px 36px rgba(234, 88, 12, 0.28);
-    animation: cardFloat 7s ease-in-out infinite 2.8s;
+    background-image: linear-gradient(rgba(15, 61, 55, 0.58), rgba(15, 61, 55, 0.58)), url('assets/images/archetype-builder.jpg');
+    animation-delay: 2.8s;
   }
   .ac-4 {
-    background: linear-gradient(155deg, #064C3A 0%, #10B981 100%);
-    box-shadow: 0 8px 36px rgba(16, 185, 129, 0.28);
-    animation: cardFloat 7s ease-in-out infinite 4.2s;
+    background-image: linear-gradient(rgba(15, 61, 55, 0.58), rgba(15, 61, 55, 0.58)), url('assets/images/archetype-architect.jpg');
+    animation-delay: 4.2s;
   }
   .mystery-caption {
     font-size: 0.95rem;
@@ -499,10 +493,10 @@
 <section class="mystery">
   <p class="eyebrow reveal">4 AI readiness identities</p>
   <div class="archetype-grid reveal" style="transition-delay:0.1s" aria-hidden="true">
-    <div class="archetype-card ac-1"><div class="card-shine"></div></div>
-    <div class="archetype-card ac-2"><div class="card-shine"></div></div>
-    <div class="archetype-card ac-3"><div class="card-shine"></div></div>
-    <div class="archetype-card ac-4"><div class="card-shine"></div></div>
+    <div class="archetype-card ac-1"></div>
+    <div class="archetype-card ac-2"></div>
+    <div class="archetype-card ac-3"></div>
+    <div class="archetype-card ac-4"></div>
   </div>
   <p class="mystery-caption reveal" style="transition-delay:0.2s">
     <strong>One of these is yours.</strong><br>
