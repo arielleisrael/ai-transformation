@@ -225,8 +225,8 @@ Cost range = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker
 
 | Answer | A | B | C | Flag |
 |---|---|---|---|---|
-| It depends on one or two people — if they're out, it stalls | — | 2 | 1 | |
-| It's complex, with a lot of steps or handoffs | — | 2 | 1 | |
+| It depends on one or two people and stalls when they're out | — | 2 | 1 | |
+| It's complex with a lot of steps or handoffs | — | 2 | 1 | |
 | Work sits waiting for someone to review or approve it | — | 2 | 1 | SF10 |
 | Mistakes slip through and get caught later | — | 2 | 1 | |
 | The same information gets entered or copied more than once | — | 2 | 1 | SF9 |
@@ -285,16 +285,25 @@ Cost range = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker
 **Subtext:** "We'll send your personalized AI Readiness Brief here — your archetype, your score, and a summary of your biggest opportunity."
 **Type:** Lead form · **All fields unscored** (ScoreApp lead-form fields cannot carry points)
 
-| Field | Type | Required | Purpose |
-|---|---|---|---|
-| First name | Text | Yes | |
-| Company name | Text | Yes | |
-| Email address | Email | Yes | |
-| **Function** — "Which area do you lead or work in?" | **Dropdown** | Yes | Drives SF8 via an Audience on Lead Form Answers |
+**Reconciled against the live ScoreApp lead form 2026-09-03.** The table below is what the form actually does, not what an earlier draft intended. Three rows changed — see the note under the table.
+
+| Field | Type | Enabled | Required | Purpose |
+|---|---|---|---|---|
+| First name | Text | Yes | **Yes** | |
+| Last name | Text | **No — disabled** | n/a | Not shown to respondents. Left disabled deliberately; the brief and emails address people by first name only. |
+| Email address | Email | Yes | **Yes** | |
+| Company name | Text | Yes | **No** | Cover "prepared for" line and body copy. When blank, the PDF omits the company line and body copy says "your organization". |
+| **Function** — "Which area do you lead or work in?" | **Dropdown** | Yes | **Yes** | Drives SF8 via an Audience on Lead Form Answers. Set to required 2026-09-03 so SF8 can always be evaluated — see note below. |
+| Phone number | Phone | Yes | **No** | Added deliberately for SMS follow-up on qualified leads |
+| **Ad** | **Hidden** | Yes | **No** | Added 2026-09-03. Populated by `?ad=<value>` on the scorecard URL; carries the LinkedIn `{{AD_ID}}` for per-lead ad attribution. See `docs/ReinventOps_LinkedIn_Attribution_Defect_Brief_v2_Implementation_Ready.md`. |
+
+> **Reading the ScoreApp settings screen.** The Lead Form list shows a **Required** value for every row, including disabled ones — Last name displays "Yes" in **grey**, which reads as required but is not. Enabled state is only unambiguous inside the field's own edit dialog (pencil icon), where Last name shows **Enabled: No**. Judge required-ness from the edit dialog, never from the list row.
 
 **Function options:** Operations · Technology / IT / Engineering · Transformation / Strategy / Innovation · Finance · Sales & Marketing · HR & People · Customer Service · Other
 
 Function sits here rather than in the quiz because it is profile data, reads naturally beside company name, and costs no assessment question. The trade-off is that it **awards no points** — it drives a flag, not a score.
+
+> **RESOLVED 2026-09-03 — Function is now required.** SF8 ("ideal champion profile", the one soft flag that is a *priority* signal rather than a caveat) fires on Function ∈ {Operations, Technology, Transformation} AND Q1 ≥ Director. While the field was optional, a respondent who skipped it could not fire SF8, so an ideal lead could reach the internal brief without its strongest positive marker — and the miss was silent, indistinguishable from a genuine negative. Making the dropdown required closes that: SF8 is now always evaluable. Cost is one extra click on a form the respondent is already completing, and "Other" is among the eight options so nobody is trapped without an honest answer. **A blank Function is therefore no longer a state that should occur; if one appears in the data, treat it as a defect and investigate rather than reading it as "not a champion."** Company name remains optional and carries no equivalent risk — the PDF has a documented fallback for it.
 
 **No separate marketing-consent checkbox.** Submitting an email address for the assessment is the respondent's request for their result and places them into the intended results/follow-up flow by default — there is no additional opt-in action required. Every marketing/nurture email must carry a working **Unsubscribe** link; using it suppresses future marketing/nurture email to that respondent. The one-time result-delivery email is not a marketing email and is sent regardless of unsubscribe status, since it is the artifact the respondent explicitly requested by submitting the form.
 
@@ -454,6 +463,19 @@ A second audience **Diagnostic Priority** (`≥ 65` plus the same gates) drives 
 ---
 
 ## 9. Changelog
+
+### v2.2 — 2026-09-03 (Q11b option rewording)
+- **Two Q11b options reworded to remove internal commas.** "It depends on one or two people — if they're out, it stalls" → **"It depends on one or two people and stalls when they're out"**; "It's complex, with a lot of steps or handoffs" → **"It's complex with a lot of steps or handoffs"**.
+- **Why.** The Brief PDF plays these answers back through a single multi-select merge tag, which ScoreApp renders as one comma-joined line. Two options containing their own commas made the boundaries between symptoms unreadable. ScoreApp has no list-rendering merge tag, and per-symptom bullet blocks are not buildable because one report section renders as one whole PDF page — so the wording is the only lever. See the Q11b section in the scoreapp_brief project memory.
+- **Scoring is unaffected.** Option IDs are unchanged (12210388, 12210389), and both still carry Layer B 2 / Layer C 1. Verified live after the edit: 14 questions, unchanged option counts, unchanged per-option scores. Stored answers on existing leads are keyed by option ID and are also unaffected.
+- **Not a lead-form change** — the lead-form freeze from v2.1 still stands.
+
+### v2.1 — 2026-09-03 (lead-form reconciliation)
+- **Q14 table corrected against the live form.** **Last name is disabled**, not required — ScoreApp's list view renders a greyed "Yes" for disabled rows, which is what made the earlier reading wrong; the field's edit dialog shows Enabled: No. **Company name is optional** (this doc previously said required); the PDF has a documented fallback for a blank company.
+- **Function set to required** (2026-09-03, live config change). It had drifted to optional, which meant SF8 — the only soft flag that is a positive priority signal — could silently fail to fire for anyone who skipped the dropdown. Now always evaluable.
+- **Phone number field documented** — present on the live form, optional, added deliberately for SMS follow-up.
+- **Hidden `Ad` field added and documented** — carries the LinkedIn `{{AD_ID}}` for per-lead ad attribution.
+- **Flagged an open decision:** SF8 depends on Function, which is optional, so the flag can silently fail to fire. See the note under Q14.
 
 ### v2.0 — 2026-08-21
 - **Split one blended score into three layers.** v1 mixed company fit, AI maturity, and workflow economics in a single 0–100 number that drove the score, the archetype, and the CTA.

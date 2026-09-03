@@ -1,6 +1,6 @@
 # AI Readiness Assessment — Master Reference
 
-**Version 2.0 · 2026-08-21 · Canonical**
+**Version 2.2 · 2026-09-01 · Canonical**
 
 The complete specification for the AI Readiness Assessment: what it is, every question, all three scoring layers, archetype assignment, qualification logic, results copy, internal process, and the ScoreApp build.
 
@@ -266,8 +266,8 @@ Cost = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker rate.
 
 | Answer | A | B | C | Flag |
 |---|---|---|---|---|
-| It depends on one or two people — if they're out, it stalls | — | 2 | 1 | |
-| It's complex, with a lot of steps or handoffs | — | 2 | 1 | |
+| It depends on one or two people and stalls when they're out | — | 2 | 1 | |
+| It's complex with a lot of steps or handoffs | — | 2 | 1 | |
 | Work sits waiting for someone to review or approve it | — | 2 | 1 | SF10 |
 | Mistakes slip through and get caught later | — | 2 | 1 | |
 | The same information gets entered or copied more than once | — | 2 | 1 | SF9 |
@@ -623,6 +623,8 @@ Archetype and AI Readiness Score are the hero. Opportunity Score is secondary, p
 
 **Suppress** the default "Thank you for taking the AI Readiness Assessment" headline — the archetype reveal makes reintroducing the quiz name feel like a reset. Move the email delivery notice *below* the score card.
 
+**R-14 (2026-09-01):** the Opening CTA (§7.6) now sits directly below the two score cards, replacing ScoreApp's default post-score placeholder block. It is the first thing a qualified respondent sees after the reveal, before the positioning statement.
+
 ### 7.3 The Positioning Statement
 
 Shown beneath both scores. The line designed to travel — what they screenshot and send to leadership.
@@ -651,7 +653,9 @@ If ScoreApp supports only single-question conditional copy, use Q7 as the trigge
 
 **Primary — all respondents.** "Get your AI Readiness Brief" → "Send my Brief"
 
-**Secondary — Layer C = ACCEPT or HOLD only.** Headline "Don't stop at the score." Same Calendly link, two framings (full copy in `content/results-copy.md` §CTA):
+**R-14 (2026-09-01): the Diagnostic CTA now appears twice on a qualified result page**, not once — an Opening CTA and a Closing CTA, bookending the page content. Both are Layer C = ACCEPT or HOLD only; both link to the same Calendly link; both carry the same archetype split. Full copy for both in `content/results-copy.md` §CTA Copy.
+
+**Opening — directly below the score cards.** Headline "Don't stop at the score." Two framings:
 
 | Archetype | Body |
 |---|---|
@@ -660,7 +664,16 @@ If ScoreApp supports only single-question conditional copy, use Q7 as the trigge
 
 Both close with "If there's something there, you'll leave knowing where to focus. If there isn't, you'll know that too." → button "Find Out If It's Worth Pursuing →" → "Free · No obligation".
 
-**Not-qualified note — Layer C = REJECT.** Four variants keyed to which gate fired (HG3/HG4 workflow is fine · HG1 not ready · HG5 early stage · HG2 access). Full copy in `content/results-copy.md`.
+**Closing — near the bottom of the page**, after the positioning statement, dynamic cost benchmark, and personalized workflow insight paragraph — in the same slot the not-qualified note occupies for rejected respondents (this is what keeps the page symmetric either way). Headline "Where to go from here," calling back to the hours/cost/insight the respondent just read rather than repeating the Opening CTA's pitch. **v2.3 (2026-09-03): this placement ends in an inline Calendly embed rather than a button.** The not-qualified note occupying the same slot for rejected respondents now carries gate-specific headlines rather than reusing this one, so the two branches are distinguishable on sight if the audience gate ever misfires. Two framings:
+
+| Archetype | Body |
+|---|---|
+| Builder, Architect | "You've seen the hours, the likely cost of leaving it alone, and where this kind of workflow tends to break down for companies like yours... The only question left is whether it's worth fixing." |
+| Spectator, Explorer | "You don't need a strategy or a plan already in motion to make this call worth taking. If there's real money or time sitting in what you found, thirty minutes is enough to know." |
+
+Button "Book Your Diagnostic Call →" → "Free · No obligation · 30 minutes".
+
+**Not-qualified note — Layer C = REJECT, shown instead of the Closing CTA.** Four variants keyed to which gate fired (HG3/HG4 workflow is fine · HG1 not ready · HG5 early stage · HG2 access). Full copy in `content/results-copy.md`.
 
 > **Principle across all four:** never imply the respondent failed. They completed an honest assessment and got an honest answer. Every variant gives them something to do and a reason to keep the page.
 
@@ -827,6 +840,12 @@ Every threshold in §4.2, §5.2, §6.5 and §6.6 is a **tuning dial, not a findi
 ---
 
 ## 13. Change Log
+
+### v2.2 — 2026-09-01
+
+**Results page**
+- Diagnostic CTA split into two placements on qualified pages: an Opening CTA directly below the score cards (replacing ScoreApp's default post-score placeholder block) and a new Closing CTA ("Where to go from here") near the bottom, in the same slot the not-qualified note fills for rejected respondents.
+- Not-qualified note is now "shown instead of the Closing CTA" (was "the secondary CTA") — terminology update only, no logic change.
 
 ### v2.0 — 2026-08-21
 
