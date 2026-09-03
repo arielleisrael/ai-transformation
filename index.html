@@ -616,8 +616,23 @@ src="https://px.ads.linkedin.com/collect/?pid=9893588&fmt=gif" />
       : 'transparent';
   }, { passive: true });
 
-  // TODO: Replace the href="#" on #hero-cta and #bottom-cta with your ScoreApp quiz URL
-  // Example: document.getElementById('hero-cta').href = 'https://your-scoreapp-url.scoreapp.com';
+  // Forward inbound tracking parameters to the assessment.
+  // LinkedIn ads land here carrying utm_* and ad params; the assessment links are
+  // hard-coded, so without this every tracking value dies on the click through to
+  // ScoreApp and the lead record cannot be attributed to an ad. No-op for organic
+  // visitors. Selector-based so links added later are covered automatically.
+  (function () {
+    var q = window.location.search;
+    if (!q || q.length < 2) return;
+    var incoming = new URLSearchParams(q);
+    document.querySelectorAll('a[href*="scoreapp.com"]').forEach(function (a) {
+      try {
+        var u = new URL(a.href);
+        incoming.forEach(function (v, k) { u.searchParams.set(k, v); });
+        a.href = u.toString();
+      } catch (e) { /* leave the link untouched if it cannot be parsed */ }
+    });
+  })();
 </script>
 
 </body>
