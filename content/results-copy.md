@@ -1,6 +1,6 @@
 # Results Page Copy — Source of Truth
 
-**Version 2.0 — 2026-08-21.** Rewritten for the three-layer scoring architecture.
+**Version 2.2 — 2026-09-01.** Diagnostic CTA now appears twice per qualified result page — see §CTA Copy.
 
 Archetype hero copy lives in `content/archetypes.md`. Scoring definitions live in `content/quiz-questions.md`. This file holds everything the respondent reads on the results page.
 
@@ -281,6 +281,8 @@ If ScoreApp only supports single-question conditional copy, use Q7 as the primar
 ## CTA Copy (Layer 4)
 
 > **The Diagnostic CTA is driven entirely by the Diagnostic Fit Score (Layer C) — never by the archetype.** An Architect whose workflow runs smoothly sees no booking CTA. A Spectator who clears every hard gate does. Routing logic: `content/quiz-questions.md` §7.4–7.5.
+>
+> **R-14 (2026-09-01): the CTA now appears in two placements on qualified pages, not one.** The **Opening CTA** sits directly below the score cards — a hook, right at the moment of the reveal. The **Closing CTA** sits near the bottom of the page, in the exact slot the Not-Qualified Note occupies for rejected respondents — so the page structure is symmetric either way: qualified visitors see two CTAs bookending the page content; rejected visitors see the Opening CTA slot replaced by nothing (no CTA at all, per Layer C routing) and the Closing CTA slot replaced by their gate-specific nurture note. Both CTAs link to the same Calendly booking link.
 
 ### Primary CTA — all respondents
 
@@ -290,7 +292,9 @@ If ScoreApp only supports single-question conditional copy, use Q7 as the primar
 
 Submitting an email address places the respondent into the results/follow-up flow by default — no separate consent checkbox gates delivery. Every marketing/nurture email carries an Unsubscribe link (see `content/follow-up-sequences.md`).
 
-### Secondary CTA — qualified respondents only (Layer C = ACCEPT or HOLD)
+### Opening CTA — qualified respondents only (Layer C = ACCEPT or HOLD)
+
+**Placement: directly below the AI Readiness and Workflow Opportunity score cards** — the first thing after the reveal, before the positioning statement, benchmark stats, or personalized insight paragraph. Replaces ScoreApp's default post-score placeholder block.
 
 Same Calendly link in both cases; the framing changes with the archetype, because "optimize your next lever" and "make your first deliberate move" are not the same conversation.
 
@@ -320,21 +324,59 @@ On a free call, we'll look at that workflow with you, pinpoint where AI could sa
 >
 > **v2.1 (2026-08-24):** Rewrote both variants around the user-supplied "Don't stop at the score" copy — sharper hook, clearer stakes ("worth knowing either way"), and a benefit-driven button label. Kept the archetype split rather than unifying to one CTA, since the two framings (assumed capability vs. no-prerequisites reassurance) are deliberate per §7.6 of the Master Reference and the "never imply the respondent failed" principle applies differently to each audience.
 
-### Not-Qualified Note — shown instead of the secondary CTA (Layer C = REJECT)
+### Closing CTA — qualified respondents only (Layer C = ACCEPT or HOLD)
+
+**Placement: near the bottom of the page**, after the positioning statement, the dynamic cost benchmark, and the personalized workflow insight paragraph — in the same slot the Not-Qualified Note occupies for rejected respondents (§ below).
+
+**v2.3 (2026-09-03): this section now ends in an inline Calendly embed, not a button.** The `Book Your Diagnostic Call →` button was removed; the booking calendar is rendered in place beneath the body copy via a Custom HTML section. The Opening CTA keeps its button. The embed must carry the same Layer C gating as this section — Audience Based, hidden from `Diagnostic Disqualified` — because a rejected respondent rendering a live booking widget defeats the entire point of Layer C.
+
+Written to call back to what the respondent just read (the hours, the cost, the workflow-specific insight) rather than repeat the Opening CTA's pitch — this is the close, not the hook.
+
+**For The Builder and The Architect:**
+
+**Headline:** "Where to go from here"
+**Sub-headline:** "You know what this is costing you. The next step is finding out what to do about it."
+**Body:** "You've seen the hours, the likely cost of leaving it alone, and where this kind of workflow tends to break down for companies like yours. That's more than most companies ever put in writing about a single process.
+
+The only question left is whether it's worth fixing — and that's exactly what the Diagnostic call answers. Free, 30 minutes, built around the workflow you already named."
+**Button:** "Book Your Diagnostic Call →"
+**Footer:** "Free · No obligation · 30 minutes"
+
+**For The Spectator and The Explorer:**
+
+**Headline:** "Where to go from here"
+**Sub-headline:** "You don't need a mature AI program for this. You need one workflow — and you just described one."
+**Body:** "You don't need a strategy or a plan already in motion to make this call worth taking. If there's real money or time sitting in what you found, thirty minutes is enough to know.
+
+And if there isn't, you'll know that too — and you'll have lost nothing but half an hour."
+**Button:** "Book Your Diagnostic Call →"
+**Footer:** "Free · No obligation · 30 minutes"
+
+> **v2.2 (2026-09-01):** Added as a second CTA placement. The Opening CTA alone left a gap once it moved up next to the score reveal — the bottom of the page, after all the cost and insight detail, still needed a close for qualified respondents, in the same structural slot the Not-Qualified Note fills for everyone else. Headline "Where to go from here" deliberately echoes the Not-Qualified Note's framing (below) so the slot reads as intentional regardless of which content lands in it.
+>
+> **v2.3 (2026-09-03) keeps this headline and differentiates the other branch instead.** A "Pick a time that works" variant was drafted and rejected: it jumped to the final micro-action, so the sub-headline and body then walked back to argue for it — *do it → here's why → now do it* — and its transactional register clashed with the evidence-led copy around it. "Where to go from here" was written to flow with this sub-headline and body, and it still does; the embed handles the handoff to the calendar by existing. **The Not-Qualified Note takes new, gate-specific headlines instead** (see below). The branches must stay distinguishable because identical headlines would make an audience-gating failure invisible: if the gate misfires and a rejected respondent renders the Closing CTA, a duplicate headline reads as normal in either state.
+
+### Not-Qualified Note — shown instead of the Closing CTA (Layer C = REJECT)
+
+**Headlines — new in v2.3 (2026-09-03).** Until now this section carried a single headline, "Where to go from here", which was live in the build but had never been recorded in this file; only the four bodies were. It duplicated the Closing CTA that occupies the same slot for qualified respondents. Each variant is its own audience-gated section, so a tailored headline costs no more to build than a shared one — and each gate is a genuinely different finding, so they now read as four different answers rather than one generic conclusion (per the UX review's note that this slot should behave as a recommendation, not a generic conclusion). **LOCKED (Arielle's final wording, 2026-09-03):**
 
 Four variants, keyed to *why* they didn't qualify. Use the one matching the gate that fired; if several fired, use the first match in this order.
 
 **HG3 or HG4 — the workflow they named is small or already working:**
-"Based on what you described, this particular workflow probably isn't where your biggest opportunity is hiding — and that's genuinely useful to know. Save this page. When a process shows up that's costing your team real hours every week, that's the conversation worth having."
+**Headline:** "Not this one — and that helps"
+"Based on what you described, this particular workflow probably isn't where your biggest opportunity is hiding — and that's genuinely good to know. Save this page. When a process shows up that's costing your team real hours every week, that's the conversation worth having."
 
 **HG1 — not ready to act:**
+**Headline:** "The opportunity's real. The timing isn't."
 "You flagged a real workflow, and the opportunity in it looks legitimate. But you also told us acting on it isn't on the table right now, and we'd rather say that plainly than pretend a call would change it. Save this page — when the timing shifts, the analysis you just did will still be here."
 
 **HG5 — very early stage:**
+**Headline:** "You're early, not behind"
 "Your results point to a real opportunity ahead, and capturing it starts with building the foundation first. The good news is that starting deliberately beats starting frantically — you haven't lost anything by being thoughtful. Save this page. When your company is ready to move from awareness to action, this is exactly where the conversation starts."
 
 **HG2 or score below threshold — access or scale:**
-"Your results are worth sharing. The people who'd need to be part of a conversation about changing this workflow probably aren't in this assessment yet — so the most useful next step is showing them what you just found. Save this page and send it along."
+**Headline:** "You've done the hard part"
+"The people who'd need to be part of a conversation about changing this workflow probably aren't in this assessment yet — so the most useful next step is showing them what you just found. Save this page and send it along."
 
 > **Design principle across all four:** never imply the respondent failed. They completed an honest assessment and received an honest answer. Every variant gives them something to do and a reason to keep the page.
 
@@ -363,6 +405,19 @@ Buttons (native, not custom copy): Copy Link, Facebook, X, LinkedIn, WhatsApp.
 ---
 
 ## Changelog
+
+### v2.3 — 2026-09-03
+- **Closing CTA button replaced by an inline Calendly embed** on all four result pages (Custom HTML section, gated to hide from `Diagnostic Disqualified`). The Opening CTA keeps its button.
+- **Closing CTA headline unchanged** ("Where to go from here"). A replacement was drafted and rejected on flow grounds — see the note in that section.
+- **Not-Qualified Note gains four gate-specific headlines** (below), replacing the single undocumented "Where to go from here" that was live. Distinct headlines across the two mutually-exclusive branches make an audience-gating failure visible instead of invisible.
+- **Two body edits made alongside the new headlines (Arielle, 2026-09-03):**
+  - HG3/HG4 body: "that's genuinely useful to know" → **"that's genuinely good to know"**, and the headline settled as **"Not this one — and that helps"** rather than the drafted "...and that's useful" — the body already carries the "useful to know" idea, and repeating it in the headline directly above was the same front-running problem that killed the Closing CTA rewrite.
+  - **"Your results are worth sharing" removed** from the HG2 opening. The Share section ("Don't keep this to yourself") renders immediately below this note, so the line was doing work the next section already does.
+- **Not-Qualified Note headline documented** as "Where to go from here" — live in the build since v2.2 but never recorded here. Now exclusive to that section.
+
+### v2.2 — 2026-09-01
+- **CTA split into two placements on qualified result pages.** Opening CTA ("Don't stop at the score.") moved to sit directly below the score cards, replacing ScoreApp's default placeholder block that lived there. New Closing CTA ("Where to go from here") added near the bottom of the page, in the same slot the Not-Qualified Note occupies for rejected respondents — keeps the page symmetric for both outcomes.
+- Not-Qualified Note section renamed for accuracy ("shown instead of the Closing CTA," not "the secondary CTA," since there are now two).
 
 ### v2.0 — 2026-08-21
 - **Two scores now shown** — AI Readiness (hero, drives archetype) and Workflow Opportunity (secondary). Replaces the single blended AI Opportunity Score.
