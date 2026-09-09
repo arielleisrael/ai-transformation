@@ -1,6 +1,6 @@
 # Landing Page Analytics — Setup and How to Read the Funnel
 
-**reinventops.com · written 2026-09-09 · flight Sept 7–26, 2026**
+**reinventops.com · written 2026-09-09 · LIVE ON PRODUCTION since 2026-09-09 · flight Sept 7–26, 2026**
 
 Companion to the [Launch Measurement Plan](ReinventOps_LinkedIn_Launch_Measurement_Plan.md), which defines *what* the campaign is judging. This one covers the mechanics: what is now instrumented, where each number is pulled from, and what a bad number at each stage actually means.
 
@@ -20,7 +20,7 @@ Which meant the first two drop-offs in the funnel — the two the landing page i
 
 ## 2. What is now in `index.html`
 
-Three changes, all live in the repo and pending deploy:
+**Live on production since 2026-09-09** (PR merged to `main`, Netlify deployed, verified on the preview and again on the live site). Three changes:
 
 1. **Google Analytics 4 snippet** in `<head>`, above the Insight Tag. Carries the live Measurement ID `G-FLG1S0R8ZH` in two places — the script `src` and the `gtag('config', …)` call. Both must match.
 2. **`id="nav-cta"`** added to the nav bar's assessment link, so all three CTAs can be told apart. The hero and bottom CTAs already had `hero-cta` and `bottom-cta`.
@@ -95,16 +95,18 @@ Ad click → completed assessment. At **15–25%** the whole funnel is healthy. 
 
 ---
 
-## 5. Setting up GA4 (~10 minutes, free)
+## 5. How the GA4 property was set up — DONE 2026-09-09
+
+Kept as a record of what was chosen and why, and as the path to follow if the property ever has to be rebuilt.
 
 1. **analytics.google.com** → **Admin** (gear, bottom-left) → **Create** → **Property**.
 2. Property name `ReinventOps`, time zone **(GMT-05:00) Chicago**, currency **USD**.
 3. Platform **Web**. Stream URL `https://reinventops.com`, stream name `reinventops.com`.
 4. Copy the **Measurement ID** (`G-` followed by ten characters) from the top right of the stream page.
 5. ~~Replace both occurrences of the placeholder in `index.html`.~~ **Done 2026-09-09 — `G-FLG1S0R8ZH`.** Kept here because it is the trap to remember if the ID ever changes: it appears twice on purpose, and replacing only one produces a property that silently records nothing.
-6. Deploy, then open reinventops.com and check **GA4 → Reports → Realtime**. You should appear within about 30 seconds.
-7. Click a CTA yourself, then check Realtime's event list for `assessment_cta_click`.
-8. Once it has fired at least once: **Admin → Key events → Mark as key event**. This is what lets it appear as a conversion in the acquisition reports rather than only in the events list.
+6. ~~Deploy and check Realtime.~~ **Done — deployed and verified, see §8.**
+7. **STILL OUTSTANDING:** once `assessment_cta_click` shows in Realtime's event list, mark it a **Key event** (**Admin → Key events**). Until then it records but does not appear as a conversion in the acquisition reports, only in the raw events list. An event has to fire at least once before GA4 will let you mark it.
+8. **ALSO WORTH DOING:** **Admin → Data streams → reinventops.com → Configure tag settings → Define internal traffic**, and add your own IP. At the ~70–130 clicks this flight will buy, your own visits are a meaningful fraction of the data.
 
 **Standard reports lag 24–48 hours.** For the first few days read **Realtime** and **Explore**, not the Reports tab, or you will think the tracking is broken when it is just late.
 
@@ -138,9 +140,25 @@ What this instrumentation *is* reliably good for at this volume is **finding a s
 
 ---
 
-## 8. Known gaps
+## 8. Production verification — 2026-09-09
 
-- [x] **Measurement ID set: `G-FLG1S0R8ZH`** — account "ReinventOps Group", property "reinventops.com", Chicago time, USD. Web stream `reinventops.com` created 2026-09-09 with Enhanced measurement ON (page views, scrolls, outbound clicks). **Still nothing is recorded until the commit is pushed and Netlify deploys.**
+Checked on the live site, not the preview, after the PR merged.
+
+| Check | Result |
+|---|---|
+| GA4 tag fires | ✅ `collect` request carries `tid=G-FLG1S0R8ZH`, `en=page_view` |
+| UTMs reach GA4 | ✅ the hit's `dl` parameter carries the full query string, so source/campaign/ad attribution lands |
+| Data actually arrives | ✅ Realtime showed the test session and its page views |
+| All three CTAs fire | ✅ `hero-cta`, `nav-cta`, `bottom-cta`, each labelled correctly |
+| Ad ID survives to ScoreApp | ✅ live hero href resolved to `…/questions?…&utm_content=<id>&ad=<id>` |
+
+**Method:** loaded the live page with `utm_content=QATEST20260909` (a deliberately fake ad ID, so the test traffic is filterable and never attributed to a real ad), wrapped `window.gtag` to record calls, and clicked each CTA with navigation suppressed — so no junk ScoreApp sessions were created.
+
+**One anomaly, unresolved and worth remembering.** The `collect` request returned **HTTP 503** rather than the usual 204, yet the data still appeared in Realtime — so a retry presumably succeeded, or the browser extension's network panel caught only a failed first attempt. Not actionable now. **But if landing-page sessions later look implausibly low against the LinkedIn click count, check this before concluding the ads underdelivered.**
+
+## 9. Known gaps
+
+- [x] **Measurement ID set: `G-FLG1S0R8ZH`** — account "ReinventOps Group", property "reinventops.com", Chicago time, USD. Web stream `reinventops.com` created 2026-09-09 with Enhanced measurement ON (page views, scrolls, outbound clicks). **Deployed and verified live 2026-09-09** — see §9.
 - [ ] The site has **no privacy policy**. Adding GA4 makes that a live gap rather than a theoretical one, and the assessment collects email downstream. Not a launch blocker for a US-only B2B audience, but worth a footer link before scaling spend.
 - [ ] **`utm_medium=paid_social` and `utm_source=linkedin` are still unchecked** on the QA checklist at account level (only the ad-level `utm_content` is confirmed). If those two are missing, GA4 will bucket the ad traffic as direct or organic social and §4a becomes unreadable. Confirm on the first live click.
 - [ ] Stage 4 (assessment start) depends on ScoreApp's own analytics — confirm it reports starts as a distinct number from completions, or §4c cannot be computed.
