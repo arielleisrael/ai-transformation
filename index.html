@@ -478,6 +478,18 @@
     .section-title { font-size: 1.75rem; }
   }
   </style>
+<!-- Google Analytics 4 — account "ReinventOps Group", property "reinventops.com" -->
+<!-- The Measurement ID appears TWICE below (script src, then gtag config); both must
+     match or the property records nothing while looking installed. To re-check it:
+     Analytics → Admin → Data streams → reinventops.com. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FLG1S0R8ZH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FLG1S0R8ZH');
+</script>
+
 <script type="text/javascript">
 _linkedin_partner_id = "9893588";
 window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
@@ -502,7 +514,7 @@ src="https://px.ads.linkedin.com/collect/?pid=9893588&fmt=gif" />
 <!-- NAV -->
 <nav>
   <span class="nav-brand">AI Readiness Assessment</span>
-  <a href="https://reinventops.scoreapp.com/questions" class="nav-link">Take the Assessment →</a>
+  <a href="https://reinventops.scoreapp.com/questions" class="nav-link" id="nav-cta">Take the Assessment →</a>
 </nav>
 
 <!-- HERO -->
@@ -653,6 +665,37 @@ src="https://px.ads.linkedin.com/collect/?pid=9893588&fmt=gif" />
         incoming.forEach(function (v, k) { u.searchParams.set(k, v); });
         a.href = u.toString();
       } catch (e) { /* leave the link untouched if it cannot be parsed */ }
+    });
+  })();
+
+  // Assessment CTA click tracking.
+  // Leaving this page for ScoreApp is the single decision the landing page asks
+  // for, so that click is the first real drop-off point. Each click fires two
+  // events: one to GA4 (page views vs. clicks, split by ad and by which CTA), and
+  // one to LinkedIn (so cost per click-through-to-assessment sits next to ad spend
+  // in Campaign Manager, per ad, without cross-referencing two reports).
+  // MUST stay below the forwarding block above so a.href is already the final URL.
+  (function () {
+    // SETUP: create a second conversion action in Campaign Manager
+    // (Analyze -> Conversion tracking -> Create -> Website conversion -> Event-specific
+    //  pixel), name it "Clicked Assessment CTA", then paste its Conversion ID here as a
+    // number, e.g. var LI_CTA_CONVERSION_ID = 1234567;
+    // While it is null the LinkedIn half is skipped and GA4 still records the click.
+    var LI_CTA_CONVERSION_ID = null;
+
+    document.querySelectorAll('a[href*="scoreapp.com"]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'assessment_cta_click', {
+            cta_location: a.id || 'unlabelled',
+            link_url: a.href,
+            transport_type: 'beacon'
+          });
+        }
+        if (LI_CTA_CONVERSION_ID && typeof window.lintrk === 'function') {
+          window.lintrk('track', { conversion_id: LI_CTA_CONVERSION_ID });
+        }
+      }, { passive: true });
     });
   })();
 </script>
