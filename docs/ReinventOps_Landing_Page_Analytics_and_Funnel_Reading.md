@@ -22,7 +22,7 @@ Which meant the first two drop-offs in the funnel — the two the landing page i
 
 Three changes, all live in the repo and pending deploy:
 
-1. **Google Analytics 4 snippet** in `<head>`, above the Insight Tag. Currently carries the placeholder `G-XXXXXXXXXX` in two places — see §5.
+1. **Google Analytics 4 snippet** in `<head>`, above the Insight Tag. Carries the live Measurement ID `G-FLG1S0R8ZH` in two places — the script `src` and the `gtag('config', …)` call. Both must match.
 2. **`id="nav-cta"`** added to the nav bar's assessment link, so all three CTAs can be told apart. The hero and bottom CTAs already had `hero-cta` and `bottom-cta`.
 3. **An `assessment_cta_click` event** on every link out to ScoreApp, carrying `cta_location` (which button) and `link_url` (the fully-forwarded URL including the ad ID). It is bound *below* the existing UTM-forwarding block, so the URL it reports is the final one.
 
@@ -101,7 +101,7 @@ Ad click → completed assessment. At **15–25%** the whole funnel is healthy. 
 2. Property name `ReinventOps`, time zone **(GMT-05:00) Chicago**, currency **USD**.
 3. Platform **Web**. Stream URL `https://reinventops.com`, stream name `reinventops.com`.
 4. Copy the **Measurement ID** (`G-` followed by ten characters) from the top right of the stream page.
-5. In `index.html`, replace **both** occurrences of `G-XXXXXXXXXX`. There are two on purpose — one in the script `src`, one in the `gtag('config', …)` call. Replacing only one produces a property that silently records nothing.
+5. ~~Replace both occurrences of the placeholder in `index.html`.~~ **Done 2026-09-09 — `G-FLG1S0R8ZH`.** Kept here because it is the trap to remember if the ID ever changes: it appears twice on purpose, and replacing only one produces a property that silently records nothing.
 6. Deploy, then open reinventops.com and check **GA4 → Reports → Realtime**. You should appear within about 30 seconds.
 7. Click a CTA yourself, then check Realtime's event list for `assessment_cta_click`.
 8. Once it has fired at least once: **Admin → Key events → Mark as key event**. This is what lets it appear as a conversion in the acquisition reports rather than only in the events list.
@@ -140,7 +140,7 @@ What this instrumentation *is* reliably good for at this volume is **finding a s
 
 ## 8. Known gaps
 
-- [ ] Measurement ID still a placeholder — nothing is recorded until §5 is done and deployed.
+- [x] **Measurement ID set: `G-FLG1S0R8ZH`** — account "ReinventOps Group", property "reinventops.com", Chicago time, USD. Web stream `reinventops.com` created 2026-09-09 with Enhanced measurement ON (page views, scrolls, outbound clicks). **Still nothing is recorded until the commit is pushed and Netlify deploys.**
 - [ ] The site has **no privacy policy**. Adding GA4 makes that a live gap rather than a theoretical one, and the assessment collects email downstream. Not a launch blocker for a US-only B2B audience, but worth a footer link before scaling spend.
 - [ ] **`utm_medium=paid_social` and `utm_source=linkedin` are still unchecked** on the QA checklist at account level (only the ad-level `utm_content` is confirmed). If those two are missing, GA4 will bucket the ad traffic as direct or organic social and §4a becomes unreadable. Confirm on the first live click.
 - [ ] Stage 4 (assessment start) depends on ScoreApp's own analytics — confirm it reports starts as a distinct number from completions, or §4c cannot be computed.
