@@ -652,45 +652,17 @@
 
   function renderQueue(docs) {
     var host = document.getElementById("queue-list");
-    var recentWrap = document.getElementById("queue-recent-wrap");
-    var recentHost = document.getElementById("queue-recent-list");
 
-    var pending = docs.filter(function (d) { return d.data && d.data.status === "pending_approval"; });
-    var recent = docs.filter(function (d) { return d.data && (d.data.status === "approved" || d.data.status === "published"); })
-      .sort(function (a, b) {
-        var ta = a.data.approved_at || a.data.suggested_publish_date || "";
-        var tb = b.data.approved_at || b.data.suggested_publish_date || "";
-        return tb.localeCompare(ta);
-      })
-      .slice(0, 10);
-
-    if (pending.length === 0) {
+    // Note: docs here come from a query scoped to status == "pending_approval",
+    // so no filtering by status is needed. The "recently approved/published"
+    // section is handled separately by refreshRecentDrafts(), which queries
+    // across all statuses.
+    if (docs.length === 0) {
       host.innerHTML = '<div class="empty-state">No drafts pending — the Content Engine hasn\'t run yet.</div>';
     } else {
       host.innerHTML = "";
-      pending.forEach(function (doc) {
+      docs.forEach(function (doc) {
         host.appendChild(renderDraftCard(doc));
-      });
-    }
-
-    if (recent.length === 0) {
-      recentWrap.hidden = true;
-    } else {
-      recentWrap.hidden = false;
-      recentHost.innerHTML = "";
-      recent.forEach(function (doc) {
-        var d = doc.data;
-        var row = document.createElement("div");
-        row.className = "card";
-        var brandClass = d.brand === "efficient_engineer" ? "brand-badge-efficient_engineer" : "brand-badge-reinventops";
-        row.innerHTML =
-          '<div class="meta-row">' +
-            '<span class="badge ' + brandClass + '">' + esc(brandLabel(d.brand)) + "</span>" +
-            '<span class="badge badge-neutral">' + esc(d.status) + "</span>" +
-            "<span>" + esc(fmtDate(d.suggested_publish_date)) + "</span>" +
-          "</div>" +
-          '<div class="content-preview">' + esc(preview(d.content)) + "</div>";
-        recentHost.appendChild(row);
       });
     }
   }
@@ -1042,31 +1014,58 @@
   }
 
   // ---------- Recommendations ----------
+  var flagDecideState = {}; // id -> deciding bool
+  var lastRecDocs = [];
+
+  function renderRecommendations(docs) {
+    var host = document.getElementById("recommendations-list");
+    if (!docs || docs.length === 0) {
+      host.innerHTML = '<div class="empty-state">No open recommendations — all clear.</div>';
+      return;
+    }
+    host.innerHTML = "";
+    docs.forEach(function (doc) {
+      var d = doc.data || {};
+      var isDeciding = !!flagDecideState[doc.id];
+      var card = document.createElement("div");
+      card.className = "card";
+
+      var btnHtml;
+      if (isDeciding) {
+        btnHtml =
+          '<div class="field">' +
+            '<label for="decide-area-' + esc(doc.id) + '">Decision notes</label>' +
+            '<textarea id="decide-area-' + esc(doc.id) + '"></textarea>' +
+          "</div>" +
+          '<div class="btn-row">' +
+            '<button class="btn btn-primary" data-action="submit-decide" data-id="' + esc(doc.id) + '">Submit Decision</button>' +
+            '<button class="btn" data-action="cancel-decide" data-id="' + esc(doc.id) + '">Cancel</button>' +
+          "</div>";
+      } else {
+        btnHtml =
+          '<div class="btn-row">' +
+            '<button class="btn" data-action="ack" data-id="' + esc(doc.id) + '">Acknowledge</button>' +
+            '<button class="btn btn-primary" data-action="decide" data-id="' + esc(doc.id) + '">Decide</button>' +
+            '<button class="btn btn-danger" data-action="dismiss" data-id="' + esc(doc.id) + '">Dismiss</button>' +
+          "</div>";
+      }
+
+      card.innerHTML =
+        '<div class="meta-row">' + urgencyBadge(d.urgency) + "<strong>" + esc(d.summary || "Recommendation") + "</strong></div>" +
+        (d.details ? '<div class="content-preview">' + esc(d.details) + "</div>" : "") +
+        btnHtml;
+      host.appendChild(card);
+    });
+  }
+
   function subscribeRecommendations() {
     if (!db) return;
     var host = document.getElementById("recommendations-list");
     host.addEventListener("click", onRecClick);
     var q = db.collection("flags").where("status", "==", "open").orderBy("urgency", "desc");
     var unsub = q.onSnapshot(function (docs) {
-      if (!docs || docs.length === 0) {
-        host.innerHTML = '<div class="empty-state">No open recommendations — all clear.</div>';
-        return;
-      }
-      host.innerHTML = "";
-      docs.forEach(function (doc) {
-        var d = doc.data || {};
-        var card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML =
-          '<div class="meta-row">' + urgencyBadge(d.urgency) + "<strong>" + esc(d.summary || "Recommendation") + "</strong></div>" +
-          (d.details ? '<div class="content-preview">' + esc(d.details) + "</div>" : "") +
-          '<div class="btn-row">' +
-            '<button class="btn" data-action="ack" data-id="' + esc(doc.id) + '">Acknowledge</button>' +
-            '<button class="btn btn-primary" data-action="decide" data-id="' + esc(doc.id) + '">Decide</button>' +
-            '<button class="btn btn-danger" data-action="dismiss" data-id="' + esc(doc.id) + '">Dismiss</button>' +
-          "</div>";
-        host.appendChild(card);
-      });
+      lastRecDocs = docs || [];
+      renderRecommendations(lastRecDocs);
     });
     unsubscribers.push(unsub);
   }
@@ -1083,10 +1082,19 @@
         .then(function () { toast("Flag acknowledged."); })
         .catch(function (e) { toast("Failed: " + (e && e.message ? e.message : e)); });
     } else if (action === "decide") {
-      var decision = window.prompt("Enter decision notes:");
-      if (decision === null) return;
+      flagDecideState[id] = true;
+      renderRecommendations(lastRecDocs);
+    } else if (action === "cancel-decide") {
+      delete flagDecideState[id];
+      renderRecommendations(lastRecDocs);
+    } else if (action === "submit-decide") {
+      var area = document.getElementById("decide-area-" + id);
+      var decision = area ? area.value : "";
       db.doc("flags/" + id).update({ status: "decided", decision: decision, decided_at: new Date().toISOString() })
-        .then(function () { toast("Decision recorded."); })
+        .then(function () {
+          delete flagDecideState[id];
+          toast("Decision recorded.");
+        })
         .catch(function (e) { toast("Failed: " + (e && e.message ? e.message : e)); });
     } else if (action === "dismiss") {
       db.doc("flags/" + id).update({ status: "dismissed", dismissed_at: new Date().toISOString() })
