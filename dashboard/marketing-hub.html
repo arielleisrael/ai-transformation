@@ -1,0 +1,1267 @@
+<title>ReinventOps Marketing Hub</title>
+<style>
+  :root {
+    --brand-green: #0F3D37;
+    --brand-slate: #2E3338;
+    --brand-blue: #8FA3B5;
+    --brand-cream: #F5F2ED;
+
+    --bg: #F5F2ED;
+    --surface: #FFFFFF;
+    --surface-2: #FAF9F6;
+    --border: #E3DED4;
+    --text: #2E3338;
+    --text-muted: #6B7178;
+    --accent: #0F3D37;
+    --accent-contrast: #FFFFFF;
+    --blue: #8FA3B5;
+    --blue-soft: #EAF0F4;
+    --danger: #B3492E;
+    --danger-soft: #FBE9E3;
+    --warn: #A5761F;
+    --warn-soft: #FBF1DC;
+    --ok: #2C6E49;
+    --ok-soft: #E4F0E8;
+    --shadow: 0 1px 2px rgba(15, 61, 55, 0.06), 0 1px 8px rgba(15, 61, 55, 0.05);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1A1D1F;
+      --surface: #232729;
+      --surface-2: #2A2E30;
+      --border: #383D40;
+      --text: #EDEBE6;
+      --text-muted: #A2A8AD;
+      --accent: #6FBFA8;
+      --accent-contrast: #0F3D37;
+      --blue: #8FA3B5;
+      --blue-soft: #26333C;
+      --danger: #E08064;
+      --danger-soft: #3A2620;
+      --warn: #E0B75E;
+      --warn-soft: #3A2F16;
+      --ok: #7FCB9E;
+      --ok-soft: #1E3327;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 8px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1A1D1F;
+    --surface: #232729;
+    --surface-2: #2A2E30;
+    --border: #383D40;
+    --text: #EDEBE6;
+    --text-muted: #A2A8AD;
+    --accent: #6FBFA8;
+    --accent-contrast: #0F3D37;
+    --blue: #8FA3B5;
+    --blue-soft: #26333C;
+    --danger: #E08064;
+    --danger-soft: #3A2620;
+    --warn: #E0B75E;
+    --warn-soft: #3A2F16;
+    --ok: #7FCB9E;
+    --ok-soft: #1E3327;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 8px rgba(0, 0, 0, 0.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 0 16px 48px;
+  }
+
+  a { color: var(--accent); }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  header.app-header {
+    padding: 24px 0 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  header.app-header h1 {
+    color: var(--accent);
+    font-size: 1.5rem;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+
+  header.app-header p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .tabbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+
+  .tab-btn {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+
+  .tab-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-contrast);
+    font-weight: 600;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .stat-card .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .stat-card .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .badge-green { background: var(--ok-soft); color: var(--ok); }
+  .badge-blue { background: var(--blue-soft); color: var(--brand-blue); }
+  .badge-warn { background: var(--warn-soft); color: var(--warn); }
+  .badge-danger { background: var(--danger-soft); color: var(--danger); }
+  .badge-neutral { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+
+  .brand-badge-reinventops { background: var(--ok-soft); color: var(--brand-green); }
+  .brand-badge-efficient_engineer { background: var(--blue-soft); color: #3E5A70; }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .brand-badge-reinventops { color: var(--ok); }
+    :root:not([data-theme="light"]) .brand-badge-efficient_engineer { color: var(--blue); }
+  }
+  :root[data-theme="dark"] .brand-badge-reinventops { color: var(--ok); }
+  :root[data-theme="dark"] .brand-badge-efficient_engineer { color: var(--blue); }
+
+  .content-preview {
+    white-space: pre-wrap;
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 8px 0;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .btn {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .btn:hover { border-color: var(--accent); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+  .btn-danger { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+  .btn-warn { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+
+  textarea, input[type="text"], input[type="number"], input[type="date"] {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: var(--surface-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+
+  textarea { min-height: 100px; resize: vertical; }
+
+  .field {
+    margin-bottom: 14px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .field .hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .section-heading {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 4px 0 12px;
+    color: var(--text);
+  }
+
+  .table-scroll { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 560px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  th {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  details.collapsed-section {
+    margin-top: 16px;
+  }
+
+  details.collapsed-section summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 8px 0;
+  }
+
+  .funnel-stage {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .funnel-stage:last-child { border-bottom: none; }
+
+  .funnel-bar-wrap {
+    flex: 1;
+    background: var(--surface-2);
+    border-radius: 6px;
+    overflow: hidden;
+    height: 10px;
+  }
+
+  .funnel-bar {
+    background: var(--accent);
+    height: 100%;
+    border-radius: 6px;
+  }
+
+  .funnel-name {
+    width: 120px;
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .funnel-num {
+    width: 110px;
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .trend-up { color: var(--ok); }
+  .trend-down { color: var(--danger); }
+  .trend-flat { color: var(--text-muted); }
+
+  .db-unavailable {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    box-shadow: var(--shadow);
+    z-index: 100;
+    max-width: calc(100vw - 40px);
+  }
+
+  .urgency-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+
+  @media (max-width: 480px) {
+    .funnel-name { width: 84px; font-size: 0.78rem; }
+    .funnel-num { width: 76px; font-size: 0.78rem; }
+    header.app-header h1 { font-size: 1.25rem; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="app-header">
+    <h1>ReinventOps Marketing Hub</h1>
+    <p>Content approval, ad monitoring, and funnel analytics</p>
+  </header>
+
+  <div id="db-status"></div>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="tab-btn active" data-tab="queue">Content Queue</button>
+    <button class="tab-btn" data-tab="publishing">Publishing Log</button>
+    <button class="tab-btn" data-tab="ads">Ad Performance</button>
+    <button class="tab-btn" data-tab="funnel">Funnel</button>
+    <button class="tab-btn" data-tab="recommendations">Recommendations</button>
+    <button class="tab-btn" data-tab="news">AI News</button>
+    <button class="tab-btn" data-tab="log">Agent Log</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
+  </nav>
+
+  <main id="panels">
+    <section class="tab-panel active" id="panel-queue">
+      <div class="section-heading">Content Queue</div>
+      <div id="queue-list"><div class="empty-state">Loading…</div></div>
+      <details class="collapsed-section" id="queue-recent-wrap" hidden>
+        <summary>Recently approved / published</summary>
+        <div id="queue-recent-list"></div>
+      </details>
+    </section>
+
+    <section class="tab-panel" id="panel-publishing">
+      <div class="section-heading">Publishing Log</div>
+      <div id="publishing-list"><div class="empty-state">Loading…</div></div>
+    </section>
+
+    <section class="tab-panel" id="panel-ads">
+      <div class="section-heading">Ad Performance</div>
+      <div class="card-grid" id="ads-summary"></div>
+      <div id="ads-flags"></div>
+      <div class="table-scroll">
+        <table id="ads-table" hidden>
+          <thead>
+            <tr>
+              <th>Date</th><th>Impressions</th><th>Clicks</th><th>CTR</th><th>Spend</th><th>Conversions</th>
+            </tr>
+          </thead>
+          <tbody id="ads-table-body"></tbody>
+        </table>
+      </div>
+      <div id="ads-empty" class="empty-state">Loading…</div>
+    </section>
+
+    <section class="tab-panel" id="panel-funnel">
+      <div class="section-heading">Funnel</div>
+      <div id="funnel-content"><div class="empty-state">Loading…</div></div>
+    </section>
+
+    <section class="tab-panel" id="panel-recommendations">
+      <div class="section-heading">Recommendations</div>
+      <div id="recommendations-list"><div class="empty-state">Loading…</div></div>
+    </section>
+
+    <section class="tab-panel" id="panel-news">
+      <div class="section-heading">AI News</div>
+      <div id="news-list"><div class="empty-state">Loading…</div></div>
+    </section>
+
+    <section class="tab-panel" id="panel-log">
+      <div class="section-heading">Agent Log</div>
+      <div class="table-scroll">
+        <table id="log-table" hidden>
+          <thead>
+            <tr><th>Timestamp</th><th>Agent</th><th>Action</th><th>Reason</th></tr>
+          </thead>
+          <tbody id="log-table-body"></tbody>
+        </table>
+      </div>
+      <div id="log-empty" class="empty-state">Loading…</div>
+    </section>
+
+    <section class="tab-panel" id="panel-settings">
+      <div class="section-heading">Settings</div>
+      <div class="card" id="settings-thresholds">
+        <div class="section-heading" style="font-size:0.95rem;">Thresholds</div>
+        <div class="field">
+          <label for="set-ctr-floor">CTR floor (%)</label>
+          <input type="number" step="0.01" id="set-ctr-floor" placeholder="0.30">
+          <div class="hint">Minimum acceptable click-through rate before flagging.</div>
+        </div>
+        <div class="field">
+          <label for="set-outperf">Outperformance ratio (x)</label>
+          <input type="number" step="0.1" id="set-outperf" placeholder="2.0">
+          <div class="hint">How much better one ad must perform to flag budget reallocation.</div>
+        </div>
+        <div class="field">
+          <label for="set-min-ads">Minimum active ads</label>
+          <input type="number" step="1" id="set-min-ads" placeholder="2">
+        </div>
+        <div class="field">
+          <label for="set-zero-conv">Zero-conversion alert (days)</label>
+          <input type="number" step="1" id="set-zero-conv" placeholder="3">
+        </div>
+        <div class="field">
+          <label for="set-budget-alert">Budget alert (%)</label>
+          <input type="number" step="0.01" id="set-budget-alert" placeholder="0.80">
+        </div>
+        <div class="field">
+          <label for="set-spend-pacing">Spend pacing alert (x)</label>
+          <input type="number" step="0.01" id="set-spend-pacing" placeholder="1.20">
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="save-thresholds">Save Thresholds</button>
+        </div>
+      </div>
+
+      <div class="card" id="settings-context">
+        <div class="section-heading" style="font-size:0.95rem;">Campaign Context</div>
+        <div class="field">
+          <label for="set-strategy">Current strategy</label>
+          <textarea id="set-strategy" style="min-height:120px;"></textarea>
+        </div>
+        <div class="field">
+          <label for="set-icp">Ideal customer profile (ICP)</label>
+          <textarea id="set-icp" style="min-height:70px;"></textarea>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="save-context">Save Campaign Context</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast-host"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var db = null;
+  var unsubscribers = [];
+
+  function esc(str) {
+    if (str === null || str === undefined) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function fmtDate(v) {
+    if (!v) return "—";
+    try {
+      var d = new Date(v);
+      if (isNaN(d.getTime())) return String(v);
+      return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+    } catch (e) { return String(v); }
+  }
+
+  function fmtDateTime(v) {
+    if (!v) return "—";
+    try {
+      var d = new Date(v);
+      if (isNaN(d.getTime())) return String(v);
+      return d.toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    } catch (e) { return String(v); }
+  }
+
+  function fmtMoney(v) {
+    var n = Number(v || 0);
+    return "$" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function fmtPct(v, digits) {
+    var n = Number(v || 0) * 100;
+    return n.toFixed(digits === undefined ? 2 : digits) + "%";
+  }
+
+  function fmtNum(v) {
+    return Number(v || 0).toLocaleString();
+  }
+
+  function toast(msg) {
+    var host = document.getElementById("toast-host");
+    var el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = msg;
+    host.appendChild(el);
+    setTimeout(function () {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }, 3200);
+  }
+
+  // ---------- Tabs ----------
+  function initTabs() {
+    var buttons = document.querySelectorAll(".tab-btn");
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var tab = btn.getAttribute("data-tab");
+        buttons.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        document.querySelectorAll(".tab-panel").forEach(function (p) {
+          p.classList.remove("active");
+        });
+        var panel = document.getElementById("panel-" + tab);
+        if (panel) panel.classList.add("active");
+      });
+    });
+  }
+
+  // ---------- DB unavailable messaging ----------
+  function showDbUnavailable() {
+    var host = document.getElementById("db-status");
+    var el = document.createElement("div");
+    el.className = "db-unavailable";
+    el.textContent = "Database unavailable — the dashboard cannot read or write live data right now. Try reloading the page in a moment.";
+    host.appendChild(el);
+
+    var emptyMsgs = {
+      "queue-list": "Database unavailable — content queue cannot load.",
+      "publishing-list": "Database unavailable — publishing log cannot load.",
+      "ads-empty": "Database unavailable — ad performance cannot load.",
+      "funnel-content": "Database unavailable — funnel report cannot load.",
+      "recommendations-list": "Database unavailable — recommendations cannot load.",
+      "news-list": "Database unavailable — AI news cannot load.",
+      "log-empty": "Database unavailable — agent log cannot load."
+    };
+    Object.keys(emptyMsgs).forEach(function (id) {
+      var node = document.getElementById(id);
+      if (node) node.innerHTML = '<div class="empty-state">' + esc(emptyMsgs[id]) + "</div>";
+    });
+
+    ["set-ctr-floor", "set-outperf", "set-min-ads", "set-zero-conv", "set-budget-alert", "set-spend-pacing", "set-strategy", "set-icp"].forEach(function (id) {
+      var node = document.getElementById(id);
+      if (node) node.disabled = true;
+    });
+    var saveT = document.getElementById("save-thresholds");
+    var saveC = document.getElementById("save-context");
+    if (saveT) saveT.disabled = true;
+    if (saveC) saveC.disabled = true;
+  }
+
+  // ---------- Content Queue ----------
+  var draftEditState = {}; // id -> editing bool
+
+  function renderQueue(docs) {
+    var host = document.getElementById("queue-list");
+    var recentWrap = document.getElementById("queue-recent-wrap");
+    var recentHost = document.getElementById("queue-recent-list");
+
+    var pending = docs.filter(function (d) { return d.data && d.data.status === "pending_approval"; });
+    var recent = docs.filter(function (d) { return d.data && (d.data.status === "approved" || d.data.status === "published"); })
+      .sort(function (a, b) {
+        var ta = a.data.approved_at || a.data.suggested_publish_date || "";
+        var tb = b.data.approved_at || b.data.suggested_publish_date || "";
+        return tb.localeCompare(ta);
+      })
+      .slice(0, 10);
+
+    if (pending.length === 0) {
+      host.innerHTML = '<div class="empty-state">No drafts pending — the Content Engine hasn\'t run yet.</div>';
+    } else {
+      host.innerHTML = "";
+      pending.forEach(function (doc) {
+        host.appendChild(renderDraftCard(doc));
+      });
+    }
+
+    if (recent.length === 0) {
+      recentWrap.hidden = true;
+    } else {
+      recentWrap.hidden = false;
+      recentHost.innerHTML = "";
+      recent.forEach(function (doc) {
+        var d = doc.data;
+        var row = document.createElement("div");
+        row.className = "card";
+        var brandClass = d.brand === "efficient_engineer" ? "brand-badge-efficient_engineer" : "brand-badge-reinventops";
+        row.innerHTML =
+          '<div class="meta-row">' +
+            '<span class="badge ' + brandClass + '">' + esc(brandLabel(d.brand)) + "</span>" +
+            '<span class="badge badge-neutral">' + esc(d.status) + "</span>" +
+            "<span>" + esc(fmtDate(d.suggested_publish_date)) + "</span>" +
+          "</div>" +
+          '<div class="content-preview">' + esc(preview(d.content)) + "</div>";
+        recentHost.appendChild(row);
+      });
+    }
+  }
+
+  function brandLabel(brand) {
+    if (brand === "reinventops") return "ReinventOps";
+    if (brand === "efficient_engineer") return "Efficient Engineer";
+    return brand || "Unknown brand";
+  }
+
+  function preview(text, len) {
+    if (!text) return "(no content)";
+    len = len || 280;
+    var s = String(text);
+    return s.length > len ? s.slice(0, len).trim() + "…" : s;
+  }
+
+  function renderDraftCard(doc) {
+    var d = doc.data;
+    var card = document.createElement("div");
+    card.className = "card";
+    var brandClass = d.brand === "efficient_engineer" ? "brand-badge-efficient_engineer" : "brand-badge-reinventops";
+    var isEditing = !!draftEditState[doc.id];
+
+    var metaHtml =
+      '<div class="meta-row">' +
+        '<span class="badge ' + brandClass + '">' + esc(brandLabel(d.brand)) + "</span>" +
+        (d.suggested_publish_date ? "<span>Suggested: " + esc(fmtDate(d.suggested_publish_date)) + "</span>" : "") +
+      "</div>" +
+      (d.source_note ? '<div class="meta-row" style="font-style:italic;">Source: ' + esc(d.source_note) + "</div>" : "");
+
+    var bodyHtml;
+    if (isEditing) {
+      bodyHtml = '<textarea id="edit-area-' + esc(doc.id) + '">' + esc(d.content || "") + "</textarea>";
+    } else {
+      bodyHtml = '<div class="content-preview">' + esc(preview(d.content)) + "</div>";
+    }
+
+    var btnHtml = isEditing
+      ? '<div class="btn-row">' +
+          '<button class="btn btn-primary" data-action="save-edit" data-id="' + esc(doc.id) + '">Approve Edited</button>' +
+          '<button class="btn" data-action="cancel-edit" data-id="' + esc(doc.id) + '">Cancel</button>' +
+        "</div>"
+      : '<div class="btn-row">' +
+          '<button class="btn btn-primary" data-action="approve" data-id="' + esc(doc.id) + '">Approve</button>' +
+          '<button class="btn" data-action="edit" data-id="' + esc(doc.id) + '">Edit</button>' +
+          '<button class="btn btn-danger" data-action="reject" data-id="' + esc(doc.id) + '">Reject</button>' +
+        "</div>";
+
+    card.innerHTML = metaHtml + bodyHtml + btnHtml;
+    return card;
+  }
+
+  function refreshRecentDrafts() {
+    if (!db) return;
+    db.collection("drafts").orderBy("suggested_publish_date", "desc").limit(30).get().then(function (result) {
+      var docs = Array.isArray(result) ? result : (result && result.docs) || [];
+      var recent = docs.filter(function (d) { return d.data && (d.data.status === "approved" || d.data.status === "published"); })
+        .slice(0, 10);
+      var recentWrap = document.getElementById("queue-recent-wrap");
+      var recentHost = document.getElementById("queue-recent-list");
+      if (recent.length === 0) {
+        recentWrap.hidden = true;
+        return;
+      }
+      recentWrap.hidden = false;
+      recentHost.innerHTML = "";
+      recent.forEach(function (doc) {
+        var d = doc.data;
+        var row = document.createElement("div");
+        row.className = "card";
+        var brandClass = d.brand === "efficient_engineer" ? "brand-badge-efficient_engineer" : "brand-badge-reinventops";
+        row.innerHTML =
+          '<div class="meta-row">' +
+            '<span class="badge ' + brandClass + '">' + esc(brandLabel(d.brand)) + "</span>" +
+            '<span class="badge badge-neutral">' + esc(d.status) + "</span>" +
+            "<span>" + esc(fmtDate(d.suggested_publish_date)) + "</span>" +
+          "</div>" +
+          '<div class="content-preview">' + esc(preview(d.content)) + "</div>";
+        recentHost.appendChild(row);
+      });
+    }).catch(function () { /* ignore */ });
+  }
+
+  function onQueueClick(evt) {
+    var btn = evt.target.closest("[data-action]");
+    if (!btn) return;
+    var action = btn.getAttribute("data-action");
+    var id = btn.getAttribute("data-id");
+    if (!id || !db) return;
+
+    if (action === "approve") {
+      db.doc("drafts/" + id).update({ status: "approved", approved_at: new Date().toISOString() })
+        .then(function () { toast("Draft approved."); })
+        .catch(function (e) { toast("Approve failed: " + (e && e.message ? e.message : e)); });
+    } else if (action === "reject") {
+      db.doc("drafts/" + id).update({ status: "rejected" })
+        .then(function () { toast("Draft rejected."); })
+        .catch(function (e) { toast("Reject failed: " + (e && e.message ? e.message : e)); });
+    } else if (action === "edit") {
+      draftEditState[id] = true;
+      refreshQueueRender();
+    } else if (action === "cancel-edit") {
+      delete draftEditState[id];
+      refreshQueueRender();
+    } else if (action === "save-edit") {
+      var area = document.getElementById("edit-area-" + id);
+      var newContent = area ? area.value : "";
+      db.doc("drafts/" + id).update({
+        content: newContent,
+        status: "approved",
+        approved_at: new Date().toISOString(),
+        edited: true
+      }).then(function () {
+        delete draftEditState[id];
+        toast("Edited draft approved.");
+      }).catch(function (e) { toast("Save failed: " + (e && e.message ? e.message : e)); });
+    }
+  }
+
+  var lastQueueDocs = [];
+  function refreshQueueRender() {
+    renderQueue(lastQueueDocs);
+  }
+
+  // Wrap subscribeQueue to also cache latest docs for edit-state re-render.
+  function subscribeQueueWrapped() {
+    if (!db) return;
+    var host = document.getElementById("queue-list");
+    host.addEventListener("click", onQueueClick);
+    var q = db.collection("drafts").where("status", "==", "pending_approval").orderBy("suggested_publish_date", "asc");
+    var unsub = q.onSnapshot(function (docs) {
+      lastQueueDocs = docs || [];
+      renderQueue(lastQueueDocs);
+      refreshRecentDrafts();
+    });
+    unsubscribers.push(unsub);
+  }
+
+  // ---------- Publishing Log ----------
+  function subscribePublishing() {
+    if (!db) return;
+    var host = document.getElementById("publishing-list");
+    var q = db.collection("content_published").orderBy("published_date", "desc").limit(20);
+    var unsub = q.onSnapshot(function (docs) {
+      if (!docs || docs.length === 0) {
+        host.innerHTML = '<div class="empty-state">No published content yet.</div>';
+        return;
+      }
+      host.innerHTML = "";
+      docs.forEach(function (doc) {
+        var d = doc.data;
+        var brandClass = d.brand === "efficient_engineer" ? "brand-badge-efficient_engineer" : "brand-badge-reinventops";
+        var statusClass = d.verification_status === "confirmed" ? "badge-green" :
+          d.verification_status === "failed" ? "badge-danger" : "badge-warn";
+        var row = document.createElement("div");
+        row.className = "card";
+        row.innerHTML =
+          '<div class="meta-row">' +
+            '<span class="badge ' + brandClass + '">' + esc(brandLabel(d.brand)) + "</span>" +
+            "<span>" + esc(fmtDate(d.published_date)) + "</span>" +
+            '<span class="badge ' + statusClass + '">' + esc(d.verification_status || "unknown") + "</span>" +
+          "</div>" +
+          '<div class="content-preview">' + esc(preview(d.content)) + "</div>" +
+          (d.live_url ? '<a href="' + esc(d.live_url) + '" target="_blank" rel="noopener">View live post →</a>' : "");
+        host.appendChild(row);
+      });
+    });
+    unsubscribers.push(unsub);
+  }
+
+  // ---------- Ad Performance ----------
+  function subscribeAds() {
+    if (!db) return;
+    var summaryHost = document.getElementById("ads-summary");
+    var tableBody = document.getElementById("ads-table-body");
+    var table = document.getElementById("ads-table");
+    var emptyHost = document.getElementById("ads-empty");
+    var flagsHost = document.getElementById("ads-flags");
+
+    var q = db.collection("ad_snapshots").orderBy("date", "desc").limit(14);
+    var unsub = q.onSnapshot(function (docs) {
+      if (!docs || docs.length === 0) {
+        table.hidden = true;
+        summaryHost.innerHTML = "";
+        emptyHost.hidden = false;
+        emptyHost.textContent = "No ad performance data yet — the Ad Monitor hasn't run.";
+        return;
+      }
+      emptyHost.hidden = true;
+
+      var totalSpend = 0, totalImpr = 0, totalClicks = 0, totalConv = 0;
+      docs.forEach(function (doc) {
+        var d = doc.data || {};
+        totalSpend += Number(d.spend || 0);
+        totalImpr += Number(d.impressions || 0);
+        totalClicks += Number(d.clicks || 0);
+        totalConv += Number(d.conversions || 0);
+      });
+      var avgCtr = totalImpr > 0 ? totalClicks / totalImpr : 0;
+
+      summaryHost.innerHTML =
+        statCard("Total Spend", fmtMoney(totalSpend)) +
+        statCard("Impressions", fmtNum(totalImpr)) +
+        statCard("Clicks", fmtNum(totalClicks)) +
+        statCard("Avg CTR", fmtPct(avgCtr)) +
+        statCard("Conversions", fmtNum(totalConv));
+
+      tableBody.innerHTML = "";
+      docs.forEach(function (doc) {
+        var d = doc.data || {};
+        var ctr = d.ctr !== undefined ? d.ctr : (d.impressions ? d.clicks / d.impressions : 0);
+        var tr = document.createElement("tr");
+        tr.innerHTML =
+          "<td>" + esc(fmtDate(d.date)) + "</td>" +
+          "<td>" + esc(fmtNum(d.impressions)) + "</td>" +
+          "<td>" + esc(fmtNum(d.clicks)) + "</td>" +
+          "<td>" + esc(fmtPct(ctr)) + "</td>" +
+          "<td>" + esc(fmtMoney(d.spend)) + "</td>" +
+          "<td>" + esc(fmtNum(d.conversions)) + "</td>";
+        tableBody.appendChild(tr);
+      });
+      table.hidden = false;
+    });
+    unsubscribers.push(unsub);
+
+    var flagsQuery = db.collection("flags").where("status", "==", "open");
+    var unsubFlags = flagsQuery.onSnapshot(function (docs) {
+      if (!docs || docs.length === 0) {
+        flagsHost.innerHTML = "";
+        return;
+      }
+      flagsHost.innerHTML = '<div class="section-heading" style="font-size:0.95rem;">Active Flags</div>';
+      docs.forEach(function (doc) {
+        var d = doc.data || {};
+        var card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML =
+          '<div class="meta-row">' + urgencyBadge(d.urgency) + "<strong>" + esc(d.summary || "Flag") + "</strong></div>" +
+          (d.details ? '<div class="content-preview">' + esc(d.details) + "</div>" : "");
+        flagsHost.appendChild(card);
+      });
+    });
+    unsubscribers.push(unsubFlags);
+  }
+
+  function statCard(label, value) {
+    return '<div class="stat-card"><div class="label">' + esc(label) + '</div><div class="value">' + esc(value) + "</div></div>";
+  }
+
+  function urgencyBadge(urgency) {
+    var cls = "badge-neutral";
+    if (urgency === "high" || urgency === "critical") cls = "badge-danger";
+    else if (urgency === "medium") cls = "badge-warn";
+    else if (urgency === "low") cls = "badge-blue";
+    return '<span class="badge ' + cls + '">' + esc(urgency || "unknown") + "</span>";
+  }
+
+  // ---------- Funnel ----------
+  function subscribeFunnel() {
+    if (!db) return;
+    var host = document.getElementById("funnel-content");
+    db.doc("weekly_reports/latest").onSnapshot(function (result) {
+      var data = result && result.data;
+      if (!data) {
+        host.innerHTML = '<div class="empty-state">No weekly report yet — check back after the first weekly run.</div>';
+        return;
+      }
+      var stages = data.funnel || data.stages;
+      if (!stages || (Array.isArray(stages) && stages.length === 0)) {
+        host.innerHTML = '<div class="empty-state">Weekly report found but no funnel data present.</div>';
+        return;
+      }
+
+      var stageList = normalizeFunnelStages(stages);
+      var maxVal = Math.max.apply(null, stageList.map(function (s) { return s.value; }).concat([1]));
+
+      var html = "";
+      if (data.week_of || data.period) {
+        html += '<div class="meta-row">Week of ' + esc(fmtDate(data.week_of || data.period)) + "</div>";
+      }
+      html += '<div class="card">';
+      stageList.forEach(function (s, i) {
+        var pct = maxVal > 0 ? (s.value / maxVal) * 100 : 0;
+        var convRate = "";
+        if (i > 0 && stageList[i - 1].value > 0) {
+          convRate = fmtPct(s.value / stageList[i - 1].value, 1);
+        }
+        var trend = "";
+        if (s.prev !== undefined && s.prev !== null) {
+          if (s.value > s.prev) trend = '<span class="trend-up">▲ ' + fmtNum(s.value - s.prev) + "</span>";
+          else if (s.value < s.prev) trend = '<span class="trend-down">▼ ' + fmtNum(s.prev - s.value) + "</span>";
+          else trend = '<span class="trend-flat">— flat</span>';
+        }
+        html +=
+          '<div class="funnel-stage">' +
+            '<div class="funnel-name">' + esc(s.name) + "</div>" +
+            '<div class="funnel-bar-wrap"><div class="funnel-bar" style="width:' + pct.toFixed(1) + '%;"></div></div>' +
+            '<div class="funnel-num">' + esc(fmtNum(s.value)) + (convRate ? " (" + convRate + ")" : "") + "</div>" +
+            (trend ? '<div class="funnel-num">' + trend + "</div>" : "") +
+          "</div>";
+      });
+      html += "</div>";
+      host.innerHTML = html;
+    });
+    // Note: doc onSnapshot returns an unsubscribe too, but we don't have a handle here since
+    // we passed the callback directly to the chained call. Track separately if supported.
+  }
+
+  function normalizeFunnelStages(stages) {
+    var order = ["impressions", "clicks", "visits", "starts", "completions", "bookings"];
+    var labels = {
+      impressions: "Impressions",
+      clicks: "Clicks",
+      visits: "Visits",
+      starts: "Starts",
+      completions: "Completions",
+      bookings: "Bookings"
+    };
+    if (Array.isArray(stages)) {
+      return stages.map(function (s) {
+        return { name: s.name || s.stage || "Stage", value: Number(s.value || s.count || 0), prev: s.prev !== undefined ? Number(s.prev) : undefined };
+      });
+    }
+    // object keyed by stage name
+    var list = [];
+    order.forEach(function (key) {
+      if (stages[key] !== undefined) {
+        var entry = stages[key];
+        if (typeof entry === "object" && entry !== null) {
+          list.push({ name: labels[key], value: Number(entry.value || entry.count || 0), prev: entry.prev !== undefined ? Number(entry.prev) : undefined });
+        } else {
+          list.push({ name: labels[key], value: Number(entry || 0), prev: undefined });
+        }
+      }
+    });
+    // include any extra keys not in known order
+    Object.keys(stages).forEach(function (key) {
+      if (order.indexOf(key) === -1) {
+        var entry = stages[key];
+        if (typeof entry === "object" && entry !== null) {
+          list.push({ name: key, value: Number(entry.value || entry.count || 0), prev: entry.prev !== undefined ? Number(entry.prev) : undefined });
+        } else if (typeof entry === "number") {
+          list.push({ name: key, value: entry, prev: undefined });
+        }
+      }
+    });
+    return list;
+  }
+
+  // ---------- Recommendations ----------
+  function subscribeRecommendations() {
+    if (!db) return;
+    var host = document.getElementById("recommendations-list");
+    host.addEventListener("click", onRecClick);
+    var q = db.collection("flags").where("status", "==", "open").orderBy("urgency", "desc");
+    var unsub = q.onSnapshot(function (docs) {
+      if (!docs || docs.length === 0) {
+        host.innerHTML = '<div class="empty-state">No open recommendations — all clear.</div>';
+        return;
+      }
+      host.innerHTML = "";
+      docs.forEach(function (doc) {
+        var d = doc.data || {};
+        var card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML =
+          '<div class="meta-row">' + urgencyBadge(d.urgency) + "<strong>" + esc(d.summary || "Recommendation") + "</strong></div>" +
+          (d.details ? '<div class="content-preview">' + esc(d.details) + "</div>" : "") +
+          '<div class="btn-row">' +
+            '<button class="btn" data-action="ack" data-id="' + esc(doc.id) + '">Acknowledge</button>' +
+            '<button class="btn btn-primary" data-action="decide" data-id="' + esc(doc.id) + '">Decide</button>' +
+            '<button class="btn btn-danger" data-action="dismiss" data-id="' + esc(doc.id) + '">Dismiss</button>' +
+          "</div>";
+        host.appendChild(card);
+      });
+    });
+    unsubscribers.push(unsub);
+  }
+
+  function onRecClick(evt) {
+    var btn = evt.target.closest("[data-action]");
+    if (!btn || !db) return;
+    var action = btn.getAttribute("data-action");
+    var id = btn.getAttribute("data-id");
+    if (!id) return;
+
+    if (action === "ack") {
+      db.doc("flags/" + id).update({ status: "acknowledged", acknowledged_at: new Date().toISOString() })
+        .then(function () { toast("Flag acknowledged."); })
+        .catch(function (e) { toast("Failed: " + (e && e.message ? e.message : e)); });
+    } else if (action === "decide") {
+      var decision = window.prompt("Enter decision notes:");
+      if (decision === null) return;
+      db.doc("flags/" + id).update({ status: "decided", decision: decision, decided_at: new Date().toISOString() })
+        .then(function () { toast("Decision recorded."); })
+        .catch(function (e) { toast("Failed: " + (e && e.message ? e.message : e)); });
+    } else if (action === "dismiss") {
+      db.doc("flags/" + id).update({ status: "dismissed", dismissed_at: new Date().toISOString() })
+        .then(function () { toast("Flag dismissed."); })
+        .catch(function (e) { toast("Failed: " + (e && e.message ? e.message : e)); });
+    }
+  }
+
+  // ---------- AI News ----------
+  function subscribeNews() {
+    if (!db) return;
+    var host = document.getElementById("news-list");
+    host.addEventListener("click", onNewsClick);
+    var q = db.collection("news_feed").where("status", "==", "new").orderBy("date", "desc").limit(20);
+    var unsub = q.onSnapshot(function (docs) {
+      if (!docs || docs.length === 0) {
+        host.innerHTML = '<div class="empty-state">No new AI news items — the News Scout hasn\'t found anything recently.</div>';
+        return;
+      }
+      host.innerHTML = "";
+      docs.forEach(function (doc) {
+        var d = doc.data || {};
+        var card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML =
+          '<div class="meta-row"><strong>' + esc(d.headline || "Untitled") + "</strong></div>" +
+          '<div class="meta-row">' +
+            (d.source ? "<span>" + esc(d.source) + "</span>" : "") +
+            (d.date ? "<span>" + esc(fmtDate(d.date)) + "</span>" : "") +
+            (d.brand_fit ? '<span class="badge badge-blue">' + esc(d.brand_fit) + "</span>" : "") +
+          "</div>" +
+          (d.angle ? '<div class="content-preview">' + esc(d.angle) + "</div>" : "") +
+          '<div class="btn-row">' +
+            '<button class="btn btn-primary" data-action="use" data-id="' + esc(doc.id) + '">Use</button>' +
+            '<button class="btn" data-action="skip" data-id="' + esc(doc.id) + '">Skip</button>' +
+          "</div>";
+        host.appendChild(card);
+      });
+    });
+    unsubscribers.push(unsub);
+  }
+
+  function onNewsClick(evt) {
+    var btn = evt.target.closest("[data-action]");
+    if (!btn || !db) return;
+    var action = btn.getAttribute("data-action");
+    var id = btn.getAttribute("data-id");
+    if (!id) return;
+
+    if (action === "use") {
+      db.doc("news_feed/" + id).update({ status: "used", used_at: new Date().toISOString() })
+        .then(function () { toast("Marked for content calendar."); })
+        .catch(function (e) { toast("Failed: " + (e && e.message ? e.message : e)); });
+    } else if (action === "skip") {
+      db.doc("news_feed/" + id).update({ status: "skipped", skipped_at: new Date().toISOString() })
+        .then(function () { toast("Skipped."); })
+        .catch(function (e) { toast("Failed: " + (e && e.message ? e.message : e)); });
+    }
+  }
+
+  // ---------- Agent Log ----------
+  function subscribeLog() {
+    if (!db) return;
+    var table = document.getElementById("log-table");
+    var body = document.getElementById("log-table-body");
+    var emptyHost = document.getElementById("log-empty");
+    var q = db.collection("agent_actions").orderBy("timestamp", "desc").limit(50);
+    var unsub = q.onSnapshot(function (docs) {
+      if (!docs || docs.length === 0) {
+        table.hidden = true;
+        emptyHost.hidden = false;
+        emptyHost.textContent = "No agent actions logged yet.";
+        return;
+      }
+      emptyHost.hidden = true;
+      body.innerHTML = "";
+      docs.forEach(function (doc) {
+        var d = doc.data || {};
+        var tr = document.createElement("tr");
+        tr.innerHTML =
+          "<td>" + esc(fmtDateTime(d.timestamp)) + "</td>" +
+          "<td>" + esc(d.agent || "—") + "</td>" +
+          "<td>" + esc(d.action || "—") + "</td>" +
+          "<td>" + esc(d.reason || "—") + "</td>";
+        body.appendChild(tr);
+      });
+      table.hidden = false;
+    });
+    unsubscribers.push(unsub);
+  }
+
+  // ---------- Settings ----------
+  function loadSettings() {
+    if (!db) return;
+
+    db.doc("config/thresholds").get().then(function (result) {
+      var data = result && result.data;
+      if (!data) return;
+      setVal("set-ctr-floor", data.ctr_floor !== undefined ? (Number(data.ctr_floor) * 100) : "");
+      setVal("set-outperf", data.outperformance_ratio);
+      setVal("set-min-ads", data.min_active_ads);
+      setVal("set-zero-conv", data.zero_conversion_days);
+      setVal("set-budget-alert", data.budget_alert_pct !== undefined ? (Number(data.budget_alert_pct) * 100) : "");
+      setVal("set-spend-pacing", data.spend_pacing_alert_pct);
+    }).catch(function () { /* leave defaults blank */ });
+
+    db.doc("config/campaign_context").get().then(function (result) {
+      var data = result && result.data;
+      if (!data) return;
+      setVal("set-strategy", data.current_strategy);
+      setVal("set-icp", data.icp);
+    }).catch(function () { /* leave blank */ });
+
+    document.getElementById("save-thresholds").addEventListener("click", function () {
+      var ctrFloorPct = parseFloat(document.getElementById("set-ctr-floor").value);
+      var budgetAlertPct = parseFloat(document.getElementById("set-budget-alert").value);
+      var payload = {
+        ctr_floor: isNaN(ctrFloorPct) ? undefined : ctrFloorPct / 100,
+        outperformance_ratio: numOrUndefined("set-outperf"),
+        min_active_ads: numOrUndefined("set-min-ads"),
+        zero_conversion_days: numOrUndefined("set-zero-conv"),
+        budget_alert_pct: isNaN(budgetAlertPct) ? undefined : budgetAlertPct / 100,
+        spend_pacing_alert_pct: numOrUndefined("set-spend-pacing")
+      };
+      Object.keys(payload).forEach(function (k) { if (payload[k] === undefined) delete payload[k]; });
+      db.doc("config/thresholds").update(payload)
+        .then(function () { toast("Thresholds saved."); })
+        .catch(function (e) { toast("Save failed: " + (e && e.message ? e.message : e)); });
+    });
+
+    document.getElementById("save-context").addEventListener("click", function () {
+      var payload = {
+        current_strategy: document.getElementById("set-strategy").value,
+        icp: document.getElementById("set-icp").value
+      };
+      db.doc("config/campaign_context").update(payload)
+        .then(function () { toast("Campaign context saved."); })
+        .catch(function (e) { toast("Save failed: " + (e && e.message ? e.message : e)); });
+    });
+  }
+
+  function setVal(id, v) {
+    var el = document.getElementById(id);
+    if (el && v !== undefined && v !== null) el.value = v;
+  }
+
+  function numOrUndefined(id) {
+    var v = parseFloat(document.getElementById(id).value);
+    return isNaN(v) ? undefined : v;
+  }
+
+  // ---------- Init ----------
+  async function init() {
+    initTabs();
+    try {
+      db = await claude.use("db");
+    } catch (e) {
+      db = null;
+    }
+
+    if (!db) {
+      showDbUnavailable();
+      return;
+    }
+
+    subscribeQueueWrapped();
+    subscribePublishing();
+    subscribeAds();
+    subscribeFunnel();
+    subscribeRecommendations();
+    subscribeNews();
+    subscribeLog();
+    loadSettings();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
