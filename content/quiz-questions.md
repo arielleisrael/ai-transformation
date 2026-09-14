@@ -219,7 +219,7 @@ Cost range = hours midpoint × 50 weeks × $50–$75/hr blended knowledge-worker
 | It runs smoothly — I'm mostly here to explore what's possible | — | 1 | **0 · HG3** |
 
 ### Q11b — Symptoms · MULTI-SELECT
-**Text:** "Which of these also apply? Select all that apply."
+**Text:** "Which of these also apply? Select all that apply, or choose 'None of these.'"
 **Type:** **Multi-select (checkboxes)** · Required
 **Scores:** Layer B 0–10 · Layer C Pillar 1 0–5
 
@@ -306,6 +306,18 @@ Function sits here rather than in the quiz because it is profile data, reads nat
 > **RESOLVED 2026-09-03 — Function is now required.** SF8 ("ideal champion profile", the one soft flag that is a *priority* signal rather than a caveat) fires on Function ∈ {Operations, Technology, Transformation} AND Q1 ≥ Director. While the field was optional, a respondent who skipped it could not fire SF8, so an ideal lead could reach the internal brief without its strongest positive marker — and the miss was silent, indistinguishable from a genuine negative. Making the dropdown required closes that: SF8 is now always evaluable. Cost is one extra click on a form the respondent is already completing, and "Other" is among the eight options so nobody is trapped without an honest answer. **A blank Function is therefore no longer a state that should occur; if one appears in the data, treat it as a defect and investigate rather than reading it as "not a champion."** Company name remains optional and carries no equivalent risk — the PDF has a documented fallback for it.
 
 **No separate marketing-consent checkbox.** Submitting an email address for the assessment is the respondent's request for their result and places them into the intended results/follow-up flow by default — there is no additional opt-in action required. Every marketing/nurture email must carry a working **Unsubscribe** link; using it suppresses future marketing/nurture email to that respondent. The one-time result-delivery email is not a marketing email and is sent regardless of unsubscribe status, since it is the artifact the respondent explicitly requested by submitting the form.
+
+### Helper Text / Tooltips (added 2026-08-25, per UX review)
+
+Optional tooltip/helper text for terms that can be interpreted differently, shown on hover or via an info icon next to the relevant question — not added to the answer labels themselves.
+
+| Question | Term | Helper text |
+|---|---|---|
+| Q2 — AI adoption | "infrastructure" (in "AI is woven into our operations — it's infrastructure, not just a tool") | "By 'infrastructure,' we mean AI is built into how work actually gets done — not a tool people open sometimes, but part of the default way tasks happen." |
+| Q4 — Leadership AI Strategy | "AI plan" | "'AI plan' means a documented direction — not necessarily a full strategy document, but a shared sense within leadership of where AI fits and what's next." |
+| Q5 — Is AI moving the needle | "measurable business results" | "This means results you could show someone outside your team — time saved, cost reduced, revenue affected — not just a general sense that AI is helping." |
+| Q7 — Workflow category | "workflow" | "A workflow is any repeatable process your team runs — not just software-driven ones. Reporting, client onboarding, and approvals all count." |
+| Q10 — Current automation state | "automation" / "partly automated" | "'Partly automated' means some steps happen without a person doing them by hand; 'entirely manual' means a person performs every step." |
 
 ---
 
