@@ -47,6 +47,7 @@ export default async (req) => {
         const status = body.action === "pause_ad" ? "PAUSED" : "ACTIVE";
         const data = await linkedinFetch(`/adCreatives/${body.ad_id}`, token, {
           method: "POST",
+          headers: { "X-Restli-Method": "PARTIAL_UPDATE" },
           body: JSON.stringify({ patch: { $set: { status } } }),
         });
         return ok(data);

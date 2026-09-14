@@ -15,5 +15,7 @@ export async function linkedinFetch(path, token, options = {}) {
   });
   const text = await res.text();
   if (!res.ok) throw new Error(`LinkedIn API ${res.status}: ${text}`);
-  return text ? JSON.parse(text) : { status: res.status };
+  if (text) return JSON.parse(text);
+  const id = res.headers.get("x-restli-id");
+  return { status: res.status, ...(id ? { id } : {}) };
 }
