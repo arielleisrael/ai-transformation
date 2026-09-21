@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Program | ReinventOps Group</title>
+  <meta name="description" content="Refer a business to ReinventOps Group and earn 10% of their first project.">
+
+  <!-- Unlisted page: shared by link with partners only, kept out of search results. -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://reinventops.com/partners/">
+
+  <!-- Share preview: Open Graph (iMessage, LinkedIn, Slack, WhatsApp, Facebook).
+       LinkedIn caches og:image BY URL - if the card art ever changes, rename the
+       file (og-card-partners-v2.png) and repoint all three image tags. -->
+  <meta property="og:site_name" content="ReinventOps Group">
+  <meta property="og:title" content="ReinventOps Group - Partner Program">
+  <meta property="og:description" content="Introduce us to a business that becomes a client and earn 10% of their first project. You make the introduction, we take it from there.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://reinventops.com/partners/">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="https://reinventops.com/assets/images/og-card-partners.png">
+  <meta property="og:image:secure_url" content="https://reinventops.com/assets/images/og-card-partners.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="ReinventOps Group Partner Program. Know someone who would be a fit? Earn 10% of their first project. You just make the intro, paid in 5 business days, nothing to sign.">
+
+  <!-- Share preview: Twitter/X card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ReinventOps Group - Partner Program">
+  <meta name="twitter:description" content="Introduce us to a business that becomes a client and earn 10% of their first project. You make the introduction, we take it from there.">
+  <meta name="twitter:image" content="https://reinventops.com/assets/images/og-card-partners.png">
+  <meta name="twitter:image:alt" content="ReinventOps Group Partner Program. Earn 10% of their first project.">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/images/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <meta name="theme-color" content="#0F3D37">
+
+  <!-- Google Analytics 4 - same property as the landing page. The Measurement ID
+       appears TWICE below (script src, then gtag config); both must match. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FLG1S0R8ZH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FLG1S0R8ZH');
+  </script>
+
+<style>
+  :root {
+    --bg:             #FFFFFF;
+    --bg-raised:      #F2F5F7;
+    --bg-sunken:      #E8ECF0;
+    --text-primary:   #2E3338;
+    --text-secondary: #4A545E;
+    --text-muted:     #7C8B99;
+    --accent:         #0F3D37;
+    --accent-light:   #1B5C52;
+    --accent-wash:    rgba(15, 61, 55, 0.06);
+    --border:         rgba(15, 61, 55, 0.14);
+    --border-soft:    rgba(15, 61, 55, 0.08);
+    --cta:            #0F3D37;
+    --cta-hover:      #1B5C52;
+    --cta-text:       #FFFFFF;
+    --code-bg:        #F7F9FA;
+  }
+      * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 0 64px;
+  }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  .eyebrow {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+  }
+
+  /* header */
+  header.masthead {
+    padding-block: 44px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  h1 {
+    font-size: clamp(2rem, 5.2vw, 3.1rem);
+    font-weight: 900;
+    letter-spacing: -0.032em;
+    line-height: 1.06;
+    max-width: 17ch;
+  }
+  .lede {
+    font-size: 1.08rem;
+    color: var(--text-secondary);
+    max-width: 60ch;
+  }
+
+  /* the offer */
+  .offer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 26px;
+  }
+  .offer div { background: var(--bg-raised); padding: 18px 20px; }
+  .offer dt {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .offer dd {
+    margin: 0;
+    font-size: 1.22rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .offer dd small { display: block; font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); letter-spacing: 0; margin-top: 3px; }
+
+  /* sections */
+  section { margin-top: 52px; }
+  h2 {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .sec-note { color: var(--text-secondary); max-width: 62ch; margin-bottom: 20px; }
+  h3 { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
+
+  /* two track cards */
+  .tracks { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .track {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    background: var(--bg);
+  }
+  .track h3 { margin-bottom: 4px; }
+  .track .size { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+  .track ul { margin: 0; padding-left: 18px; display: grid; gap: 7px; }
+  .track li { color: var(--text-secondary); font-size: 0.94rem; }
+
+  /* checklist */
+  .check { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .check li {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 10px;
+    align-items: start;
+    font-size: 1rem;
+  }
+  .check li::before {
+    content: "";
+    width: 15px; height: 15px;
+    margin-top: 5px;
+    border: 2px solid var(--accent);
+    border-radius: 4px;
+  }
+  .check-foot { margin-top: 16px; color: var(--text-secondary); font-size: 0.94rem; }
+
+  /* skip list */
+  .skip { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--text-secondary); }
+  .skip strong { color: var(--text-primary); }
+
+  /* routes */
+  .routes { display: grid; gap: 12px; }
+  .route {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px;
+    align-items: center;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: var(--bg-raised);
+  }
+  .route p { font-size: 0.94rem; color: var(--text-secondary); margin-top: 3px; }
+  .btn {
+    display: inline-block;
+    background: var(--cta);
+    color: var(--cta-text);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.18s;
+  }
+  .btn:hover { background: var(--cta-hover); }
+  .btn:focus-visible, .copy:focus-visible, a:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
+  .credit {
+    margin-top: 14px;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-wash);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.95rem;
+  }
+
+  /* copy blocks */
+  .msg { border: 1px solid var(--border-soft); border-radius: 12px; overflow: hidden; margin-bottom: 14px; background: var(--bg); }
+  .msg-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .msg-head .label { font-size: 0.82rem; font-weight: 700; }
+  .msg-head .use { font-size: 0.76rem; color: var(--text-muted); }
+  .copy {
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 6px 13px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .copy:hover { background: var(--accent-wash); }
+  .copy[data-done="1"] { color: var(--cta-text); background: var(--cta); border-color: var(--cta); }
+  .msg-body {
+    margin: 0;
+    padding: 16px;
+    font-family: inherit;
+    font-size: 0.94rem;
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    background: var(--code-bg);
+  }
+
+  /* talk track */
+  .say { border-left: 3px solid var(--accent); padding: 4px 0 4px 18px; font-size: 1.05rem; max-width: 60ch; }
+  .qa { display: grid; gap: 14px; margin-top: 18px; }
+  .qa div { border-top: 1px solid var(--border-soft); padding-top: 14px; }
+  .qa p:first-child { font-weight: 700; font-size: 0.95rem; }
+  .qa p:last-child { color: var(--text-secondary); font-size: 0.95rem; margin-top: 2px; }
+  .ask { margin: 14px 0 0; padding-left: 18px; display: grid; gap: 8px; color: var(--text-secondary); }
+  .ask li em { color: var(--text-primary); font-style: italic; }
+
+  footer {
+    margin-top: 56px;
+    border-top: 1px solid var(--border-soft);
+    padding-top: 20px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%) translateY(8px);
+    background: var(--accent);
+    color: #FFFFFF;
+    padding: 9px 18px;
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 680px) {
+    .tracks { grid-template-columns: 1fr; }
+    .offer { grid-template-columns: 1fr; }
+    .route { grid-template-columns: 1fr; align-items: start; }
+    .btn { width: 100%; text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">ReinventOps Group &middot; Partner Program</p>
+    <h1>Know someone drowning in the same task every week?</h1>
+    <p class="lede">Introduce them to us. If they become a client, you earn 10% of their first project. You don't have to sell anything, explain anything technical, or follow up. Make the introduction and we take it from there.</p>
+  </header>
+
+  <dl class="offer">
+    <div>
+      <dt>You earn</dt>
+      <dd>10%<small>of their first paid project</small></dd>
+    </div>
+    <div>
+      <dt>For example</dt>
+      <dd>$500 to you<small>if their first project is $5,000</small></dd>
+    </div>
+    <div>
+      <dt>Paid</dt>
+      <dd>Within 5 days<small>business days, once the client has paid in full</small></dd>
+    </div>
+  </dl>
+
+  <section>
+    <h2>What we actually do</h2>
+    <p class="sec-note">ReinventOps Group is run by co-founders Uzziah and Arielle Israel. We find the one workflow costing a business the most time or money, put a real number on it, and build the AI and automation that fixes it.</p>
+    <p class="sec-note">Most teams already know they should be using AI. What's missing is a plan and any proof that it's paying off. That's the gap we close. Every conversation starts with a free 30-minute call, and people leave it knowing whether it's worth pursuing either way.</p>
+  </section>
+
+  <section>
+    <h2>Who to introduce us to</h2>
+    <p class="sec-note">Two kinds of businesses are a strong fit. They look different from the outside, but the problem underneath is the same.</p>
+    <div class="tracks">
+      <article class="track">
+        <h3>Growing companies</h3>
+        <p class="size">Roughly 50 to 250 people</p>
+        <ul>
+          <li>The team already uses ChatGPT, Claude, Copilot or Gemini, but everyone does it their own way</li>
+          <li>Nobody can say what AI is actually saving them</li>
+          <li>A task repeats daily or weekly across several people, full of copying, re-entering, chasing and waiting</li>
+          <li>Leadership wants results they can measure, not more training</li>
+          <li>Your contact is a founder, CEO, COO, head of operations or technology, or the director who owns that process</li>
+        </ul>
+      </article>
+      <article class="track">
+        <h3>Small owner-run businesses</h3>
+        <p class="size">The owner is the whole decision</p>
+        <ul>
+          <li>The owner decides, and you can reach them directly</li>
+          <li>Hours disappear every week into lead follow-up, onboarding, client messages, invoicing or content</li>
+          <li>Growth is capped because everything runs through them</li>
+          <li>They want it built for them, not a list of tools to go figure out</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>The 60-second check</h2>
+    <p class="sec-note">Before you send someone over, run through these. Five yeses means send them. Two or three still means message us and ask.</p>
+    <ul class="check">
+      <li>They run the business, or have real say in how it runs</li>
+      <li>They can name a task that repeats every week and eats hours</li>
+      <li>That work is mostly copying, chasing, re-entering, waiting or reporting</li>
+      <li>They'd pay to have it fixed if the numbers made sense</li>
+      <li>They're ready to act soon, not just curious about AI</li>
+    </ul>
+    <p class="check-foot">When in doubt, send them anyway with a note. We'd rather tell you it isn't a fit than have you sit on a good one.</p>
+  </section>
+
+  <section>
+    <h2>Who isn't a fit yet</h2>
+    <p class="sec-note">No hard feelings toward any of these, they're just not where we can help today.</p>
+    <ul class="skip">
+      <li><strong>Curious, not committed.</strong> They want to learn about AI but have no plans to change anything.</li>
+      <li><strong>Looking for training or a tool list.</strong> We fix workflows, we don't run AI workshops.</li>
+      <li><strong>Nothing's broken.</strong> Or the problem is one person spending a couple of hours a week.</li>
+      <li><strong>No path to the decision-maker.</strong> Your contact can't reach whoever signs.</li>
+      <li><strong>Already mature.</strong> They have an in-house AI team getting measurable results.</li>
+      <li><strong>Enterprise-scale or heavily regulated builds.</strong> Mission-critical infrastructure and compliance work sit outside our scope.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>How to refer someone</h2>
+    <p class="sec-note">Pick whichever is easiest in the moment. All three work.</p>
+    <div class="routes">
+      <div class="route">
+        <div>
+          <h3>Make an introduction</h3>
+          <p>Email or text us both together. Best for small owner-run businesses.</p>
+        </div>
+        <a class="btn" href="mailto:arielle@reinventops.com,uzziah@reinventops.com?subject=Referral%20introduction">Email us both</a>
+      </div>
+      <div class="route">
+        <div>
+          <h3>Send the AI Readiness Assessment</h3>
+          <p>Free, 2 minutes, instant result. Best for companies with a team.</p>
+        </div>
+        <a class="btn" href="https://reinventops.com" target="_blank" rel="noopener">reinventops.com</a>
+      </div>
+      <div class="route">
+        <div>
+          <h3>Send the quick fit form</h3>
+          <p>Five questions, about 2 minutes. Best for owner-run businesses.</p>
+        </div>
+        <a class="btn" href="https://forms.gle/RNqoev157CPCtjus8" target="_blank" rel="noopener">Open the form</a>
+      </div>
+    </div>
+    <p class="credit"><strong>However you do it, tell us who you sent.</strong> Their name and company is enough. That's what ties the referral to you, and it's the only step that matters for getting paid.</p>
+  </section>
+
+  <section>
+    <h2>Messages you can send</h2>
+    <p class="sec-note">Tap copy, paste, change whatever you want. Sounding like yourself beats sounding like us.</p>
+
+    <div class="msg">
+      <div class="msg-head">
+        <div>
+          <div class="label">Note to an owner or leader</div>
+          <div class="use">Email or LinkedIn message</div>
+        </div>
+        <button class="copy" type="button">Copy</button>
+      </div>
+      <p class="msg-body">Hi [Name],
+
+You mentioned [the team loses hours to X] the last time we talked, and it stuck with me. I know two people who fix exactly that kind of thing.
+
+Uzziah and Arielle at ReinventOps Group. They take one task that's eating your team's week, work out what it's actually costing you, and then build something that handles it. They do a free 30-minute call first, and they'll tell you straight if it isn't worth doing.
+
+Want me to introduce you?</p>
+    </div>
+
+    <div class="msg">
+      <div class="msg-head">
+        <div>
+          <div class="label">Quick text</div>
+          <div class="use">When you only get one line</div>
+        </div>
+        <button class="copy" type="button">Copy</button>
+      </div>
+      <p class="msg-body">Hey [Name], random thought. You know how [X] eats your whole week? I know people who build the thing that just does that for you. Want me to connect you?</p>
+    </div>
+
+    <div class="msg">
+      <div class="msg-head">
+        <div>
+          <div class="label">Introduction email</div>
+          <div class="use">Once they've said yes</div>
+        </div>
+        <button class="copy" type="button">Copy</button>
+      </div>
+      <p class="msg-body">Subject: [Name], meet Uzziah and Arielle
+
+[Name], these are the two I mentioned. Uzziah and Arielle run ReinventOps Group, and they sort out the work that keeps eating your week.
+
+Uzziah and Arielle, [Name] runs [Company]. [The challenge] came up when we talked and it sounded like your kind of problem.
+
+I'll get out of the way. Good to connect you both.</p>
+    </div>
+
+    <div class="msg">
+      <div class="msg-head">
+        <div>
+          <div class="label">Sending the form or assessment</div>
+          <div class="use">When they'd rather look first</div>
+        </div>
+        <button class="copy" type="button">Copy</button>
+      </div>
+      <p class="msg-body">Here's that link: https://forms.gle/RNqoev157CPCtjus8
+
+It's short, maybe five questions. They'll get back to you if they think they can help. Last question asks who sent you, just put my name there.</p>
+    </div>
+    <p class="check-foot">If you'd rather mention the referral fee up front, add a line like "full transparency, they pay me a referral fee if you end up working together." Entirely your call.</p>
+  </section>
+
+  <section>
+    <h2>If you'd rather just talk</h2>
+    <p class="sec-note">Most referrals happen out loud, not over email. Here's what to say.</p>
+
+    <h3>The 30-second version</h3>
+    <p class="say">So they do AI automation, but not the consulting kind where you just end up with a deck. You tell them what keeps eating everyone's time and they figure out what it's actually costing you. If it's worth fixing, they build it. And the first call's free, so you'd know pretty quick either way.</p>
+
+    <h3 style="margin-top:26px">Three questions that tell you if it's a fit</h3>
+    <ul class="ask">
+      <li><em>What's the thing your team does every week that everyone groans about?</em></li>
+      <li><em>If you could hand one task off tomorrow and never see it again, what would it be?</em></li>
+      <li><em>Where do things sit waiting on one person?</em></li>
+    </ul>
+
+    <h3 style="margin-top:26px">What they'll ask you back</h3>
+    <p class="sec-note" style="margin-top:6px">Anything in parentheses is a note to you, not something to say out loud.</p>
+    <div class="qa">
+      <div>
+        <p>"What's this going to cost me?"</p>
+        <p>Depends what they end up building, and the first call doesn't cost anything, so you'd find that out before you commit to anything.</p>
+      </div>
+      <div>
+        <p>"How long does something like that take?"</p>
+        <p>Same answer, it depends on what they're building. The more moving pieces, the longer it runs. They'll give you a real timeline once they know what's involved.</p>
+      </div>
+      <div>
+        <p>"Do I need to be technical for this?"</p>
+        <p>Nope. You just walk them through how the work happens now. That's the whole ask.</p>
+      </div>
+      <div>
+        <p>"What if it turns out AI can't help with this?"</p>
+        <p>Then they'll say so on the call. Worst case you're out half an hour and you know.</p>
+      </div>
+      <div>
+        <p>"Are you getting something out of this?"</p>
+        <p>Yes, if it turns into a project. <em style="color:var(--text-muted)">(Just say so. It costs you nothing and people trust you more for it.)</em></p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The fine print, in plain words</h2>
+    <div class="qa">
+      <div>
+        <p>When do I get paid?</p>
+        <p>10% of the referred client's first paid project, within 5 business days of them paying in full.</p>
+      </div>
+      <div>
+        <p>Does the free call count?</p>
+        <p>No. The fee is earned when the business signs and pays for a project.</p>
+      </div>
+      <div>
+        <p>What if someone else already sent them?</p>
+        <p>Credit goes to whoever shared them with us first.</p>
+      </div>
+      <div>
+        <p>Do I need to sign anything?</p>
+        <p>No. Just make sure we know the referral came from you, either because they put your name on the form or in their email, or because you told us who you were sending.</p>
+      </div>
+      <div>
+        <p>What if I'm not sure they're a fit?</p>
+        <p>Send them anyway with a note. We'll tell you honestly, and it costs you nothing to ask.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>ReinventOps Group &middot; Questions about a referral? Email <a href="mailto:uzziah@reinventops.com" style="color:var(--accent)">uzziah@reinventops.com</a> or <a href="mailto:arielle@reinventops.com" style="color:var(--accent)">arielle@reinventops.com</a>.</p>
+  </footer>
+</div>
+
+<div id="toast" role="status" aria-live="polite">Copied</div>
+
+<script>
+  (function () {
+    var toast = document.getElementById('toast');
+    var timer;
+    function flash(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(timer);
+      timer = setTimeout(function () { toast.classList.remove('show'); }, 1600);
+    }
+    document.querySelectorAll('.copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var body = btn.closest('.msg').querySelector('.msg-body');
+        var text = body.innerText;
+        function done() {
+          btn.textContent = 'Copied';
+          btn.setAttribute('data-done', '1');
+          flash('Copied. Paste it wherever you like.');
+          setTimeout(function () {
+            btn.textContent = 'Copy';
+            btn.removeAttribute('data-done');
+          }, 2000);
+        }
+        function fallback() {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          var ok = false;
+          try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+          document.body.removeChild(ta);
+          if (ok) { done(); } else { flash('Copy did not work. Select the text and copy it.'); }
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done)['catch'](fallback);
+        } else {
+          fallback();
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
