@@ -32,6 +32,7 @@
   <meta name="twitter:description" content="Introduce us to a business that becomes a client and earn 10% of their first project. You make the introduction, we take it from there.">
   <meta name="twitter:image" content="https://reinventops.com/assets/images/og-card-partners.png">
   <meta name="twitter:image:alt" content="ReinventOps Group Partner Program. Earn 10% of their first project.">
+
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/assets/images/icon-512.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
@@ -93,10 +94,17 @@
 
   /* header */
   header.masthead {
-    padding-block: 44px 8px;
+    padding-block: 40px 8px;
     display: flex;
     flex-direction: column;
     gap: 14px;
+  }
+  .brand { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+  .brand img { width: 250px; height: auto; }
+  .mantra {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.01em;
   }
   h1 {
     font-size: clamp(2rem, 5.2vw, 3.1rem);
@@ -164,6 +172,25 @@
   .track .size { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
   .track ul { margin: 0; padding-left: 18px; display: grid; gap: 7px; }
   .track li { color: var(--text-secondary); font-size: 0.94rem; }
+
+  .track-glyph {
+    width: 40px; height: 32px;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 14px;
+    opacity: 0.85;
+  }
+
+  /* flow figure */
+  figure.flow { margin: 26px 0 0; }
+  figure.flow svg { width: 100%; height: auto; max-width: 100%; color: var(--text-secondary); }
+  figure.flow .hl { stroke: var(--accent); }
+  figure.flow .hl-text { fill: var(--accent); }
+  figure.flow figcaption {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
 
   /* checklist */
   .check { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
@@ -307,7 +334,11 @@
 <div class="wrap">
 
   <header class="masthead">
-    <p class="eyebrow">ReinventOps Group &middot; Partner Program</p>
+    <div class="brand">
+      <img src="/assets/images/logo-lockup.png" alt="ReinventOps Group" width="560" height="108">
+      <p class="mantra">Make work easier. Make the business better.</p>
+    </div>
+    <p class="eyebrow">Partner Program</p>
     <h1>Know someone drowning in the same task every week?</h1>
     <p class="lede">Introduce them to us. If they become a client, you earn 10% of their first project. You don't have to sell anything, explain anything technical, or follow up. Make the introduction and we take it from there.</p>
   </header>
@@ -338,22 +369,43 @@
     <p class="sec-note">Two kinds of businesses are a strong fit. They look different from the outside, but the problem underneath is the same.</p>
     <div class="tracks">
       <article class="track">
-        <h3>Growing companies</h3>
-        <p class="size">Roughly 50 to 250 people</p>
+        <svg class="track-glyph" viewBox="0 0 40 32" role="img" aria-label="Work moving between several teams">
+          <rect x="1" y="9" width="13" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+          <rect x="18" y="1" width="13" height="30" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="5" y1="17" x2="10" y2="17" stroke="currentColor" stroke-width="2"/>
+          <line x1="5" y1="24" x2="10" y2="24" stroke="currentColor" stroke-width="2"/>
+          <line x1="22" y1="9" x2="27" y2="9" stroke="currentColor" stroke-width="2"/>
+          <line x1="22" y1="17" x2="27" y2="17" stroke="currentColor" stroke-width="2"/>
+          <line x1="22" y1="24" x2="27" y2="24" stroke="currentColor" stroke-width="2"/>
+          <line x1="35" y1="31" x2="35" y2="20" stroke="currentColor" stroke-width="2"/>
+          <circle cx="35" cy="15" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <h3>Companies with teams</h3>
+        <p class="size">Work passes through several hands</p>
         <ul>
           <li>The team already uses ChatGPT, Claude, Copilot or Gemini, but everyone does it their own way</li>
+          <li>There is no system for it yet, and they know they need one</li>
           <li>Nobody can say what AI is actually saving them</li>
           <li>A task repeats daily or weekly across several people, full of copying, re-entering, chasing and waiting</li>
           <li>Leadership wants results they can measure, not more training</li>
-          <li>Your contact is a founder, CEO, COO, head of operations or technology, or the director who owns that process</li>
+          <li>Your contact signs off on spending or has real influence over what the company buys: a founder, CEO, COO, head of operations or technology, or the director who owns the process</li>
         </ul>
       </article>
       <article class="track">
-        <h3>Small owner-run businesses</h3>
-        <p class="size">The owner is the whole decision</p>
+        <svg class="track-glyph" viewBox="0 0 40 32" role="img" aria-label="One owner carrying the whole list">
+          <circle cx="12" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M2 31c0-5.5 4.5-10 10-10s10 4.5 10 10" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="29" y1="7" x2="38" y2="7" stroke="currentColor" stroke-width="2"/>
+          <line x1="29" y1="15" x2="38" y2="15" stroke="currentColor" stroke-width="2"/>
+          <line x1="29" y1="23" x2="38" y2="23" stroke="currentColor" stroke-width="2"/>
+          <line x1="29" y1="31" x2="38" y2="31" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <h3>Owner-run businesses</h3>
+        <p class="size">Everything lands on one desk</p>
         <ul>
-          <li>The owner decides, and you can reach them directly</li>
+          <li>The owner decides and you can reach them, or you know someone close enough to the owner to sway what they buy</li>
           <li>Hours disappear every week into lead follow-up, onboarding, client messages, invoicing or content</li>
+          <li>They have been meaning to put a system in place and never get to it</li>
           <li>Growth is capped because everything runs through them</li>
           <li>They want it built for them, not a list of tools to go figure out</li>
         </ul>
@@ -378,12 +430,12 @@
     <h2>Who isn't a fit yet</h2>
     <p class="sec-note">No hard feelings toward any of these, they're just not where we can help today.</p>
     <ul class="skip">
+      <li><strong>Not able or willing to pay for it.</strong> This is paid work. If a business can't invest in a build, or doesn't want to, it isn't a fit however good the problem looks.</li>
       <li><strong>Curious, not committed.</strong> They want to learn about AI but have no plans to change anything.</li>
       <li><strong>Looking for training or a tool list.</strong> We fix workflows, we don't run AI workshops.</li>
       <li><strong>Nothing's broken.</strong> Or the problem is one person spending a couple of hours a week.</li>
       <li><strong>No path to the decision-maker.</strong> Your contact can't reach whoever signs.</li>
       <li><strong>Already mature.</strong> They have an in-house AI team getting measurable results.</li>
-      <li><strong>Enterprise-scale or heavily regulated builds.</strong> Mission-critical infrastructure and compliance work sit outside our scope.</li>
     </ul>
   </section>
 
@@ -413,6 +465,43 @@
         <a class="btn" href="https://forms.gle/RNqoev157CPCtjus8" target="_blank" rel="noopener">Open the form</a>
       </div>
     </div>
+
+    <figure class="flow">
+      <svg viewBox="0 0 885 132" role="img" aria-label="After you make an introduction, we run a free 30-minute call; if it is worth doing they sign a project, and you are paid 10% within 5 business days.">
+        <defs>
+          <marker id="pf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <rect x="5" y="34" width="145" height="62" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="77" y="60" text-anchor="middle" font-size="13" fill="currentColor">You make the</text>
+        <text x="77" y="78" text-anchor="middle" font-size="13" fill="currentColor">introduction</text>
+
+        <rect x="245" y="34" width="145" height="62" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="317" y="60" text-anchor="middle" font-size="13" fill="currentColor">Free 30-minute</text>
+        <text x="317" y="78" text-anchor="middle" font-size="13" fill="currentColor">call</text>
+
+        <rect x="485" y="34" width="145" height="62" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="557" y="60" text-anchor="middle" font-size="13" fill="currentColor">They sign</text>
+        <text x="557" y="78" text-anchor="middle" font-size="13" fill="currentColor">a project</text>
+
+        <rect x="725" y="34" width="155" height="62" rx="8" fill="none" class="hl" stroke="currentColor" stroke-width="2"/>
+        <text x="802" y="60" text-anchor="middle" font-size="13" font-weight="700" class="hl-text" fill="currentColor">You are paid</text>
+        <text x="802" y="78" text-anchor="middle" font-size="13" font-weight="700" class="hl-text" fill="currentColor">10%</text>
+
+        <line x1="152" y1="65" x2="238" y2="65" stroke="currentColor" stroke-width="1.5" marker-end="url(#pf-arrow)"/>
+        <text x="195" y="55" text-anchor="middle" font-size="11" fill="currentColor">we reach out</text>
+
+        <line x1="392" y1="65" x2="478" y2="65" stroke="currentColor" stroke-width="1.5" marker-end="url(#pf-arrow)"/>
+        <text x="435" y="55" text-anchor="middle" font-size="11" fill="currentColor">if it is worth doing</text>
+
+        <line x1="632" y1="65" x2="718" y2="65" class="hl" stroke="currentColor" stroke-width="1.5" marker-end="url(#pf-arrow)"/>
+        <text x="675" y="55" text-anchor="middle" font-size="11" class="hl-text" fill="currentColor">5 business days</text>
+      </svg>
+      <figcaption>Your part is the first box. The rest is on us, and the fee lands once the client has paid in full.</figcaption>
+    </figure>
+
     <p class="credit"><strong>However you do it, tell us who you sent.</strong> Their name and company is enough. That's what ties the referral to you, and it's the only step that matters for getting paid.</p>
   </section>
 
